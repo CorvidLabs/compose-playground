@@ -1,17 +1,29 @@
 package com.corvidlabs.composeplayground.snapshot
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
@@ -24,9 +36,9 @@ import com.corvidlabs.composeplayground.ui.theme.ComposePlaygroundTheme
 import org.junit.Rule
 import org.junit.Test
 
-/// Renders crisp, tightly-cropped component images (the representative demo on a clean
-/// surface) plus a compact home preview. SHRINK fits the image to the content and the high
-/// density renders it at many pixels — short, wide images stay sharp at the website's sizes.
+/// Renders crisp, tightly-cropped component images. Most components show their first
+/// example demo; transient/interactive components (progress, snackbar, menus, dialogs,
+/// sheets, tooltips, pager) use a curated static representation so the image isn't empty.
 class GallerySnapshotTest {
 
     @get:Rule
@@ -41,7 +53,6 @@ class GallerySnapshotTest {
         renderingMode = RenderingMode.SHRINK
     )
 
-    /// Every component: its representative (first) example demo, light theme.
     @Test
     fun componentShowcaseLight() {
         allComponents.forEach { component ->
@@ -53,7 +64,6 @@ class GallerySnapshotTest {
         }
     }
 
-    /// A few rich showcases in dark theme.
     @Test
     fun componentShowcaseDark() {
         listOf("card", "gradients", "chip", "navigation-bar", "button").forEach { id ->
@@ -66,7 +76,6 @@ class GallerySnapshotTest {
         }
     }
 
-    /// A compact home catalog preview (light + dark).
     @Test
     fun homeCatalog() {
         paparazzi.snapshot(name = "home-light") {
@@ -81,11 +90,9 @@ class GallerySnapshotTest {
         allComponents.firstOrNull { it.id == id } ?: error("Unknown component id: $id")
 }
 
-/// The component's first example demo on a clean, padded surface — short and wide so it
-/// stays sharp when shown on the website.
+/// The component's representative visual on a clean, padded surface.
 @Composable
 private fun Showcase(component: Component) {
-    val example = component.examples.firstOrNull() ?: return
     Surface(color = MaterialTheme.colorScheme.background) {
         Box(
             modifier = Modifier
@@ -93,19 +100,168 @@ private fun Showcase(component: Component) {
                 .padding(horizontal = 28.dp, vertical = 32.dp),
             contentAlignment = Alignment.Center
         ) {
-            example.demo()
+            when (component.id) {
+                "progress" -> ProgressShowcase()
+                "snackbar" -> SnackbarShowcase()
+                "tooltip" -> TooltipShowcase()
+                "menu" -> MenuShowcase()
+                "bottom-sheet" -> BottomSheetShowcase()
+                "dialog" -> DialogShowcase()
+                "pager" -> PagerShowcase()
+                else -> component.examples.firstOrNull()?.demo?.invoke()
+            }
         }
     }
 }
 
-/// A short, content-sized slice of the home catalog (first three groups) for the hero.
+@Composable
+private fun ProgressShowcase() {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        CircularProgressIndicator(progress = { 0.7f })
+        LinearProgressIndicator(progress = { 0.7f }, modifier = Modifier.fillMaxWidth())
+    }
+}
+
+@Composable
+private fun SnackbarShowcase() {
+    Snackbar(action = { TextButton(onClick = {}) { Text("Undo") } }) {
+        Text("Message archived")
+    }
+}
+
+@Composable
+private fun TooltipShowcase() {
+    Surface(
+        color = MaterialTheme.colorScheme.inverseSurface,
+        shape = RoundedCornerShape(6.dp)
+    ) {
+        Text(
+            text = "Plain tooltip",
+            color = MaterialTheme.colorScheme.inverseOnSurface,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
+        )
+    }
+}
+
+@Composable
+private fun MenuShowcase() {
+    Surface(shape = MaterialTheme.shapes.small, tonalElevation = 3.dp, shadowElevation = 4.dp) {
+        Column(modifier = Modifier.width(210.dp).padding(vertical = 8.dp)) {
+            listOf("Edit", "Duplicate", "Delete").forEach { label ->
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun BottomSheetShowcase() {
+    Surface(
+        shape = RoundedCornerShape(topStart = 22.dp, topEnd = 22.dp),
+        tonalElevation = 1.dp,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(bottom = 14.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box(
+                modifier = Modifier
+                    .padding(top = 12.dp, bottom = 10.dp)
+                    .size(width = 32.dp, height = 4.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.onSurfaceVariant)
+            )
+            listOf("Edit", "Share", "Delete").forEach { label ->
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 22.dp, vertical = 12.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun DialogShowcase() {
+    Surface(
+        shape = MaterialTheme.shapes.extraLarge,
+        tonalElevation = 3.dp,
+        shadowElevation = 6.dp,
+        modifier = Modifier.width(300.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Text("Delete file?", style = MaterialTheme.typography.titleLarge)
+            Text(
+                text = "This action can't be undone.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
+            ) {
+                TextButton(onClick = {}) { Text("Cancel") }
+                TextButton(onClick = {}) { Text("Delete") }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PagerShowcase() {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Surface(
+            shape = MaterialTheme.shapes.large,
+            color = MaterialTheme.colorScheme.primaryContainer,
+            modifier = Modifier.fillMaxWidth().height(120.dp)
+        ) {
+            Box(contentAlignment = Alignment.Center) {
+                Text(
+                    "Page 1",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            repeat(4) { i ->
+                Box(
+                    modifier = Modifier
+                        .size(if (i == 0) 10.dp else 8.dp)
+                        .clip(CircleShape)
+                        .background(
+                            if (i == 0) MaterialTheme.colorScheme.primary
+                            else MaterialTheme.colorScheme.outlineVariant
+                        )
+                )
+            }
+        }
+    }
+}
+
 @Composable
 private fun HomePreview() {
     Surface(color = MaterialTheme.colorScheme.background) {
         Column(
-            modifier = Modifier
-                .widthIn(max = 380.dp)
-                .padding(16.dp),
+            modifier = Modifier.widthIn(max = 380.dp).padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
