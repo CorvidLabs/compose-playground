@@ -35,6 +35,9 @@ const related = component.related
 const index = components.findIndex((c) => c.id === component.id);
 const prev = components[(index - 1 + components.length) % components.length];
 const next = components[(index + 1) % components.length];
+
+const slug = (s: string) =>
+  s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 ---
 
 <Layout
@@ -43,7 +46,6 @@ const next = components[(index + 1) % components.length];
   active="components"
 >
   <div class="section container detail" style={`--hue:${hue}`}>
-    {/* Breadcrumb */}
     <nav class="crumbs" aria-label="Breadcrumb">
       <ol>
         <li><a href={withBase("/")}>Home</a></li>
@@ -54,50 +56,47 @@ const next = components[(index + 1) % components.length];
       </ol>
     </nav>
 
-    {/* Hero */}
-    <section class="hero">
-      <div class="hero-copy">
-        <a class="chip group-chip" href={withBase(`/components#${component.group}`)}>{groupLabel}</a>
-        <h1>{component.name}</h1>
-        <p class="lead">{component.summary}</p>
-        <p class="description muted">{component.description}</p>
-        <div class="row hero-actions">
-          <a class="btn btn-primary" href={sourceUrl(component)} target="_blank" rel="noopener">
-            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg>
-            View source
+    <header class="head">
+      <a class="chip group-chip" href={withBase(`/components#${component.group}`)}>{groupLabel}</a>
+      <h1>{component.name}</h1>
+      <p class="lead">{component.summary}</p>
+      <p class="description muted">{component.description}</p>
+      <div class="row head-actions">
+        <a class="btn btn-primary" href={sourceUrl(component)} target="_blank" rel="noopener">
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg>
+          View source
+        </a>
+        {component.docUrl && (
+          <a class="btn" href={component.docUrl} target="_blank" rel="noopener">
+            Material docs
+            <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
           </a>
-          {component.docUrl && (
-            <a class="btn" href={component.docUrl} target="_blank" rel="noopener">
-              Material docs
-              <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
-            </a>
-          )}
-          <a class="btn btn-ghost" href={withBase("/components")}>All components</a>
-        </div>
+        )}
+        <a class="btn btn-ghost" href={withBase("/components")}>All components</a>
       </div>
 
-      <div class="hero-shot">
-        <div class="phone">
-          <img
-            src={withBase(`/${component.screenshot}`)}
-            alt={`${component.name} component rendered in the Compose Playground app`}
-            width="300"
-            height="600"
-          />
+      {component.examples.length > 1 && (
+        <div class="jump" aria-label="Jump to example">
+          <span class="jump-label">{component.examples.length} examples</span>
+          {component.examples.map((ex) => (
+            <a class="jump-chip" href={`#${slug(ex.title)}`}>{ex.title}</a>
+          ))}
         </div>
-      </div>
-    </section>
+      )}
+    </header>
 
-    {/* Examples */}
     {component.examples.length > 0 && (
       <section class="examples" aria-labelledby="examples-heading">
-        <h2 id="examples-heading">Examples</h2>
+        <h2 id="examples-heading" class="sr-only">Examples</h2>
         <div class="example-list">
-          {component.examples.map((example) => (
-            <article class="card example-card">
+          {component.examples.map((example, i) => (
+            <article class="card example-card" id={slug(example.title)}>
               <header class="example-head">
-                <h3>{example.title}</h3>
-                {example.description && <p class="muted">{example.description}</p>}
+                <span class="example-num">{String(i + 1).padStart(2, "0")}</span>
+                <div>
+                  <h3>{example.title}</h3>
+                  {example.description && <p class="muted">{example.description}</p>}
+                </div>
               </header>
               <div class="code-panel">
                 <div class="code-toolbar">
@@ -115,10 +114,9 @@ const next = components[(index + 1) % components.length];
       </section>
     )}
 
-    {/* Related */}
     {related.length > 0 && (
       <section class="related" aria-labelledby="related-heading">
-        <h2 id="related-heading">Related</h2>
+        <h2 id="related-heading">Related components</h2>
         <div class="related-grid">
           {related.map((r) => {
             const rGroup = groups.find((g) => g.key === r.group);
@@ -126,6 +124,7 @@ const next = components[(index + 1) % components.length];
             return (
               <a class="card card-hover related-card" href={withBase(`/components/${r.id}`)} style={`--hue:${rHue}`}>
                 <span class="related-name">{r.name}</span>
+                <span class="related-sum muted">{r.summary}</span>
                 <span class="chip group-chip">{rGroup?.label ?? r.group}</span>
               </a>
             );
@@ -134,7 +133,6 @@ const next = components[(index + 1) % components.length];
       </section>
     )}
 
-    {/* Prev / Next */}
     <nav class="pager" aria-label="Component navigation">
       <a class="card card-hover pager-link prev" href={withBase(`/components/${prev.id}`)} rel="prev">
         <span class="pager-dir">← Previous</span>
@@ -149,155 +147,85 @@ const next = components[(index + 1) % components.length];
 </Layout>
 
 <style>
-  .detail { padding-top: clamp(20px, 4vw, 40px); }
+  .detail { padding-top: clamp(20px, 4vw, 40px); max-width: 920px; }
 
-  /* breadcrumb */
   .crumbs ol {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 0 0 28px;
-    padding: 0;
-    font-size: 0.88rem;
-    color: var(--text-faint);
+    list-style: none; display: flex; flex-wrap: wrap; gap: 8px;
+    margin: 0 0 28px; padding: 0; font-size: 0.88rem; color: var(--text-faint);
   }
   .crumbs a { color: var(--text-dim); }
   .crumbs a:hover { color: var(--primary-bright); }
   .crumbs [aria-current="page"] { color: var(--text); font-weight: 600; }
 
-  /* hero */
-  .hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
-    gap: clamp(28px, 5vw, 64px);
-    align-items: center;
-    margin-bottom: clamp(48px, 8vw, 88px);
-  }
-  .hero h1 { margin: 0.35em 0 0.25em; }
+  .head { margin-bottom: clamp(36px, 6vw, 56px); }
+  .head h1 { margin: 0.4em 0 0.2em; font-size: clamp(2.2rem, 5vw, 3.1rem); }
   .group-chip {
     background: hsl(var(--hue) 70% 60% / 0.14);
     color: hsl(var(--hue) 80% 78%);
     border-color: hsl(var(--hue) 70% 60% / 0.4);
   }
-  [data-theme="light"] .group-chip { color: hsl(var(--hue) 65% 42%); }
+  [data-theme="light"] .group-chip { color: hsl(var(--hue) 65% 40%); }
   a.group-chip:hover { text-decoration: none; border-color: hsl(var(--hue) 70% 60% / 0.7); }
-  .description { max-width: 60ch; margin-top: 16px; }
-  .hero-actions { margin-top: 24px; }
+  .description { max-width: 65ch; margin-top: 14px; font-size: 1.02rem; }
+  .head-actions { margin-top: 26px; }
 
-  /* phone frame */
-  .hero-shot { display: flex; justify-content: center; }
-  .phone {
-    width: 100%;
-    max-width: 300px;
-    padding: 10px;
-    border-radius: 36px;
-    background: linear-gradient(160deg, var(--surface-3), var(--surface));
-    border: 1px solid var(--border-strong);
-    box-shadow: var(--shadow-glow);
+  .jump {
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    margin-top: 30px; padding-top: 24px; border-top: 1px solid var(--border);
   }
-  .phone img {
-    width: 100%;
-    height: auto;
-    border-radius: 28px;
-    border: 1px solid var(--border);
-    display: block;
+  .jump-label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-faint); margin-right: 4px; }
+  .jump-chip {
+    padding: 6px 13px; border-radius: 999px; font-size: 0.86rem; font-weight: 600;
+    color: var(--text-dim); background: var(--surface-2); border: 1px solid var(--border);
   }
+  .jump-chip:hover { color: var(--text); border-color: var(--primary-ring); text-decoration: none; }
 
-  /* examples */
   .examples { margin-bottom: clamp(48px, 8vw, 80px); }
-  .examples h2, .related h2 { margin-bottom: 24px; }
-  .example-list { display: grid; gap: 24px; }
-  .example-card { padding: 22px 22px 0; overflow: hidden; }
-  .example-head { margin-bottom: 18px; }
-  .example-head h3 { margin: 0 0 0.35em; }
-  .example-head p { margin: 0; max-width: 70ch; }
-
-  .code-panel {
-    position: relative;
-    margin: 0 -22px;
-    border-top: 1px solid var(--border);
+  .example-list { display: grid; gap: 22px; }
+  .example-card { padding: 24px 24px 0; overflow: hidden; scroll-margin-top: calc(var(--header-h) + 20px); }
+  .example-head { display: flex; gap: 16px; align-items: baseline; margin-bottom: 18px; }
+  .example-num {
+    font-family: var(--font-mono); font-size: 0.85rem; font-weight: 600;
+    color: hsl(var(--hue) 75% 70%); padding-top: 2px; flex-shrink: 0;
   }
+  .example-head h3 { margin: 0 0 0.2em; font-size: 1.2rem; }
+  .example-head p { margin: 0; max-width: 70ch; font-size: 0.95rem; }
+
+  .code-panel { position: relative; margin: 0 -24px; border-top: 1px solid var(--border); }
   .code-toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 16px;
-    background: #0a0712;
-    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 16px; background: #0a0712; border-bottom: 1px solid var(--border);
   }
   [data-theme="light"] .code-toolbar { background: #faf8ff; }
-  .code-lang {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-faint);
-  }
+  .code-lang { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
   .copy-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 12px;
-    border-radius: 999px;
-    font: inherit;
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--text-dim);
-    background: var(--surface-2);
-    border: 1px solid var(--border-strong);
-    cursor: pointer;
-    transition: color 0.15s, border-color 0.15s, background 0.15s;
+    display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px;
+    border-radius: 999px; font: inherit; font-size: 0.78rem; font-weight: 600;
+    color: var(--text-dim); background: var(--surface-2); border: 1px solid var(--border-strong);
+    cursor: pointer; transition: color .15s, border-color .15s, background .15s;
   }
   .copy-btn:hover { color: var(--text); border-color: var(--primary-ring); }
   .copy-btn.copied { color: var(--mint); border-color: var(--mint); }
   .code-panel :global(pre) { border: 0; border-radius: 0; }
 
-  /* related */
-  .related { margin-bottom: clamp(48px, 8vw, 72px); }
-  .related-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 16px;
-  }
-  .related-card {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 18px;
-    text-decoration: none;
-    color: var(--text);
-  }
+  .related { margin-bottom: clamp(40px, 7vw, 64px); }
+  .related h2, .examples h2:not(.sr-only) { margin-bottom: 22px; }
+  .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 16px; }
+  .related-card { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 18px; color: var(--text); }
   .related-card:hover { text-decoration: none; }
   .related-name { font-weight: 700; font-size: 1.02rem; }
+  .related-sum { font-size: 0.86rem; line-height: 1.4; }
 
-  /* pager */
-  .pager {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-  .pager-link {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 18px 22px;
-    text-decoration: none;
-    color: var(--text);
-  }
+  .pager { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .pager-link { display: flex; flex-direction: column; gap: 4px; padding: 18px 22px; color: var(--text); }
   .pager-link:hover { text-decoration: none; }
   .pager-link.next { text-align: right; align-items: flex-end; }
   .pager-dir { font-size: 0.8rem; color: var(--text-faint); font-weight: 600; }
   .pager-name { font-weight: 700; font-size: 1.05rem; }
 
-  @media (max-width: 760px) {
-    .hero { grid-template-columns: 1fr; }
-    .hero-shot { order: -1; }
-    .phone { max-width: 260px; }
-  }
   @media (max-width: 520px) {
     .pager { grid-template-columns: 1fr; }
+    .code-panel { margin: 0 -24px; }
   }
 </style>
 
@@ -314,7 +242,6 @@ const next = components[(index + 1) % components.length];
     try {
       await navigator.clipboard.writeText(code);
     } catch {
-      // fallback for older / insecure contexts
       const ta = document.createElement("textarea");
       ta.value = code;
       ta.style.position = "fixed";
