@@ -1,0 +1,65 @@
+name: CI
+
+# Builds the debug APK on every push / PR to main and uploads it as an artifact.
+#
+# Spec-sync validation is intentionally NOT a hard gate here: the spec-sync
+# binary (fledge) is not trivially installable on a stock GitHub runner, so
+# gating CI on it would produce flaky red builds. Spec checks are run locally
+# via `fledge spec check --non-interactive`. A best-effort, non-blocking
+# `specs` job is included below purely for visibility.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build debug APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Assemble debug APK
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+  # Non-blocking spec-sync visibility job. The real, authoritative spec check
+  # runs locally via `fledge spec check`. This job never fails the workflow.
+  specs:
+    name: Spec check (non-blocking)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Report spec-check policy
+        run: |
+          echo "Spec-sync validation is performed locally via:"
+          echo "  fledge spec check --non-interactive"
+          echo "The fledge/spec-sync binary is not provisioned on CI runners,"
+          echo "so this job is informational and non-blocking."
