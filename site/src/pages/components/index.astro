@@ -69,7 +69,9 @@ import { groups, meta, componentsInGroup, withBase, groupHue } from "../../lib/s
                 data-summary={c.summary}
                 style={`--hue:${hue}`}
               >
-                <span class="comp-accent" aria-hidden="true"></span>
+                <span class="thumb">
+                  <img src={withBase(`/${c.screenshot}`)} alt={`${c.name} preview`} loading="lazy" />
+                </span>
                 <span class="comp-body">
                   <span class="comp-name">{c.name}</span>
                   <span class="comp-summary">{c.summary}</span>
@@ -130,15 +132,17 @@ import { groups, meta, componentsInGroup, withBase, groupHue } from "../../lib/s
   .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
 
   .comp-card {
-    position: relative; display: flex; padding: 0; overflow: hidden; color: var(--text);
+    position: relative; display: flex; flex-direction: column; padding: 0; overflow: hidden; color: var(--text);
   }
   .comp-card:hover { text-decoration: none; }
   .comp-card[hidden] { display: none; }
-  .comp-accent {
-    width: 4px; flex: none;
-    background: linear-gradient(180deg, hsl(var(--hue) 80% 68%), hsl(var(--hue) 80% 68% / 0.25));
+  .thumb {
+    display: block; aspect-ratio: 4 / 3; overflow: hidden; border-bottom: 1px solid var(--border);
+    background: radial-gradient(120% 120% at 50% 0%, hsl(var(--hue) 60% 40% / 0.18), transparent 70%), var(--surface-3);
   }
-  .comp-body { display: flex; flex-direction: column; gap: 8px; padding: 18px 20px; flex: 1; }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top center; transition: transform .4s ease; }
+  .comp-card:hover .thumb img { transform: scale(1.04); }
+  .comp-body { display: flex; flex-direction: column; gap: 8px; padding: 16px 18px 18px; flex: 1; }
   .comp-name { font-weight: 700; font-size: 1.08rem; letter-spacing: -0.01em; }
   .comp-summary {
     color: var(--text-dim); font-size: 0.92rem; line-height: 1.5; flex: 1;

@@ -3,37 +3,28 @@ import { Code } from "astro:components";
 import Layout from "../layouts/Layout.astro";
 import { groups, meta, withBase, groupHue, componentById } from "../lib/site";
 
-const heroCode =
-  componentById("button")?.examples[0]?.code ??
-  `Button(onClick = {}) { Text("Filled") }`;
+const showcase = ["button", "chip", "gradients"]
+  .map((id) => componentById(id))
+  .filter((c) => c)
+  .map((c) => ({
+    id: c!.id,
+    name: c!.name,
+    blurb: c!.summary,
+    code: c!.examples[0]?.code ?? "",
+    img: c!.screenshot,
+  }));
 
 const features = [
-  {
-    title: "Live, interactive examples",
-    body: "Every component rendered for real — no mock-ups, no guesswork.",
-    icon: `<path d="M4 4h16v12H4z"/><path d="M2 20h20"/><path d="m9 9 3 2-3 2"/>`,
-  },
-  {
-    title: "Copy-paste Kotlin",
-    body: "Real, idiomatic Compose snippets you can drop straight into your app.",
-    icon: `<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>`,
-  },
-  {
-    title: "Light, dark & Material You",
-    body: "Each component themed across modes and dynamic color.",
-    icon: `<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>`,
-  },
-  {
-    title: "Snapshot-tested UI",
-    body: "Verified pixel-for-pixel with Paparazzi, so what you copy is what ships.",
-    icon: `<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3.5"/>`,
-  },
+  { title: "Live, interactive examples", body: "Every component rendered for real — no mock-ups.", icon: `<path d="M4 4h16v12H4z"/><path d="M2 20h20"/><path d="m9 9 3 2-3 2"/>` },
+  { title: "Copy-paste Kotlin", body: "Real, idiomatic Compose you can drop into your app.", icon: `<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>` },
+  { title: "Light, dark & Material You", body: "Each component themed across modes and dynamic color.", icon: `<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>` },
+  { title: "Snapshot-tested UI", body: "Verified pixel-for-pixel with Paparazzi.", icon: `<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3.5"/>` },
 ];
 
 const steps = [
   { n: "1", title: "Browse the gallery", body: "Scan 52 components grouped by purpose, or search instantly with /." },
-  { n: "2", title: "Open a component", body: "Read what it's for and see every variant as a focused example." },
-  { n: "3", title: "Copy the Kotlin", body: "Grab idiomatic Compose and paste it straight into your app." },
+  { n: "2", title: "Open a component", body: "See every variant rendered, with what it's for." },
+  { n: "3", title: "Copy the Kotlin", body: "Grab idiomatic Compose and paste it into your app." },
 ];
 
 const stats = [
@@ -48,7 +39,7 @@ const stats = [
   description="An interactive Jetpack Compose + Material 3 gallery: 52 components, 82 live examples, and copy-paste Kotlin — all snapshot-tested."
   active="home"
 >
-  {/* ===================== HERO ===================== */}
+  {/* HERO */}
   <section class="hero">
     <div class="aurora" aria-hidden="true"></div>
     <div class="container hero-grid">
@@ -69,7 +60,6 @@ const stats = [
             View on GitHub
           </a>
         </div>
-
         <ul class="stats" aria-label="At a glance">
           {stats.map((s) => (
             <li class="stat">
@@ -80,27 +70,21 @@ const stats = [
         </ul>
       </div>
 
-      <div class="hero-code">
-        <div class="code-window card">
-          <div class="win-bar">
-            <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
-            <span class="win-file">Button.kt</span>
-            <span class="win-tag">Compose</span>
-          </div>
-          <Code code={heroCode} lang="kotlin" />
-        </div>
+      <div class="hero-shot">
+        <figure class="device">
+          <img src={withBase("/screenshots/home-light.png")} alt="Compose Playground home screen with the component catalog" loading="eager" />
+        </figure>
       </div>
     </div>
   </section>
 
-  {/* ===================== GET STARTED ===================== */}
+  {/* GET STARTED */}
   <section class="section container" id="start">
     <header class="band-head center">
       <p class="eyebrow">Easy to start</p>
       <h2>Find it, learn it, <span class="gradient-text">ship it</span></h2>
       <p class="lead muted">Three steps from "what does this look like?" to working Compose code.</p>
     </header>
-
     <ol class="steps">
       {steps.map((s) => (
         <li class="card step">
@@ -110,19 +94,41 @@ const stats = [
         </li>
       ))}
     </ol>
+  </section>
 
-    <div class="quickstart card">
-      <div>
-        <h3>Run the app yourself</h3>
-        <p class="muted">Clone the repo and open it in Android Studio — every example is a real, running composable.</p>
-      </div>
-      <pre class="qs-code"><code>git clone {meta.repoUrl}.git
-cd compose-playground
-./gradlew installDebug</code></pre>
+  {/* SHOWCASE — image + code */}
+  <section class="section container">
+    <header class="band-head">
+      <p class="eyebrow">A closer look</p>
+      <h2>See the component, <span class="gradient-text">copy the code</span></h2>
+    </header>
+    <div class="showcase">
+      {showcase.map((s, i) => (
+        <article class:list={["show-row", { reverse: i % 2 === 1 }]}>
+          <figure class="show-shot">
+            <img src={withBase(`/${s.img}`)} alt={`${s.name} demos`} loading="lazy" />
+          </figure>
+          <div class="show-code">
+            <h3>{s.name}</h3>
+            <p class="muted">{s.blurb}</p>
+            <div class="code-window card">
+              <div class="win-bar">
+                <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="win-file">{s.name}.kt</span>
+              </div>
+              <Code code={s.code} lang="kotlin" />
+            </div>
+            <a class="see-it" href={withBase(`/components/${s.id}`)}>
+              See all examples
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </article>
+      ))}
     </div>
   </section>
 
-  {/* ===================== FEATURES ===================== */}
+  {/* FEATURES */}
   <section class="section container">
     <div class="grid features">
       {features.map((f) => (
@@ -137,14 +143,13 @@ cd compose-playground
     </div>
   </section>
 
-  {/* ===================== GROUPS ===================== */}
+  {/* GROUPS */}
   <section class="section container" id="groups">
     <header class="band-head">
       <p class="eyebrow">Organized by purpose</p>
       <h2>Explore the <span class="gradient-text">{groups.length} groups</span></h2>
       <p class="lead muted">From actions and navigation to gestures and graphics — jump straight to what you need.</p>
     </header>
-
     <div class="grid groups-grid">
       {groups.map((g) => {
         const hue = groupHue(g.key);
@@ -154,16 +159,14 @@ cd compose-playground
             <span class="group-dot" aria-hidden="true"></span>
             <h3>{g.label}</h3>
             <p class="muted group-blurb">{g.blurb}</p>
-            <span class="group-count">
-              {g.componentIds.length} {g.componentIds.length === 1 ? "component" : "components"}
-            </span>
+            <span class="group-count">{g.componentIds.length} {g.componentIds.length === 1 ? "component" : "components"}</span>
           </a>
         );
       })}
     </div>
   </section>
 
-  {/* ===================== ABOUT ===================== */}
+  {/* ABOUT */}
   <section class="section container" id="about">
     <div class="about card">
       <p class="eyebrow">About</p>
@@ -184,7 +187,7 @@ cd compose-playground
     </div>
   </section>
 
-  {/* ===================== FINAL CTA ===================== */}
+  {/* FINAL CTA */}
   <section class="section container">
     <div class="cta">
       <div class="cta-glow" aria-hidden="true"></div>
@@ -203,76 +206,68 @@ cd compose-playground
 
 <style>
   /* hero */
-  .hero { position: relative; overflow: hidden; padding-block: clamp(44px, 7vw, 92px); }
+  .hero { position: relative; overflow: hidden; padding-block: clamp(44px, 7vw, 88px); }
   .aurora {
     position: absolute; inset: -30% -10% auto -10%; height: 720px;
-    background:
-      radial-gradient(620px 420px at 74% 16%, rgba(139, 109, 255, 0.30), transparent 62%),
-      radial-gradient(560px 380px at 16% 8%, rgba(255, 143, 176, 0.20), transparent 60%);
+    background: radial-gradient(620px 420px at 74% 16%, rgba(139,109,255,0.30), transparent 62%), radial-gradient(560px 380px at 16% 8%, rgba(255,143,176,0.20), transparent 60%);
     filter: blur(8px); pointer-events: none; z-index: 0;
   }
-  .hero-grid {
-    position: relative; z-index: 1; display: grid;
-    grid-template-columns: 1.02fr 0.98fr; gap: clamp(32px, 5vw, 60px); align-items: center;
-  }
+  .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
   .hero-copy h1 { margin-top: 0.5rem; }
   .hero-cta { margin-top: 1.8rem; }
-
   .stats { list-style: none; margin: 2.4rem 0 0; padding: 0; display: flex; gap: 32px; }
   .stat { display: flex; flex-direction: column; }
   .stat-value { font-size: clamp(1.7rem, 3vw, 2.2rem); font-weight: 800; line-height: 1; letter-spacing: -0.03em; }
   .stat-label { margin-top: 6px; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; }
 
-  /* hero code window */
-  .code-window { overflow: hidden; box-shadow: var(--shadow-glow); }
-  .win-bar {
-    display: flex; align-items: center; gap: 12px; padding: 11px 16px;
-    background: #0a0712; border-bottom: 1px solid var(--border);
+  .hero-shot { display: flex; justify-content: center; }
+  .device {
+    margin: 0; width: 100%; max-width: 320px; padding: 10px; border-radius: 34px;
+    background: linear-gradient(165deg, var(--surface-3), var(--surface));
+    border: 1px solid var(--border-strong); box-shadow: var(--shadow-glow);
   }
-  [data-theme="light"] .win-bar { background: #f1ecff; }
-  .dots { display: inline-flex; gap: 6px; }
-  .dots i { width: 11px; height: 11px; border-radius: 50%; background: var(--surface-3); }
-  .dots i:nth-child(1) { background: #ff6b8b; } .dots i:nth-child(2) { background: #ffc861; } .dots i:nth-child(3) { background: #5fd0a8; }
-  .win-file { font-family: var(--font-mono); font-size: 0.82rem; color: var(--text-dim); }
-  .win-tag { margin-left: auto; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-faint); }
-  .code-window :global(pre) { border: 0; border-radius: 0; font-size: 0.9rem; padding: 20px 22px; }
+  .device img { width: 100%; height: auto; border-radius: 26px; border: 1px solid var(--border); display: block; }
 
-  /* get started */
+  /* band heads */
   .band-head { max-width: 60ch; margin-bottom: 36px; }
   .band-head.center { margin-inline: auto; text-align: center; }
   .band-head h2 { margin-top: 0.3rem; }
 
-  .steps {
-    list-style: none; margin: 0 0 24px; padding: 0;
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; counter-reset: step;
-  }
+  /* steps */
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
   .step { padding: 26px 24px; }
-  .step-n {
-    display: inline-grid; place-items: center; width: 38px; height: 38px; border-radius: 12px;
-    font-weight: 800; font-size: 1.1rem; color: #fff; background: var(--grad);
-    box-shadow: 0 8px 22px -10px var(--primary-ring); margin-bottom: 14px;
-  }
+  .step-n { display: inline-grid; place-items: center; width: 38px; height: 38px; border-radius: 12px; font-weight: 800; font-size: 1.1rem; color: #fff; background: var(--grad); box-shadow: 0 8px 22px -10px var(--primary-ring); margin-bottom: 14px; }
   .step h3 { margin: 0 0 6px; font-size: 1.1rem; }
   .step p { margin: 0; font-size: 0.95rem; }
 
-  .quickstart {
-    display: grid; grid-template-columns: 1fr 1.1fr; gap: 24px; align-items: center;
-    padding: 26px 28px;
-  }
-  .quickstart h3 { margin: 0 0 6px; }
-  .quickstart p { margin: 0; max-width: 44ch; }
-  .qs-code { font-size: 0.84rem; }
-  .qs-code code { color: var(--text); }
+  /* showcase */
+  .showcase { display: flex; flex-direction: column; gap: clamp(40px, 7vw, 80px); }
+  .show-row { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(28px, 5vw, 56px); align-items: center; }
+  .show-row.reverse { grid-template-columns: 1.2fr 0.8fr; }
+  .show-row.reverse .show-shot { order: 2; }
+  .show-shot { margin: 0; display: flex; justify-content: center; }
+  .show-shot img { width: 100%; max-width: 320px; height: auto; border-radius: 18px; border: 1px solid var(--border-strong); box-shadow: var(--shadow); display: block; }
+  .show-code h3 { margin: 0 0 6px; font-size: clamp(1.4rem, 2.6vw, 1.9rem); }
+  .show-code > p { margin: 0 0 16px; max-width: 52ch; }
+  .see-it { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; font-weight: 600; }
+  .see-it:hover { text-decoration: none; gap: 10px; }
+
+  /* code window */
+  .code-window { overflow: hidden; }
+  .win-bar { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: #0a0712; border-bottom: 1px solid var(--border); }
+  [data-theme="light"] .win-bar { background: #f1ecff; }
+  .dots { display: inline-flex; gap: 6px; }
+  .dots i { width: 11px; height: 11px; border-radius: 50%; }
+  .dots i:nth-child(1) { background: #ff6b8b; } .dots i:nth-child(2) { background: #ffc861; } .dots i:nth-child(3) { background: #5fd0a8; }
+  .win-file { font-family: var(--font-mono); font-size: 0.82rem; color: var(--text-dim); }
+  .code-window :global(pre) { border: 0; border-radius: 0; font-size: 0.86rem; }
 
   /* features */
   .features { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .feature { padding: 24px; }
   .feature h3 { margin: 14px 0 6px; font-size: 1.06rem; }
   .feature p { margin: 0; font-size: 0.94rem; }
-  .feature-icon {
-    display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 14px;
-    background: var(--primary-soft); border: 1px solid var(--primary-ring); color: var(--primary-bright);
-  }
+  .feature-icon { display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 14px; background: var(--primary-soft); border: 1px solid var(--primary-ring); color: var(--primary-bright); }
 
   /* groups */
   .groups-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
@@ -285,19 +280,12 @@ cd compose-playground
   .group-count { font-size: 0.8rem; font-weight: 600; color: hsl(var(--g) 70% 72%); }
   [data-theme="light"] .group-count { color: hsl(var(--g) 55% 45%); }
 
-  /* about */
+  /* about + cta */
   .about { padding: clamp(28px, 5vw, 48px); max-width: 760px; }
   .about h2 { margin-top: 0.4rem; }
   .about .row { margin-top: 1.4rem; }
-
-  /* final cta */
-  .cta {
-    position: relative; overflow: hidden; text-align: center; padding: clamp(40px, 7vw, 80px) 24px;
-    border-radius: var(--radius-lg); border: 1px solid var(--border-strong);
-    background: radial-gradient(700px 320px at 50% -20%, var(--primary-soft), transparent 70%), linear-gradient(180deg, var(--surface), var(--surface-2));
-    box-shadow: var(--shadow-glow);
-  }
-  .cta-glow { position: absolute; inset: auto 0 -60% 0; height: 320px; background: radial-gradient(520px 240px at 50% 100%, rgba(255, 143, 176, 0.22), transparent 70%); pointer-events: none; }
+  .cta { position: relative; overflow: hidden; text-align: center; padding: clamp(40px, 7vw, 80px) 24px; border-radius: var(--radius-lg); border: 1px solid var(--border-strong); background: radial-gradient(700px 320px at 50% -20%, var(--primary-soft), transparent 70%), linear-gradient(180deg, var(--surface), var(--surface-2)); box-shadow: var(--shadow-glow); }
+  .cta-glow { position: absolute; inset: auto 0 -60% 0; height: 320px; background: radial-gradient(520px 240px at 50% 100%, rgba(255,143,176,0.22), transparent 70%); pointer-events: none; }
   .cta h2, .cta .lead { position: relative; }
   .cta .lead { margin-inline: auto; }
   .cta-row { position: relative; justify-content: center; margin-top: 1.6rem; }
@@ -306,12 +294,10 @@ cd compose-playground
   @media (max-width: 960px) { .features { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 860px) {
     .hero-grid { grid-template-columns: 1fr; }
-    .hero-code { order: 2; }
+    .hero-shot { order: -1; }
     .steps { grid-template-columns: 1fr; }
-    .quickstart { grid-template-columns: 1fr; }
+    .show-row, .show-row.reverse { grid-template-columns: 1fr; }
+    .show-row.reverse .show-shot { order: 0; }
   }
-  @media (max-width: 520px) {
-    .features { grid-template-columns: 1fr; }
-    .stats { gap: 24px; }
-  }
+  @media (max-width: 520px) { .features { grid-template-columns: 1fr; } .stats { gap: 24px; } }
 </style>

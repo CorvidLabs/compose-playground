@@ -1,8 +1,10 @@
 package com.corvidlabs.composeplayground.snapshot
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,6 +15,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.cash.paparazzi.DeviceConfig
@@ -20,15 +23,13 @@ import app.cash.paparazzi.Paparazzi
 import com.corvidlabs.composeplayground.catalog.allComponents
 import com.corvidlabs.composeplayground.catalog.componentsByGroup
 import com.corvidlabs.composeplayground.model.Component
-import com.corvidlabs.composeplayground.ui.components.ExampleCard
 import com.corvidlabs.composeplayground.ui.theme.ComposePlaygroundTheme
 import org.junit.Rule
 import org.junit.Test
 
-/// Renders the entire catalog to deterministic PNGs (JVM, no device). Run
-/// `recordPaparazziDebug` to refresh the images, `verifyPaparazziDebug` to assert no
-/// visual regressions. A tall canvas lets every example on a detail screen fit; the docs
-/// pipeline trims the surrounding whitespace for display.
+/// Renders each component as a CLEAN showcase image (the live demos on cards, no page
+/// chrome) plus the home catalog. Run `recordPaparazziDebug` to refresh the PNGs; the docs
+/// pipeline trims the whitespace for display on the website and README.
 class GallerySnapshotTest {
 
     @get:Rule
@@ -36,26 +37,26 @@ class GallerySnapshotTest {
         deviceConfig = DeviceConfig.PIXEL_6.copy(screenHeight = 4000, softButtons = false)
     )
 
-    /// Every component, captured as its full detail screen in light theme.
+    /// Every component as a tidy showcase of its example demos (light theme).
     @Test
-    fun componentScreensLight() {
+    fun componentShowcaseLight() {
         allComponents.forEach { component ->
             paparazzi.snapshot(name = component.id) {
                 ComposePlaygroundTheme(darkTheme = false, dynamicColor = false) {
-                    DetailPreview(component)
+                    Showcase(component)
                 }
             }
         }
     }
 
-    /// A few visually rich screens captured in dark theme.
+    /// A few rich showcases in dark theme.
     @Test
-    fun componentScreensDark() {
+    fun componentShowcaseDark() {
         listOf("card", "gradients", "chip", "navigation-bar", "button").forEach { id ->
             val component = component(id)
             paparazzi.snapshot(name = "$id-dark") {
                 ComposePlaygroundTheme(darkTheme = true, dynamicColor = false) {
-                    DetailPreview(component)
+                    Showcase(component)
                 }
             }
         }
@@ -76,21 +77,39 @@ class GallerySnapshotTest {
         allComponents.firstOrNull { it.id == id } ?: error("Unknown component id: $id")
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+/// A clean visual showcase of a component: each example's live demo on its own card with a
+/// small caption — no titles, descriptions, or code panels. This is what ships as the image.
 @Composable
-private fun DetailPreview(component: Component) {
+private fun Showcase(component: Component) {
     Surface(color = MaterialTheme.colorScheme.background) {
-        Scaffold(
-            topBar = { TopAppBar(title = { Text(component.name) }) }
-        ) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Text(component.description, style = MaterialTheme.typography.bodyLarge)
-                component.examples.forEach { ExampleCard(it) }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            component.examples.forEach { example ->
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(
+                        text = example.title,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Surface(
+                        tonalElevation = 2.dp,
+                        shape = MaterialTheme.shapes.large,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(24.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            example.demo()
+                        }
+                    }
+                }
             }
         }
     }
