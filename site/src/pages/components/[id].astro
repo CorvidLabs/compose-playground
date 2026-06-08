@@ -1,0 +1,337 @@
+---
+import { Code } from "astro:components";
+import Layout from "../../layouts/Layout.astro";
+import {
+  components,
+  groups,
+  componentById,
+  withBase,
+  sourceUrl,
+  groupHue,
+  type Component,
+} from "../../lib/site";
+
+export async function getStaticPaths() {
+  return components.map((component) => ({
+    params: { id: component.id },
+    props: { component },
+  }));
+}
+
+interface Props {
+  component: Component;
+}
+
+const { component } = Astro.props;
+
+const group = groups.find((g) => g.key === component.group);
+const groupLabel = group?.label ?? component.group;
+const hue = groupHue(component.group);
+
+const related = component.related
+  .map((id) => componentById(id))
+  .filter((c): c is Component => Boolean(c));
+
+const index = components.findIndex((c) => c.id === component.id);
+const prev = components[(index - 1 + components.length) % components.length];
+const next = components[(index + 1) % components.length];
+---
+
+<Layout
+  title={`${component.name} · Compose Playground`}
+  description={component.summary}
+  active="components"
+>
+  <div class="section container detail" style={`--hue:${hue}`}>
+    {/* Breadcrumb */}
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href={withBase("/")}>Home</a></li>
+        <li aria-hidden="true">/</li>
+        <li><a href={withBase("/components")}>Components</a></li>
+        <li aria-hidden="true">/</li>
+        <li aria-current="page">{component.name}</li>
+      </ol>
+    </nav>
+
+    {/* Hero */}
+    <section class="hero">
+      <div class="hero-copy">
+        <a class="chip group-chip" href={withBase(`/components#${component.group}`)}>{groupLabel}</a>
+        <h1>{component.name}</h1>
+        <p class="lead">{component.summary}</p>
+        <p class="description muted">{component.description}</p>
+        <div class="row hero-actions">
+          <a class="btn btn-primary" href={sourceUrl(component)} target="_blank" rel="noopener">
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg>
+            View source
+          </a>
+          {component.docUrl && (
+            <a class="btn" href={component.docUrl} target="_blank" rel="noopener">
+              Material docs
+              <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </a>
+          )}
+          <a class="btn btn-ghost" href={withBase("/components")}>All components</a>
+        </div>
+      </div>
+
+      <div class="hero-shot">
+        <div class="phone">
+          <img
+            src={withBase(`/${component.screenshot}`)}
+            alt={`${component.name} component rendered in the Compose Playground app`}
+            width="300"
+            height="600"
+          />
+        </div>
+      </div>
+    </section>
+
+    {/* Examples */}
+    {component.examples.length > 0 && (
+      <section class="examples" aria-labelledby="examples-heading">
+        <h2 id="examples-heading">Examples</h2>
+        <div class="example-list">
+          {component.examples.map((example) => (
+            <article class="card example-card">
+              <header class="example-head">
+                <h3>{example.title}</h3>
+                {example.description && <p class="muted">{example.description}</p>}
+              </header>
+              <div class="code-panel">
+                <div class="code-toolbar">
+                  <span class="code-lang">Kotlin</span>
+                  <button class="copy-btn" type="button" data-copy aria-label={`Copy ${example.title} code`}>
+                    <svg class="i-copy" aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+                    <span class="copy-label">Copy</span>
+                  </button>
+                </div>
+                <Code code={example.code} lang="kotlin" />
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {/* Related */}
+    {related.length > 0 && (
+      <section class="related" aria-labelledby="related-heading">
+        <h2 id="related-heading">Related</h2>
+        <div class="related-grid">
+          {related.map((r) => {
+            const rGroup = groups.find((g) => g.key === r.group);
+            const rHue = groupHue(r.group);
+            return (
+              <a class="card card-hover related-card" href={withBase(`/components/${r.id}`)} style={`--hue:${rHue}`}>
+                <span class="related-name">{r.name}</span>
+                <span class="chip group-chip">{rGroup?.label ?? r.group}</span>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    )}
+
+    {/* Prev / Next */}
+    <nav class="pager" aria-label="Component navigation">
+      <a class="card card-hover pager-link prev" href={withBase(`/components/${prev.id}`)} rel="prev">
+        <span class="pager-dir">← Previous</span>
+        <span class="pager-name">{prev.name}</span>
+      </a>
+      <a class="card card-hover pager-link next" href={withBase(`/components/${next.id}`)} rel="next">
+        <span class="pager-dir">Next →</span>
+        <span class="pager-name">{next.name}</span>
+      </a>
+    </nav>
+  </div>
+</Layout>
+
+<style>
+  .detail { padding-top: clamp(20px, 4vw, 40px); }
+
+  /* breadcrumb */
+  .crumbs ol {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 28px;
+    padding: 0;
+    font-size: 0.88rem;
+    color: var(--text-faint);
+  }
+  .crumbs a { color: var(--text-dim); }
+  .crumbs a:hover { color: var(--primary-bright); }
+  .crumbs [aria-current="page"] { color: var(--text); font-weight: 600; }
+
+  /* hero */
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: clamp(28px, 5vw, 64px);
+    align-items: center;
+    margin-bottom: clamp(48px, 8vw, 88px);
+  }
+  .hero h1 { margin: 0.35em 0 0.25em; }
+  .group-chip {
+    background: hsl(var(--hue) 70% 60% / 0.14);
+    color: hsl(var(--hue) 80% 78%);
+    border-color: hsl(var(--hue) 70% 60% / 0.4);
+  }
+  [data-theme="light"] .group-chip { color: hsl(var(--hue) 65% 42%); }
+  a.group-chip:hover { text-decoration: none; border-color: hsl(var(--hue) 70% 60% / 0.7); }
+  .description { max-width: 60ch; margin-top: 16px; }
+  .hero-actions { margin-top: 24px; }
+
+  /* phone frame */
+  .hero-shot { display: flex; justify-content: center; }
+  .phone {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    border-radius: 36px;
+    background: linear-gradient(160deg, var(--surface-3), var(--surface));
+    border: 1px solid var(--border-strong);
+    box-shadow: var(--shadow-glow);
+  }
+  .phone img {
+    width: 100%;
+    height: auto;
+    border-radius: 28px;
+    border: 1px solid var(--border);
+    display: block;
+  }
+
+  /* examples */
+  .examples { margin-bottom: clamp(48px, 8vw, 80px); }
+  .examples h2, .related h2 { margin-bottom: 24px; }
+  .example-list { display: grid; gap: 24px; }
+  .example-card { padding: 22px 22px 0; overflow: hidden; }
+  .example-head { margin-bottom: 18px; }
+  .example-head h3 { margin: 0 0 0.35em; }
+  .example-head p { margin: 0; max-width: 70ch; }
+
+  .code-panel {
+    position: relative;
+    margin: 0 -22px;
+    border-top: 1px solid var(--border);
+  }
+  .code-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    background: #0a0712;
+    border-bottom: 1px solid var(--border);
+  }
+  [data-theme="light"] .code-toolbar { background: #faf8ff; }
+  .code-lang {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    background: var(--surface-2);
+    border: 1px solid var(--border-strong);
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+  }
+  .copy-btn:hover { color: var(--text); border-color: var(--primary-ring); }
+  .copy-btn.copied { color: var(--mint); border-color: var(--mint); }
+  .code-panel :global(pre) { border: 0; border-radius: 0; }
+
+  /* related */
+  .related { margin-bottom: clamp(48px, 8vw, 72px); }
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+  }
+  .related-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 18px;
+    text-decoration: none;
+    color: var(--text);
+  }
+  .related-card:hover { text-decoration: none; }
+  .related-name { font-weight: 700; font-size: 1.02rem; }
+
+  /* pager */
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .pager-link {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 18px 22px;
+    text-decoration: none;
+    color: var(--text);
+  }
+  .pager-link:hover { text-decoration: none; }
+  .pager-link.next { text-align: right; align-items: flex-end; }
+  .pager-dir { font-size: 0.8rem; color: var(--text-faint); font-weight: 600; }
+  .pager-name { font-weight: 700; font-size: 1.05rem; }
+
+  @media (max-width: 760px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-shot { order: -1; }
+    .phone { max-width: 260px; }
+  }
+  @media (max-width: 520px) {
+    .pager { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+  document.addEventListener("click", async (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>("[data-copy]");
+    if (!btn) return;
+
+    const panel = btn.closest(".code-panel");
+    const pre = panel?.querySelector("pre");
+    const code = pre?.textContent ?? "";
+    if (!code) return;
+
+    try {
+      await navigator.clipboard.writeText(code);
+    } catch {
+      // fallback for older / insecure contexts
+      const ta = document.createElement("textarea");
+      ta.value = code;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch { /* ignore */ }
+      ta.remove();
+    }
+
+    const label = btn.querySelector(".copy-label");
+    const original = label?.textContent ?? "Copy";
+    btn.classList.add("copied");
+    if (label) label.textContent = "Copied!";
+    window.setTimeout(() => {
+      btn.classList.remove("copied");
+      if (label) label.textContent = original;
+    }, 1600);
+  });
+</script>
