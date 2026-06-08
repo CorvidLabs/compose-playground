@@ -15,15 +15,22 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material3.DividerDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -49,15 +56,27 @@ import com.corvidlabs.composeplayground.catalog.componentFor
 import com.corvidlabs.composeplayground.catalog.componentsByGroup
 import com.corvidlabs.composeplayground.model.Component
 import com.corvidlabs.composeplayground.ui.components.ExampleCard
+import com.corvidlabs.composeplayground.ui.theme.ThemeMode
 
 /// Root navigation host: a searchable, grouped home catalog and a detail page per component.
 @Composable
-internal fun PlaygroundApp() {
+internal fun PlaygroundApp(
+    themeMode: ThemeMode,
+    onThemeModeChange: (ThemeMode) -> Unit,
+    dynamicColor: Boolean,
+    onDynamicColorChange: (Boolean) -> Unit
+) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "home") {
         composable("home") {
-            HomeScreen(onOpen = { id -> navController.navigate("component/$id") })
+            HomeScreen(
+                onOpen = { id -> navController.navigate("component/$id") },
+                themeMode = themeMode,
+                onThemeModeChange = onThemeModeChange,
+                dynamicColor = dynamicColor,
+                onDynamicColorChange = onDynamicColorChange
+            )
         }
         composable(
             route = "component/{id}",
@@ -80,7 +99,13 @@ internal fun PlaygroundApp() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun HomeScreen(onOpen: (String) -> Unit) {
+private fun HomeScreen(
+    onOpen: (String) -> Unit,
+    themeMode: ThemeMode,
+    onThemeModeChange: (ThemeMode) -> Unit,
+    dynamicColor: Boolean,
+    onDynamicColorChange: (Boolean) -> Unit
+) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     var query by rememberSaveable { mutableStateOf("") }
     val matches by remember {
@@ -95,6 +120,14 @@ private fun HomeScreen(onOpen: (String) -> Unit) {
         topBar = {
             TopAppBar(
                 title = { Text("Compose Playground") },
+                actions = {
+                    ThemeMenu(
+                        themeMode = themeMode,
+                        onThemeModeChange = onThemeModeChange,
+                        dynamicColor = dynamicColor,
+                        onDynamicColorChange = onDynamicColorChange
+                    )
+                },
                 scrollBehavior = scrollBehavior
             )
         }
@@ -157,6 +190,52 @@ private fun HomeScreen(onOpen: (String) -> Unit) {
         }
     }
 }
+
+/// Top-bar action exposing live theme controls: System/Light/Dark plus a dynamic-color toggle.
+@Composable
+private fun ThemeMenu(
+    themeMode: ThemeMode,
+    onThemeModeChange: (ThemeMode) -> Unit,
+    dynamicColor: Boolean,
+    onDynamicColorChange: (Boolean) -> Unit
+) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+
+    IconButton(onClick = { expanded = true }) {
+        Icon(Icons.Outlined.Palette, contentDescription = "Theme")
+    }
+    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+        ThemeMode.entries.forEach { mode ->
+            DropdownMenuItem(
+                text = { Text(mode.label) },
+                onClick = { onThemeModeChange(mode) },
+                trailingIcon = {
+                    if (mode == themeMode) {
+                        Icon(Icons.Filled.Check, contentDescription = "Selected")
+                    }
+                }
+            )
+        }
+        HorizontalDivider(color = DividerDefaults.color)
+        DropdownMenuItem(
+            text = { Text("Dynamic color (Material You)") },
+            onClick = { onDynamicColorChange(!dynamicColor) },
+            trailingIcon = {
+                Switch(
+                    checked = dynamicColor,
+                    onCheckedChange = { onDynamicColorChange(it) }
+                )
+            }
+        )
+    }
+}
+
+private val ThemeMode.label: String
+    get() = when (this) {
+        ThemeMode.System -> "System"
+        ThemeMode.Light -> "Light"
+        ThemeMode.Dark -> "Dark"
+    }
 
 @Composable
 private fun GroupHeader(title: String, subtitle: String) {
