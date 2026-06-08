@@ -226,7 +226,7 @@ const stats = [
     background: linear-gradient(165deg, var(--surface-3), var(--surface));
     border: 1px solid var(--border-strong); box-shadow: var(--shadow-glow);
   }
-  .device img { width: 100%; height: auto; border-radius: 26px; border: 1px solid var(--border); display: block; }
+  .device img { width: 100%; aspect-ratio: 320 / 600; object-fit: cover; object-position: top center; border-radius: 26px; border: 1px solid var(--border); display: block; }
 
   /* band heads */
   .band-head { max-width: 60ch; margin-bottom: 36px; }
