@@ -242,11 +242,11 @@ const stats = [
 
   /* showcase */
   .showcase { display: flex; flex-direction: column; gap: clamp(40px, 7vw, 80px); }
-  .show-row { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(28px, 5vw, 56px); align-items: center; }
-  .show-row.reverse { grid-template-columns: 1.2fr 0.8fr; }
+  .show-row { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 5vw, 56px); align-items: center; }
+  .show-row.reverse { grid-template-columns: 1fr 1fr; }
   .show-row.reverse .show-shot { order: 2; }
   .show-shot { margin: 0; display: flex; justify-content: center; }
-  .show-shot img { width: 100%; max-width: 320px; height: auto; border-radius: 18px; border: 1px solid var(--border-strong); box-shadow: var(--shadow); display: block; }
+  .show-shot img { width: 100%; height: auto; border-radius: 16px; border: 1px solid var(--border-strong); box-shadow: var(--shadow); display: block; background: var(--surface); }
   .show-code h3 { margin: 0 0 6px; font-size: clamp(1.4rem, 2.6vw, 1.9rem); }
   .show-code > p { margin: 0 0 16px; max-width: 52ch; }
   .see-it { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; font-weight: 600; }

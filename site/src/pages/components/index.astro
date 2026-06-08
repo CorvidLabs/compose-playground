@@ -137,10 +137,10 @@ import { groups, meta, componentsInGroup, withBase, groupHue } from "../../lib/s
   .comp-card:hover { text-decoration: none; }
   .comp-card[hidden] { display: none; }
   .thumb {
-    display: block; aspect-ratio: 4 / 3; overflow: hidden; border-bottom: 1px solid var(--border);
+    display: block; aspect-ratio: 16 / 10; overflow: hidden; border-bottom: 1px solid var(--border);
     background: radial-gradient(120% 120% at 50% 0%, hsl(var(--hue) 60% 40% / 0.18), transparent 70%), var(--surface-3);
   }
-  .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top center; transition: transform .4s ease; }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: center; transition: transform .4s ease; }
   .comp-card:hover .thumb img { transform: scale(1.04); }
   .comp-body { display: flex; flex-direction: column; gap: 8px; padding: 16px 18px 18px; flex: 1; }
   .comp-name { font-weight: 700; font-size: 1.08rem; letter-spacing: -0.01em; }

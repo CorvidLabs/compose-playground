@@ -3,23 +3,20 @@ package com.corvidlabs.composeplayground.snapshot
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
+import com.android.ide.common.rendering.api.SessionParams.RenderingMode
+import com.android.resources.Density
 import com.corvidlabs.composeplayground.catalog.allComponents
 import com.corvidlabs.composeplayground.catalog.componentsByGroup
 import com.corvidlabs.composeplayground.model.Component
@@ -27,17 +24,24 @@ import com.corvidlabs.composeplayground.ui.theme.ComposePlaygroundTheme
 import org.junit.Rule
 import org.junit.Test
 
-/// Renders each component as a CLEAN showcase image (the live demos on cards, no page
-/// chrome) plus the home catalog. Run `recordPaparazziDebug` to refresh the PNGs; the docs
-/// pipeline trims the whitespace for display on the website and README.
+/// Renders crisp, tightly-cropped component images (the representative demo on a clean
+/// surface) plus a compact home preview. SHRINK fits the image to the content and the high
+/// density renders it at many pixels — short, wide images stay sharp at the website's sizes.
 class GallerySnapshotTest {
 
     @get:Rule
     val paparazzi = Paparazzi(
-        deviceConfig = DeviceConfig.PIXEL_6.copy(screenHeight = 4000, softButtons = false)
+        deviceConfig = DeviceConfig.PIXEL_6.copy(
+            screenHeight = 2400,
+            density = Density.XXHIGH,
+            xdpi = 480,
+            ydpi = 480,
+            softButtons = false
+        ),
+        renderingMode = RenderingMode.SHRINK
     )
 
-    /// Every component as a tidy showcase of its example demos (light theme).
+    /// Every component: its representative (first) example demo, light theme.
     @Test
     fun componentShowcaseLight() {
         allComponents.forEach { component ->
@@ -62,7 +66,7 @@ class GallerySnapshotTest {
         }
     }
 
-    /// The grouped home catalog (light + dark).
+    /// A compact home catalog preview (light + dark).
     @Test
     fun homeCatalog() {
         paparazzi.snapshot(name = "home-light") {
@@ -77,79 +81,58 @@ class GallerySnapshotTest {
         allComponents.firstOrNull { it.id == id } ?: error("Unknown component id: $id")
 }
 
-/// A clean visual showcase of a component: each example's live demo on its own card with a
-/// small caption — no titles, descriptions, or code panels. This is what ships as the image.
+/// The component's first example demo on a clean, padded surface — short and wide so it
+/// stays sharp when shown on the website.
 @Composable
 private fun Showcase(component: Component) {
+    val example = component.examples.firstOrNull() ?: return
     Surface(color = MaterialTheme.colorScheme.background) {
-        Column(
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+                .widthIn(max = 380.dp)
+                .padding(horizontal = 28.dp, vertical = 32.dp),
+            contentAlignment = Alignment.Center
         ) {
-            component.examples.forEach { example ->
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text(
-                        text = example.title,
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Surface(
-                        tonalElevation = 2.dp,
-                        shape = MaterialTheme.shapes.large,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(24.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            example.demo()
-                        }
-                    }
-                }
-            }
+            example.demo()
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+/// A short, content-sized slice of the home catalog (first three groups) for the hero.
 @Composable
 private fun HomePreview() {
-    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-        Scaffold(
-            topBar = { TopAppBar(title = { Text("Compose Playground") }) }
-        ) { innerPadding ->
-            LazyColumn(
-                contentPadding = innerPadding,
-                modifier = Modifier.padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                componentsByGroup.forEach { (group, members) ->
-                    item {
-                        Text(
-                            text = group.label,
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.padding(top = 12.dp)
-                        )
-                    }
-                    items(members) { component ->
-                        Surface(
-                            shape = MaterialTheme.shapes.large,
-                            tonalElevation = 2.dp,
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            Column(modifier = Modifier.padding(16.dp)) {
-                                Text(component.name, style = MaterialTheme.typography.titleMedium)
-                                Text(
-                                    component.summary,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
+    Surface(color = MaterialTheme.colorScheme.background) {
+        Column(
+            modifier = Modifier
+                .widthIn(max = 380.dp)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = "Compose Playground",
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+            componentsByGroup.take(3).forEach { (group, members) ->
+                Text(
+                    text = group.label,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(top = 10.dp)
+                )
+                members.forEach { component ->
+                    Surface(
+                        shape = MaterialTheme.shapes.large,
+                        tonalElevation = 2.dp,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text(component.name, style = MaterialTheme.typography.titleMedium)
+                            Text(
+                                component.summary,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                         }
                     }
                 }
