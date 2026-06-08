@@ -1,0 +1,33 @@
+# fledge task runner — https://github.com/CorvidLabs
+# Gradle tasks use the Android Studio JBR for Java unless JAVA_HOME is already set,
+# so they work both locally and on a self-hosted macOS runner.
+
+[tasks.build]
+cmd = "JAVA_HOME=\"${JAVA_HOME:-/Applications/Android Studio.app/Contents/jbr/Contents/Home}\" ./gradlew assembleDebug"
+
+[tasks.test]
+cmd = "JAVA_HOME=\"${JAVA_HOME:-/Applications/Android Studio.app/Contents/jbr/Contents/Home}\" ./gradlew testDebugUnitTest"
+
+[tasks.snapshot-verify]
+cmd = "JAVA_HOME=\"${JAVA_HOME:-/Applications/Android Studio.app/Contents/jbr/Contents/Home}\" ./gradlew verifyPaparazziDebug"
+
+[tasks.snapshot-record]
+cmd = "JAVA_HOME=\"${JAVA_HOME:-/Applications/Android Studio.app/Contents/jbr/Contents/Home}\" ./gradlew recordPaparazziDebug"
+
+[tasks.lint]
+cmd = "JAVA_HOME=\"${JAVA_HOME:-/Applications/Android Studio.app/Contents/jbr/Contents/Home}\" ./gradlew lintDebug"
+
+[tasks.spec-check]
+cmd = "fledge spec check --non-interactive"
+
+[lanes.check]
+description = "Quick pre-commit gate"
+steps = [{ parallel = ["spec-check", "build"] }]
+
+[lanes.ci]
+description = "Full CI pipeline: build, unit tests, snapshot verification, spec sync"
+steps = [
+  "build",
+  { parallel = ["test", "spec-check"] },
+  "snapshot-verify",
+]
