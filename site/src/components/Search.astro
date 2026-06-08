@@ -1,0 +1,473 @@
+---
+import { components, groups, withBase } from "../lib/site";
+
+const groupLabel = new Map(groups.map((g) => [g.key, g.label]));
+
+const searchData = components.map((c) => ({
+  id: c.id,
+  name: c.name,
+  group: groupLabel.get(c.group) ?? c.group,
+  summary: c.summary,
+  url: withBase(`/components/${c.id}`),
+}));
+---
+
+<div class="cp-search" data-search-root hidden aria-hidden="true">
+  <div class="cp-backdrop" data-search-backdrop></div>
+  <div
+    class="cp-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Search components"
+  >
+    <div class="cp-field">
+      <svg class="cp-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input
+        type="text"
+        class="cp-input"
+        data-search-input
+        placeholder="Search components…"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        role="combobox"
+        aria-expanded="true"
+        aria-controls="cp-search-results"
+        aria-activedescendant=""
+        aria-label="Search components"
+      />
+      <kbd class="cp-esc">Esc</kbd>
+    </div>
+    <ul
+      class="cp-results"
+      id="cp-search-results"
+      role="listbox"
+      aria-label="Search results"
+      data-search-results
+    ></ul>
+    <div class="cp-foot">
+      <span class="cp-hint"><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+      <span class="cp-hint"><kbd>↵</kbd> open</span>
+      <span class="cp-hint cp-count" data-search-count></span>
+    </div>
+  </div>
+</div>
+
+<script type="application/json" id="cp-search-data" set:html={JSON.stringify(searchData)} />
+
+<script>
+  interface Item {
+    id: string;
+    name: string;
+    group: string;
+    summary: string;
+    url: string;
+  }
+
+  const root = document.querySelector<HTMLElement>("[data-search-root]");
+  const dataEl = document.getElementById("cp-search-data");
+
+  if (root && dataEl) {
+    const backdrop = root.querySelector<HTMLElement>("[data-search-backdrop]");
+    const input = root.querySelector<HTMLInputElement>("[data-search-input]");
+    const list = root.querySelector<HTMLUListElement>("[data-search-results]");
+    const countEl = root.querySelector<HTMLElement>("[data-search-count]");
+
+    const items: Item[] = JSON.parse(dataEl.textContent || "[]");
+    const MAX_RESULTS = 12;
+
+    let open = false;
+    let active = 0;
+    let current: Item[] = [];
+    let lastFocused: HTMLElement | null = null;
+
+    function escapeHtml(value: string): string {
+      return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function highlight(text: string, query: string): string {
+      const safe = escapeHtml(text);
+      if (!query) return safe;
+      const idx = text.toLowerCase().indexOf(query.toLowerCase());
+      if (idx < 0) return safe;
+      const before = escapeHtml(text.slice(0, idx));
+      const match = escapeHtml(text.slice(idx, idx + query.length));
+      const after = escapeHtml(text.slice(idx + query.length));
+      return `${before}<mark>${match}</mark>${after}`;
+    }
+
+    function filter(query: string): Item[] {
+      const q = query.trim().toLowerCase();
+      if (!q) return items.slice(0, MAX_RESULTS);
+      const scored: { item: Item; score: number }[] = [];
+      for (const item of items) {
+        const name = item.name.toLowerCase();
+        const group = item.group.toLowerCase();
+        const summary = item.summary.toLowerCase();
+        let score = -1;
+        if (name.startsWith(q)) score = 0;
+        else if (name.includes(q)) score = 1;
+        else if (group.includes(q)) score = 2;
+        else if (summary.includes(q)) score = 3;
+        if (score >= 0) scored.push({ item, score });
+      }
+      scored.sort((a, b) => a.score - b.score || a.item.name.localeCompare(b.item.name));
+      return scored.slice(0, MAX_RESULTS).map((s) => s.item);
+    }
+
+    function render(): void {
+      if (!list || !input) return;
+      const query = input.value;
+      current = filter(query);
+      active = 0;
+
+      if (current.length === 0) {
+        list.innerHTML = `<li class="cp-empty" role="presentation">
+          <div class="cp-empty-title">No matches</div>
+          <div class="cp-empty-sub">Nothing found for “${escapeHtml(query.trim())}”.</div>
+        </li>`;
+        if (countEl) countEl.textContent = "";
+        input.setAttribute("aria-activedescendant", "");
+        return;
+      }
+
+      list.innerHTML = current
+        .map((item, i) => {
+          const id = `cp-opt-${i}`;
+          return `<li
+            id="${id}"
+            class="cp-row${i === active ? " is-active" : ""}"
+            role="option"
+            aria-selected="${i === active}"
+            data-index="${i}"
+            data-url="${escapeHtml(item.url)}"
+          >
+            <span class="cp-row-main">
+              <span class="cp-name">${highlight(item.name, query.trim())}</span>
+              <span class="cp-summary">${highlight(item.summary, query.trim())}</span>
+            </span>
+            <span class="chip cp-chip">${escapeHtml(item.group)}</span>
+          </li>`;
+        })
+        .join("");
+
+      if (countEl) {
+        countEl.textContent = `${current.length} result${current.length === 1 ? "" : "s"}`;
+      }
+      syncActive();
+    }
+
+    function syncActive(): void {
+      if (!list || !input) return;
+      const rows = list.querySelectorAll<HTMLElement>(".cp-row");
+      rows.forEach((row, i) => {
+        const on = i === active;
+        row.classList.toggle("is-active", on);
+        row.setAttribute("aria-selected", String(on));
+        if (on) {
+          input.setAttribute("aria-activedescendant", row.id);
+          row.scrollIntoView({ block: "nearest" });
+        }
+      });
+    }
+
+    function move(delta: number): void {
+      if (current.length === 0) return;
+      active = (active + delta + current.length) % current.length;
+      syncActive();
+    }
+
+    function go(): void {
+      const item = current[active];
+      if (item) window.location.href = item.url;
+    }
+
+    function openPalette(): void {
+      if (open || !root || !input) return;
+      open = true;
+      lastFocused = document.activeElement as HTMLElement | null;
+      root.hidden = false;
+      root.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      // double rAF so the transition runs after display flips
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => root.classList.add("is-open"));
+      });
+      input.value = "";
+      render();
+      input.focus();
+    }
+
+    function closePalette(): void {
+      if (!open || !root) return;
+      open = false;
+      root.classList.remove("is-open");
+      root.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      const finish = () => {
+        if (!open) {
+          root.hidden = true;
+          if (lastFocused && document.contains(lastFocused)) lastFocused.focus();
+        }
+      };
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduce) {
+        finish();
+      } else {
+        root.addEventListener("transitionend", finish, { once: true });
+        // safety fallback if transitionend doesn't fire
+        window.setTimeout(finish, 260);
+      }
+    }
+
+    function isTyping(target: EventTarget | null): boolean {
+      const el = target as HTMLElement | null;
+      if (!el) return false;
+      const tag = el.tagName;
+      return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || el.isContentEditable;
+    }
+
+    // open triggers
+    document.addEventListener("click", (e) => {
+      const trigger = (e.target as HTMLElement).closest("[data-search-open]");
+      if (trigger) {
+        e.preventDefault();
+        openPalette();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      const isMeta = e.metaKey || e.ctrlKey;
+      if (isMeta && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        open ? closePalette() : openPalette();
+        return;
+      }
+      if (!open && e.key === "/" && !isTyping(e.target) && !isMeta && !e.altKey) {
+        e.preventDefault();
+        openPalette();
+      }
+    });
+
+    // backdrop close
+    backdrop?.addEventListener("click", closePalette);
+
+    // input behaviour
+    input?.addEventListener("input", render);
+    input?.addEventListener("keydown", (e) => {
+      switch (e.key) {
+        case "Escape":
+          e.preventDefault();
+          closePalette();
+          break;
+        case "ArrowDown":
+          e.preventDefault();
+          move(1);
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          move(-1);
+          break;
+        case "Enter":
+          e.preventDefault();
+          go();
+          break;
+      }
+    });
+
+    // pointer interaction on rows
+    list?.addEventListener("mousemove", (e) => {
+      const row = (e.target as HTMLElement).closest<HTMLElement>(".cp-row");
+      if (!row) return;
+      const idx = Number(row.dataset.index);
+      if (!Number.isNaN(idx) && idx !== active) {
+        active = idx;
+        syncActive();
+      }
+    });
+    list?.addEventListener("click", (e) => {
+      const row = (e.target as HTMLElement).closest<HTMLElement>(".cp-row");
+      if (row?.dataset.url) window.location.href = row.dataset.url;
+    });
+  }
+</script>
+
+<style>
+  .cp-search {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: grid;
+    place-items: start center;
+    padding: clamp(56px, 14vh, 160px) 16px 16px;
+  }
+  .cp-search[hidden] { display: none; }
+
+  .cp-backdrop {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--bg) 55%, rgba(8, 5, 16, 0.6));
+    backdrop-filter: blur(10px) saturate(120%);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .cp-search.is-open .cp-backdrop { opacity: 1; }
+
+  .cp-modal {
+    position: relative;
+    width: min(640px, 100%);
+    background: linear-gradient(180deg, var(--surface), var(--surface-2));
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-glow);
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-8px) scale(0.985);
+    transition: opacity 0.2s ease, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .cp-search.is-open .cp-modal {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .cp-field {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .cp-icon { color: var(--text-faint); flex: none; }
+  .cp-input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 1.05rem;
+    font-weight: 500;
+    line-height: 1.4;
+    padding: 4px 0;
+  }
+  .cp-input::placeholder { color: var(--text-faint); }
+  .cp-input:focus { outline: none; }
+  .cp-esc {
+    flex: none;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-faint);
+    background: var(--surface-3);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 3px 7px;
+  }
+
+  .cp-results {
+    list-style: none;
+    margin: 0;
+    padding: 8px;
+    max-height: min(52vh, 420px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .cp-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 11px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    border: 1px solid transparent;
+  }
+  .cp-row.is-active {
+    background: var(--primary-soft);
+    border-color: var(--primary-ring);
+  }
+  .cp-row-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+  }
+  .cp-name {
+    color: var(--text);
+    font-weight: 600;
+    font-size: 0.96rem;
+    letter-spacing: -0.01em;
+  }
+  .cp-row.is-active .cp-name { color: var(--primary-bright); }
+  .cp-summary {
+    color: var(--text-dim);
+    font-size: 0.84rem;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .cp-chip { flex: none; }
+  .cp-row :global(mark) {
+    background: transparent;
+    color: var(--primary-bright);
+    font-weight: 700;
+  }
+
+  .cp-empty {
+    padding: 36px 16px;
+    text-align: center;
+  }
+  .cp-empty-title {
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .cp-empty-sub {
+    color: var(--text-faint);
+    font-size: 0.88rem;
+  }
+
+  .cp-foot {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 18px;
+    border-top: 1px solid var(--border);
+    background: color-mix(in srgb, var(--surface) 60%, transparent);
+  }
+  .cp-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-faint);
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  .cp-count { margin-left: auto; }
+  .cp-foot kbd {
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    background: var(--surface-3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2px 6px;
+    min-width: 20px;
+    text-align: center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cp-backdrop,
+    .cp-modal {
+      transition: none;
+    }
+    .cp-modal { transform: none; }
+  }
+</style>
