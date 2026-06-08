@@ -1,0 +1,5 @@
+[registry]
+name = "compose-playground"
+
+[specs]
+catalog = "specs/catalog/catalog.spec.md"
