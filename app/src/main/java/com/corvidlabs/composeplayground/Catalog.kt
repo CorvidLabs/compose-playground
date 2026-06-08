@@ -7,6 +7,7 @@ import androidx.compose.material.icons.outlined.Animation
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.CreditCard
 import androidx.compose.material.icons.outlined.Dashboard
+import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Label
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.outlined.TextFields
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material.icons.outlined.VerticalSplit
 import androidx.compose.material.icons.outlined.ViewAgenda
+import androidx.compose.material.icons.outlined.ViewWeek
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.corvidlabs.composeplayground.demos.AnimationDemo
@@ -29,7 +31,9 @@ import com.corvidlabs.composeplayground.demos.ChipsDemo
 import com.corvidlabs.composeplayground.demos.DialogsDemo
 import com.corvidlabs.composeplayground.demos.LayoutDemo
 import com.corvidlabs.composeplayground.demos.ListsDemo
+import com.corvidlabs.composeplayground.demos.PickersDemo
 import com.corvidlabs.composeplayground.demos.ProgressDemo
+import com.corvidlabs.composeplayground.demos.SegmentedButtonsDemo
 import com.corvidlabs.composeplayground.demos.SelectionDemo
 import com.corvidlabs.composeplayground.demos.SheetsDemo
 import com.corvidlabs.composeplayground.demos.SlidersDemo
@@ -58,6 +62,8 @@ internal val demos: List<Demo> = listOf(
     Demo("textfields", "Text Fields", "Filled, outlined, password, search", Icons.Outlined.Edit) { TextFieldsDemo(it) },
     Demo("selection", "Selection Controls", "Checkbox, switch, radio", Icons.Outlined.CheckCircle) { SelectionDemo(it) },
     Demo("sliders", "Sliders", "Continuous, stepped, range", Icons.Outlined.Tune) { SlidersDemo(it) },
+    Demo("pickers", "Pickers", "Date & time pickers", Icons.Outlined.DateRange) { PickersDemo(it) },
+    Demo("segmented", "Segmented Buttons", "Single & multi choice groups", Icons.Outlined.ViewWeek) { SegmentedButtonsDemo(it) },
     Demo("chips", "Chips", "Assist, filter, input, suggestion", Icons.Outlined.Label) { ChipsDemo(it) },
     Demo("cards", "Cards & Surfaces", "Elevated, filled, outlined", Icons.Outlined.CreditCard) { CardsDemo(it) },
     Demo("progress", "Progress", "Circular & linear indicators", Icons.Outlined.Refresh) { ProgressDemo(it) },
