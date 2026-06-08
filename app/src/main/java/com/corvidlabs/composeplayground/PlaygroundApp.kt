@@ -63,10 +63,10 @@ import com.corvidlabs.composeplayground.ui.theme.ThemeMode
 /// Root navigation host: a searchable, grouped home catalog and a detail page per component.
 @Composable
 internal fun PlaygroundApp(
-    themeMode: ThemeMode,
-    onThemeModeChange: (ThemeMode) -> Unit,
-    dynamicColor: Boolean,
-    onDynamicColorChange: (Boolean) -> Unit
+    themeMode: ThemeMode = ThemeMode.System,
+    onThemeModeChange: (ThemeMode) -> Unit = {},
+    dynamicColor: Boolean = true,
+    onDynamicColorChange: (Boolean) -> Unit = {}
 ) {
     val navController = rememberNavController()
 

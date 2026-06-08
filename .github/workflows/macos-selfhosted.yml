@@ -27,7 +27,7 @@ jobs:
         run: echo "sdk.dir=$HOME/Library/Android/sdk" > local.properties
 
       - name: Run fledge CI lane (build + tests + snapshots + spec check)
-        run: fledge run ci --non-interactive
+        run: fledge lanes run ci --non-interactive
 
       - name: Upload debug APK
         if: always()
