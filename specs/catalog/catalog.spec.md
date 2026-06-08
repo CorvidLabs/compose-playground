@@ -1,9 +1,10 @@
 ---
 module: catalog
-version: 1
+version: 2
 status: active
 files:
-  - app/src/main/java/com/corvidlabs/composeplayground/Catalog.kt
+  - app/src/main/java/com/corvidlabs/composeplayground/model/Component.kt
+  - app/src/main/java/com/corvidlabs/composeplayground/catalog/Registry.kt
   - app/src/main/java/com/corvidlabs/composeplayground/PlaygroundApp.kt
   - app/src/main/java/com/corvidlabs/composeplayground/MainActivity.kt
 
@@ -15,56 +16,65 @@ depends_on: []
 
 ## Purpose
 
-The catalog module is the backbone of the Compose Playground app. It defines the
-registry of component demos and the navigation shell that lets a user browse the
-home list and drill into a per-component showcase screen. Adding a new demo is a
-two-step change: author a `@Composable (PaddingValues) -> Unit` under `demos/` and
-register one `Demo` entry here.
+The catalog is the backbone of the Compose Playground app. It defines the component
+model, the registry that aggregates every documented component from the per-group
+files, and the navigation shell — a grouped, searchable home catalog plus a detail
+page per component. Each component owns a longer description, related links, and a
+list of interactive examples that each pair a live demo with its source code.
+
+Adding a component is a two-step change: append a `Component(...)` to the relevant
+`catalog/groups/<Group>.kt` file; no central edits are required because `Registry.kt`
+aggregates the per-group lists.
 
 ## Public API
 
-The app module is intentionally `internal` (Kotlin app-module convention), so no
-symbols are exported across module boundaries. The catalog surface is:
+The app module is intentionally `internal` (Kotlin app-module convention); nothing is
+exported across module boundaries. The catalog surface is:
 
 ### Structs & Enums
 
 | Type | Description |
 |------|-------------|
-| `Demo` | Immutable descriptor for one showcase: `route`, `title`, `subtitle`, `icon`, and a `content` composable. |
+| `Component` | A documented component: `id`, `name`, `group`, `summary`, `description`, `docUrl?`, `related`, `examples`. |
+| `CodeExample` | One example: `title`, `description`, `code` string, and a `@Composable` `demo`. |
+| `ComponentGroup` | Enum of related-component sections (Actions, Communication, …, Graphics). |
 
 ### Functions
 
 | Function | Signature | Description |
 |----------|-----------|-------------|
-| `demos` | `List<Demo>` | Ordered registry of every showcase rendered on the home screen. |
-| `demoFor` | `(route: String?) -> Demo?` | Resolves a navigation route back to its `Demo`. |
-| `PlaygroundApp` | `@Composable () -> Unit` | Root `NavHost`: a `home` catalog destination plus one destination per demo route. |
+| `allComponents` | `List<Component>` | Flat registry assembled from every group file. |
+| `componentsByGroup` | `List<Pair<ComponentGroup, List<Component>>>` | Components bucketed by group, empty groups dropped. |
+| `componentFor` | `(id: String?) -> Component?` | Resolves a navigation route id to its component. |
+| `PlaygroundApp` | `@Composable () -> Unit` | Root `NavHost`: a `home` destination and a `component/{id}` detail route. |
 
 ## Invariants
 
-1. Every `Demo.route` is unique across `demos` (routes are NavHost destination keys).
-2. Every `Demo.route` has a matching `composable(route)` destination registered by `PlaygroundApp`.
-3. The home list renders exactly one row per entry in `demos`, in list order.
-4. Each demo's `content` receives the scaffold inner padding and lays out edge-to-edge beneath the top app bar.
+1. Every `Component.id` is unique across `allComponents` (ids are NavHost route keys).
+2. The home screen renders every component, grouped by `ComponentGroup` in enum order.
+3. A blank search shows the grouped catalog; a non-blank query shows a flat, filtered
+   list matching `name`, `summary`, or group label (case-insensitive).
+4. Each example renders its live `demo` above a collapsible panel showing its `code`.
+5. `related` ids that do not resolve are silently ignored (no crash, no dead row).
 
 ## Behavioral Examples
 
 ```
-Given the app is launched
-When the home screen renders
-Then it shows one tappable row per entry in `demos`
+Given the user types a query on the home screen
+When no component matches
+Then a "No components match" empty state is shown
 
-Given the user taps a catalog row
-When navigation occurs
-Then the matching demo's detail screen is pushed with a back-enabled top app bar
+Given the user opens a component detail page
+When the page renders
+Then the description, each interactive example, and a Related section are shown
 ```
 
 ## Error Cases
 
 | Error | When | Behavior |
 |-------|------|----------|
-| Unknown route | `demoFor` is called with a route not in `demos` | Returns `null` (no crash). |
-| Back from detail | User presses the top-bar back button or system back | `popBackStack()` returns to the home catalog. |
+| Unknown route id | `component/{id}` navigated with an unknown id | A "not found" screen with a back button is shown. |
+| Unresolved related id | A `related` id has no matching component | That related row is omitted. |
 
 ## Dependencies
 
@@ -76,3 +86,4 @@ Then the matching demo's detail screen is pushed with a back-enabled top app bar
 | Version | Date | Changes |
 |---------|------|---------|
 | 1 | 2026-06-08 | Initial spec for the catalog + navigation shell |
+| 2 | 2026-06-08 | Rework for the grouped/searchable gallery, component model, and detail pages |
