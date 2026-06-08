@@ -5,14 +5,19 @@ groups**, each with its own detail page, a written description, related links, a
 scrollable examples that pair a **live, interactive demo** with its **expandable source
 code**. Browse by group or search across everything.
 
-> All screenshots below are generated deterministically by the snapshot tests (Paparazzi) —
-> they are the real UI, rendered on the JVM with no device.
+> **📸 [Browse the full visual gallery → `docs/COMPONENTS.md`](docs/COMPONENTS.md)** — every one of
+> the 52 components, rendered as a screenshot. No emulator required.
+>
+> All screenshots are generated deterministically by the snapshot tests (Paparazzi) — the real
+> UI, rendered on the JVM with no device.
 
 ## Screens
 
 | Home (light) | Home (dark) |
 |:---:|:---:|
 | <img src="docs/screenshots/home-light.png" width="260"/> | <img src="docs/screenshots/home-dark.png" width="260"/> |
+
+A few component detail pages — see **[the full gallery](docs/COMPONENTS.md)** for all 52:
 
 | Button | Chip | Text Field | Date & Time Pickers |
 |:---:|:---:|:---:|:---:|

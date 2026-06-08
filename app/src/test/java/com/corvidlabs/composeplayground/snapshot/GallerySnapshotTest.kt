@@ -25,19 +25,22 @@ import com.corvidlabs.composeplayground.ui.theme.ComposePlaygroundTheme
 import org.junit.Rule
 import org.junit.Test
 
-/// Renders the catalog to deterministic PNGs (JVM, no device). Run `recordPaparazziDebug`
-/// to refresh the images, `verifyPaparazziDebug` to assert no visual regressions.
+/// Renders the entire catalog to deterministic PNGs (JVM, no device). Run
+/// `recordPaparazziDebug` to refresh the images, `verifyPaparazziDebug` to assert no
+/// visual regressions. A tall canvas lets every example on a detail screen fit; the docs
+/// pipeline trims the surrounding whitespace for display.
 class GallerySnapshotTest {
 
     @get:Rule
-    val paparazzi = Paparazzi(deviceConfig = DeviceConfig.PIXEL_6.copy(softButtons = false))
+    val paparazzi = Paparazzi(
+        deviceConfig = DeviceConfig.PIXEL_6.copy(screenHeight = 4000, softButtons = false)
+    )
 
-    /// One flagship component per group, captured as its detail screen in light theme.
+    /// Every component, captured as its full detail screen in light theme.
     @Test
     fun componentScreensLight() {
-        flagshipIds.forEach { id ->
-            val component = component(id)
-            paparazzi.snapshot(name = id) {
+        allComponents.forEach { component ->
+            paparazzi.snapshot(name = component.id) {
                 ComposePlaygroundTheme(darkTheme = false, dynamicColor = false) {
                     DetailPreview(component)
                 }
@@ -48,7 +51,7 @@ class GallerySnapshotTest {
     /// A few visually rich screens captured in dark theme.
     @Test
     fun componentScreensDark() {
-        listOf("card", "gradients", "chip").forEach { id ->
+        listOf("card", "gradients", "chip", "navigation-bar", "button").forEach { id ->
             val component = component(id)
             paparazzi.snapshot(name = "$id-dark") {
                 ComposePlaygroundTheme(darkTheme = true, dynamicColor = false) {
@@ -71,31 +74,24 @@ class GallerySnapshotTest {
 
     private fun component(id: String): Component =
         allComponents.firstOrNull { it.id == id } ?: error("Unknown component id: $id")
-
-    private companion object {
-        val flagshipIds = listOf(
-            "button", "icon-button", "progress", "card", "list-item",
-            "navigation-bar", "tabs", "chip", "slider", "pickers",
-            "text-field", "row-column", "lazy-grid", "pager",
-            "animate-as-state", "draggable", "gradients", "canvas"
-        )
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DetailPreview(component: Component) {
-    Scaffold(
-        topBar = { TopAppBar(title = { Text(component.name) }) }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Text(component.description, style = MaterialTheme.typography.bodyLarge)
-            component.examples.take(2).forEach { ExampleCard(it) }
+    Surface(color = MaterialTheme.colorScheme.background) {
+        Scaffold(
+            topBar = { TopAppBar(title = { Text(component.name) }) }
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text(component.description, style = MaterialTheme.typography.bodyLarge)
+                component.examples.forEach { ExampleCard(it) }
+            }
         }
     }
 }
