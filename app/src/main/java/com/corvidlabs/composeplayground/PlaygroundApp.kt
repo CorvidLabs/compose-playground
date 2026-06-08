@@ -37,6 +37,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
@@ -164,7 +166,8 @@ private fun GroupHeader(title: String, subtitle: String) {
         Text(
             text = title,
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.semantics { heading() }
         )
         Text(
             text = subtitle,
@@ -268,7 +271,11 @@ private fun ComponentScreen(
             if (related.isNotEmpty()) {
                 item(key = "related") {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text("Related", style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            text = "Related",
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.semantics { heading() }
+                        )
                         related.forEach { other ->
                             Surface(
                                 onClick = { onOpenRelated(other.id) },

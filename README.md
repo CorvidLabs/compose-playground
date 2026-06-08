@@ -100,6 +100,12 @@ and each `CodeExample` is a live `@Composable` demo plus the source string shown
 `catalog/groups/<Group>.kt`, then it appears automatically — `Registry.kt` aggregates the
 per-group lists, so there is no central file to edit.
 
+## Accessibility
+
+Icons carry meaningful `contentDescription`s (or `null` when decorative) and section
+headers expose heading semantics for TalkBack. See **[docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md)**
+for the full audit and conventions.
+
 ## Build & run
 
 ```bash
