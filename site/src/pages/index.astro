@@ -1,0 +1,11 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { meta } from "../lib/site";
+---
+<Layout title="Compose Playground" active="home">
+  <section class="section container">
+    <p class="eyebrow">Foundation OK</p>
+    <h1 class="gradient-text">Compose Playground</h1>
+    <p class="lead">{meta.componentCount} components · {meta.groupCount} groups · {meta.exampleCount} examples</p>
+  </section>
+</Layout>

@@ -1,0 +1,1391 @@
+{
+  "meta": {
+    "repo": "CorvidLabs/compose-playground",
+    "repoUrl": "https://github.com/CorvidLabs/compose-playground",
+    "componentCount": 52,
+    "groupCount": 11,
+    "exampleCount": 82
+  },
+  "groups": [
+    {
+      "key": "Actions",
+      "label": "Actions",
+      "blurb": "Buttons, FABs, and other ways to trigger an action",
+      "componentIds": [
+        "button",
+        "icon-button",
+        "fab"
+      ]
+    },
+    {
+      "key": "Communication",
+      "label": "Communication",
+      "blurb": "Badges, progress, snackbars, and dialogs",
+      "componentIds": [
+        "badge",
+        "progress",
+        "snackbar",
+        "dialog",
+        "tooltip"
+      ]
+    },
+    {
+      "key": "Containment",
+      "label": "Containment",
+      "blurb": "Cards, lists, sheets, and dividers that hold content",
+      "componentIds": [
+        "card",
+        "list-item",
+        "bottom-sheet",
+        "divider"
+      ]
+    },
+    {
+      "key": "Navigation",
+      "label": "Navigation",
+      "blurb": "Bars, rails, drawers, tabs, and menus",
+      "componentIds": [
+        "top-app-bar",
+        "navigation-bar",
+        "navigation-rail",
+        "navigation-drawer",
+        "tabs",
+        "menu",
+        "bottom-app-bar"
+      ]
+    },
+    {
+      "key": "Selection",
+      "label": "Selection & Inputs",
+      "blurb": "Checkboxes, switches, sliders, chips, and pickers",
+      "componentIds": [
+        "checkbox",
+        "switch",
+        "radio-button",
+        "slider",
+        "chip",
+        "segmented-button",
+        "pickers"
+      ]
+    },
+    {
+      "key": "TextInputs",
+      "label": "Text & Fields",
+      "blurb": "Typography and text entry",
+      "componentIds": [
+        "text",
+        "text-field"
+      ]
+    },
+    {
+      "key": "Layout",
+      "label": "Layout",
+      "blurb": "Row, Column, Box, and arrangement primitives",
+      "componentIds": [
+        "row-column",
+        "box",
+        "spacer",
+        "surface"
+      ]
+    },
+    {
+      "key": "Lists",
+      "label": "Lists & Grids",
+      "blurb": "Lazy lists, grids, and pagers",
+      "componentIds": [
+        "lazy-column",
+        "lazy-row",
+        "lazy-grid",
+        "staggered-grid",
+        "pager"
+      ]
+    },
+    {
+      "key": "Animation",
+      "label": "Animation",
+      "blurb": "State, visibility, content, and transitions",
+      "componentIds": [
+        "animate-as-state",
+        "animated-visibility",
+        "animated-content",
+        "crossfade",
+        "infinite-transition"
+      ]
+    },
+    {
+      "key": "Gestures",
+      "label": "Gestures & Scroll",
+      "blurb": "Click, drag, swipe, and scroll handling",
+      "componentIds": [
+        "clickable",
+        "draggable",
+        "transformable",
+        "scroll",
+        "swipe-to-dismiss",
+        "pull-to-refresh"
+      ]
+    },
+    {
+      "key": "Graphics",
+      "label": "Graphics & Drawing",
+      "blurb": "Canvas, brushes, shapes, and clipping",
+      "componentIds": [
+        "canvas",
+        "gradients",
+        "shapes",
+        "draw-modifiers"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "button",
+      "name": "Button",
+      "group": "Actions",
+      "summary": "Five emphasis levels from filled to text",
+      "description": "Buttons let people take action. Material 3 ships five emphasis levels — filled (highest), tonal, elevated, outlined, and text (lowest) — plus support for leading icons and disabled states.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/button",
+      "related": [
+        "icon-button",
+        "fab",
+        "segmented-button"
+      ],
+      "examples": [
+        {
+          "title": "Emphasis levels",
+          "description": "Pick emphasis to match a button's importance on the screen.",
+          "code": "Button(onClick = {}) { Text(\"Filled\") }\nFilledTonalButton(onClick = {}) { Text(\"Tonal\") }\nElevatedButton(onClick = {}) { Text(\"Elevated\") }\nOutlinedButton(onClick = {}) { Text(\"Outlined\") }\nTextButton(onClick = {}) { Text(\"Text\") }"
+        },
+        {
+          "title": "Leading icon",
+          "description": "",
+          "code": "Button(onClick = {}) {\n    Icon(Icons.Filled.Add, null, Modifier.size(18.dp))\n    Text(\"  Add item\")\n}"
+        },
+        {
+          "title": "Disabled",
+          "description": "",
+          "code": "Button(onClick = {}, enabled = false) { Text(\"Filled\") }\nOutlinedButton(onClick = {}, enabled = false) { Text(\"Outlined\") }"
+        }
+      ],
+      "screenshot": "screenshots/button.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/ActionsGroup.kt"
+    },
+    {
+      "id": "icon-button",
+      "name": "Icon Button",
+      "group": "Actions",
+      "summary": "Standard, filled, outlined, and toggle icon buttons",
+      "description": "Icon buttons trigger a single action with a compact, recognizable glyph. They come in standard, filled, and outlined styles, plus a toggleable variant.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/icon-button",
+      "related": [
+        "button",
+        "fab"
+      ],
+      "examples": [
+        {
+          "title": "Styles",
+          "description": "",
+          "code": "IconButton(onClick = {}) { Icon(Icons.Filled.Favorite, \"Favorite\") }\nFilledIconButton(onClick = {}) { Icon(Icons.Filled.Share, \"Share\") }\nOutlinedIconButton(onClick = {}) { Icon(Icons.Filled.Edit, \"Edit\") }"
+        },
+        {
+          "title": "Toggle",
+          "description": "An IconToggleButton flips between checked and unchecked.",
+          "code": "var checked by remember { mutableStateOf(false) }\nIconToggleButton(checked = checked, onCheckedChange = { checked = it }) {\n    Icon(Icons.Filled.Favorite, if (checked) \"Liked\" else \"Not liked\")\n}"
+        }
+      ],
+      "screenshot": "screenshots/icon-button.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/ActionsGroup.kt"
+    },
+    {
+      "id": "fab",
+      "name": "Floating Action Button",
+      "group": "Actions",
+      "summary": "Small, regular, large, and extended FABs",
+      "description": "The FAB represents the primary action of a screen. It comes in small, regular, and large sizes, plus an extended form that pairs an icon with a label.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/fab",
+      "related": [
+        "button"
+      ],
+      "examples": [
+        {
+          "title": "Sizes & extended",
+          "description": "",
+          "code": "SmallFloatingActionButton(onClick = {}) { Icon(Icons.Filled.Add, \"Add\") }\nFloatingActionButton(onClick = {}) { Icon(Icons.Filled.Add, \"Add\") }\nLargeFloatingActionButton(onClick = {}) { Icon(Icons.Filled.Add, \"Add\") }\nExtendedFloatingActionButton(\n    onClick = {},\n    icon = { Icon(Icons.Filled.Add, null) },\n    text = { Text(\"Compose\") }\n)"
+        }
+      ],
+      "screenshot": "screenshots/fab.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/ActionsGroup.kt"
+    },
+    {
+      "id": "badge",
+      "name": "Badge",
+      "group": "Communication",
+      "summary": "Dot, count, and overflow badges anchored to an icon",
+      "description": "A Badge draws attention to a small piece of dynamic status — an unread count or a simple dot — on top of another element. Wrap an anchor in a BadgedBox and supply the badge; an empty Badge renders as a dot, while content renders as a label.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/badge",
+      "related": [
+        "navigation-bar",
+        "progress"
+      ],
+      "examples": [
+        {
+          "title": "Dot, count & overflow",
+          "description": "An empty Badge is a dot; pass Text for a count, capping large values at 99+.",
+          "code": "BadgedBox(badge = { Badge() }) {\n    Icon(Icons.Filled.Email, contentDescription = \"Mail\")\n}\nBadgedBox(badge = { Badge { Text(\"8\") } }) {\n    Icon(Icons.Filled.Email, contentDescription = \"Mail\")\n}\nBadgedBox(badge = { Badge { Text(\"99+\") } }) {\n    Icon(Icons.Filled.Email, contentDescription = \"Mail\")\n}"
+        },
+        {
+          "title": "Live counter",
+          "description": "Drive the badge from state and hide it when the count is zero.",
+          "code": "var count by remember { mutableIntStateOf(0) }\nBadgedBox(badge = { if (count > 0) Badge { Text(\"$count\") } }) {\n    Icon(Icons.Filled.Email, contentDescription = \"Mail\")\n}\nButton(onClick = { count++ }) { Text(\"Add\") }\nOutlinedButton(onClick = { count = 0 }) { Text(\"Clear\") }"
+        }
+      ],
+      "screenshot": "screenshots/badge.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/CommunicationGroup.kt"
+    },
+    {
+      "id": "progress",
+      "name": "Progress Indicators",
+      "group": "Communication",
+      "summary": "Indeterminate and determinate circular & linear progress",
+      "description": "Progress indicators express an unspecified wait time (indeterminate) or how far along a known operation is (determinate). Both circular and linear variants are available; pass a progress lambda for the determinate form.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/progress",
+      "related": [
+        "snackbar",
+        "badge"
+      ],
+      "examples": [
+        {
+          "title": "Indeterminate",
+          "description": "Omit progress for a continuous, looping animation.",
+          "code": "CircularProgressIndicator()\nLinearProgressIndicator()"
+        },
+        {
+          "title": "Determinate",
+          "description": "Animate the progress value and surface it as a percentage.",
+          "code": "var target by remember { mutableStateOf(0f) }\nval progress by animateFloatAsState(targetValue = target, label = \"progress\")\nLinearProgressIndicator(progress = { progress }, modifier = Modifier.fillMaxWidth())\nText(\"${(progress * 100).toInt()}%\")\nButton(onClick = { target = (target + 0.2f).coerceAtMost(1f) }) { Text(\"Advance\") }\nOutlinedButton(onClick = { target = 0f }) { Text(\"Reset\") }"
+        }
+      ],
+      "screenshot": "screenshots/progress.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/CommunicationGroup.kt"
+    },
+    {
+      "id": "snackbar",
+      "name": "Snackbar",
+      "group": "Communication",
+      "summary": "Brief, transient messages with an optional action",
+      "description": "A Snackbar shows a short, low-priority message at the bottom of the screen. Host it with a SnackbarHost bound to a SnackbarHostState, then call showSnackbar from a coroutine. An action label lets people respond, and the returned result tells you whether they tapped it.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/snackbar",
+      "related": [
+        "progress",
+        "dialog"
+      ],
+      "examples": [
+        {
+          "title": "Show a message",
+          "description": "Launch showSnackbar from a coroutine scope tied to the composition.",
+          "code": "val hostState = remember { SnackbarHostState() }\nval scope = rememberCoroutineScope()\nBox {\n    Button(onClick = {\n        scope.launch { hostState.showSnackbar(\"Message sent\") }\n    }) { Text(\"Send\") }\n    SnackbarHost(hostState, Modifier.align(Alignment.BottomCenter))\n}"
+        },
+        {
+          "title": "Action & result",
+          "description": "Read the SnackbarResult to know whether the action was tapped.",
+          "code": "scope.launch {\n    val result = hostState.showSnackbar(\n        message = \"Item deleted\",\n        actionLabel = \"Undo\"\n    )\n    if (result == SnackbarResult.ActionPerformed) {\n        // restore the item\n    }\n}"
+        }
+      ],
+      "screenshot": "screenshots/snackbar.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/CommunicationGroup.kt"
+    },
+    {
+      "id": "dialog",
+      "name": "Dialog",
+      "group": "Communication",
+      "summary": "AlertDialog confirmations and fully custom dialogs",
+      "description": "Dialogs interrupt to request a decision or show critical information. AlertDialog gives you a ready-made layout with icon, title, body, and confirm/dismiss buttons, while the lower-level Dialog lets you place any content — such as a Card — in a modal window.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/dialog",
+      "related": [
+        "bottom-sheet",
+        "snackbar"
+      ],
+      "examples": [
+        {
+          "title": "AlertDialog",
+          "description": "A structured confirmation with confirm and dismiss buttons.",
+          "code": "var open by remember { mutableStateOf(false) }\nButton(onClick = { open = true }) { Text(\"Delete\") }\nif (open) {\n    AlertDialog(\n        onDismissRequest = { open = false },\n        icon = { Icon(Icons.Filled.Delete, contentDescription = null) },\n        title = { Text(\"Delete item?\") },\n        text = { Text(\"This action cannot be undone.\") },\n        confirmButton = { TextButton(onClick = { open = false }) { Text(\"Delete\") } },\n        dismissButton = { TextButton(onClick = { open = false }) { Text(\"Cancel\") } }\n    )\n}"
+        },
+        {
+          "title": "Custom dialog",
+          "description": "Wrap any content — here a Card — in the low-level Dialog.",
+          "code": "var open by remember { mutableStateOf(false) }\nButton(onClick = { open = true }) { Text(\"Show card\") }\nif (open) {\n    Dialog(onDismissRequest = { open = false }) {\n        Card {\n            Column(Modifier.padding(24.dp)) {\n                Text(\"Custom content\")\n                TextButton(onClick = { open = false }) { Text(\"Close\") }\n            }\n        }\n    }\n}"
+        }
+      ],
+      "screenshot": "screenshots/dialog.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/CommunicationGroup.kt"
+    },
+    {
+      "id": "tooltip",
+      "name": "Tooltip",
+      "group": "Communication",
+      "summary": "Plain tooltips anchored to an interactive element",
+      "description": "Tooltips reveal a brief label for an element on long-press or hover. A TooltipBox positions a PlainTooltip relative to its anchor and is driven by a TooltipState that controls when the tooltip appears.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/tooltip",
+      "related": [
+        "icon-button",
+        "badge"
+      ],
+      "examples": [
+        {
+          "title": "Plain tooltip",
+          "description": "Anchor a PlainTooltip to an IconButton via TooltipBox.",
+          "code": "val state = rememberTooltipState()\nTooltipBox(\n    positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),\n    tooltip = { PlainTooltip { Text(\"More info\") } },\n    state = state\n) {\n    IconButton(onClick = {}) {\n        Icon(Icons.Filled.Info, contentDescription = \"Info\")\n    }\n}"
+        }
+      ],
+      "screenshot": "screenshots/tooltip.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/CommunicationGroup.kt"
+    },
+    {
+      "id": "card",
+      "name": "Card",
+      "group": "Containment",
+      "summary": "Filled, elevated, and outlined containers for grouped content",
+      "description": "Cards hold a single coherent piece of content and actions. Material 3 offers three styles — filled, elevated, and outlined — and cards can be made clickable to act as tappable list items.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/card",
+      "related": [
+        "list-item"
+      ],
+      "examples": [
+        {
+          "title": "Styles",
+          "description": "Filled, elevated, and outlined share the same content slot.",
+          "code": "Card { CardBody(\"Filled\", \"A tonal surface that lifts content gently.\") }\nElevatedCard { CardBody(\"Elevated\", \"Adds a shadow for extra separation.\") }\nOutlinedCard { CardBody(\"Outlined\", \"A hairline border instead of a shadow.\") }"
+        },
+        {
+          "title": "Clickable card",
+          "description": "Pass onClick to make the whole card a tappable row.",
+          "code": "Card(onClick = {}) {\n    Row(\n        modifier = Modifier.fillMaxWidth().padding(16.dp),\n        verticalAlignment = Alignment.CenterVertically\n    ) {\n        Surface(shape = CircleShape, color = MaterialTheme.colorScheme.primaryContainer) {\n            Icon(Icons.Filled.Person, null, Modifier.padding(8.dp))\n        }\n        Column(Modifier.padding(start = 12.dp)) {\n            Text(\"Ada Lovelace\")\n            Text(\"Tap to view profile\")\n        }\n    }\n}"
+        }
+      ],
+      "screenshot": "screenshots/card.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/ContainmentGroup.kt"
+    },
+    {
+      "id": "list-item",
+      "name": "List Item",
+      "group": "Containment",
+      "summary": "Headline, supporting text, and leading content rows",
+      "description": "ListItem renders a single Material 3 list row with slots for headline, supporting text, and leading or trailing content. Wrap a column of them in a tonal Surface and separate them with dividers to build a settings-style list.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/list-item",
+      "related": [
+        "card",
+        "lazy-column"
+      ],
+      "examples": [
+        {
+          "title": "List with dividers",
+          "description": "",
+          "code": "Surface(tonalElevation = 2.dp) {\n    Column {\n        ListItem(\n            headlineContent = { Text(\"Account\") },\n            supportingContent = { Text(\"Manage your profile\") },\n            leadingContent = { Icon(Icons.Filled.AccountCircle, null) }\n        )\n        HorizontalDivider()\n        ListItem(\n            headlineContent = { Text(\"Settings\") },\n            supportingContent = { Text(\"Theme and notifications\") },\n            leadingContent = { Icon(Icons.Filled.Settings, null) }\n        )\n    }\n}"
+        }
+      ],
+      "screenshot": "screenshots/list-item.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/ContainmentGroup.kt"
+    },
+    {
+      "id": "bottom-sheet",
+      "name": "Modal Bottom Sheet",
+      "group": "Containment",
+      "summary": "A sheet that slides up from the bottom edge",
+      "description": "A modal bottom sheet presents a focused set of actions anchored to the bottom of the screen, dimming the content behind it. Drive it with rememberModalBottomSheetState and hide it before clearing the open flag for a smooth exit animation.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/bottom-sheets",
+      "related": [
+        "dialog"
+      ],
+      "examples": [
+        {
+          "title": "Open and dismiss",
+          "description": "A Button opens the sheet; selecting an action animates it closed.",
+          "code": "val sheetState = rememberModalBottomSheetState()\nval scope = rememberCoroutineScope()\nvar open by remember { mutableStateOf(false) }\n\nButton(onClick = { open = true }) { Text(\"Show actions\") }\n\nif (open) {\n    ModalBottomSheet(onDismissRequest = { open = false }, sheetState = sheetState) {\n        ListItem(\n            headlineContent = { Text(\"Share\") },\n            leadingContent = { Icon(Icons.Filled.Share, null) },\n            modifier = Modifier.clickable {\n                scope.launch { sheetState.hide() }\n                    .invokeOnCompletion { open = false }\n            }\n        )\n    }\n}"
+        }
+      ],
+      "screenshot": "screenshots/bottom-sheet.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/ContainmentGroup.kt"
+    },
+    {
+      "id": "divider",
+      "name": "Divider",
+      "group": "Containment",
+      "summary": "Horizontal and vertical thin separating lines",
+      "description": "Dividers are thin lines that group content into sections. Use a HorizontalDivider between stacked items and a VerticalDivider inside a fixed-height row to separate side-by-side content.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/divider",
+      "related": [
+        "list-item"
+      ],
+      "examples": [
+        {
+          "title": "Horizontal",
+          "description": "",
+          "code": "Column {\n    Text(\"Above the line\")\n    HorizontalDivider()\n    Text(\"Below the line\")\n}"
+        },
+        {
+          "title": "Vertical",
+          "description": "A VerticalDivider needs a bounded height from its parent row.",
+          "code": "Row(modifier = Modifier.height(24.dp)) {\n    Text(\"Left\")\n    VerticalDivider()\n    Text(\"Right\")\n}"
+        }
+      ],
+      "screenshot": "screenshots/divider.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/ContainmentGroup.kt"
+    },
+    {
+      "id": "top-app-bar",
+      "name": "Top App Bar",
+      "group": "Navigation",
+      "summary": "Small and center-aligned bars with navigation and actions",
+      "description": "Top app bars display a screen title plus a leading navigation icon and trailing action icons. Material 3 ships small, center-aligned, medium, and large variants; the small and center-aligned forms are shown here.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/app-bars",
+      "related": [
+        "bottom-app-bar",
+        "tabs",
+        "navigation-drawer"
+      ],
+      "examples": [
+        {
+          "title": "Small top app bar",
+          "description": "A title aligned to the start, with navigation and action icons.",
+          "code": "TopAppBar(\n    title = { Text(\"Inbox\") },\n    navigationIcon = {\n        IconButton(onClick = {}) { Icon(Icons.Filled.Menu, \"Open menu\") }\n    },\n    actions = {\n        IconButton(onClick = {}) { Icon(Icons.Filled.Search, \"Search\") }\n        IconButton(onClick = {}) { Icon(Icons.Filled.MoreVert, \"More\") }\n    }\n)"
+        },
+        {
+          "title": "Center-aligned top app bar",
+          "description": "The title is centered, ideal for top-level screens.",
+          "code": "CenterAlignedTopAppBar(\n    title = { Text(\"Home\") },\n    navigationIcon = {\n        IconButton(onClick = {}) { Icon(Icons.AutoMirrored.Filled.ArrowBack, \"Back\") }\n    },\n    actions = {\n        IconButton(onClick = {}) { Icon(Icons.Filled.Settings, \"Settings\") }\n    }\n)"
+        }
+      ],
+      "screenshot": "screenshots/top-app-bar.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/NavigationGroup.kt"
+    },
+    {
+      "id": "navigation-bar",
+      "name": "Navigation Bar",
+      "group": "Navigation",
+      "summary": "Bottom bar with three to five destinations",
+      "description": "A navigation bar lets people switch between top-level destinations from the bottom of the screen. Each item carries an icon and a label, and exactly one is selected at a time.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/navigation-bar",
+      "related": [
+        "navigation-rail",
+        "navigation-drawer",
+        "bottom-app-bar"
+      ],
+      "examples": [
+        {
+          "title": "Four destinations",
+          "description": "Tap an item to move the selection.",
+          "code": "var selected by remember { mutableIntStateOf(0) }\nNavigationBar {\n    NavigationBarItem(\n        selected = selected == 0,\n        onClick = { selected = 0 },\n        icon = { Icon(Icons.Filled.Home, \"Home\") },\n        label = { Text(\"Home\") }\n    )\n    // Search, Favorites, Profile ...\n}"
+        }
+      ],
+      "screenshot": "screenshots/navigation-bar.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/NavigationGroup.kt"
+    },
+    {
+      "id": "navigation-rail",
+      "name": "Navigation Rail",
+      "group": "Navigation",
+      "summary": "Vertical destination switcher for wide screens",
+      "description": "A navigation rail places top-level destinations along the side of the screen, a common pattern on tablets and other large displays. Like the navigation bar, exactly one destination is selected at a time.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/navigation-rail",
+      "related": [
+        "navigation-bar",
+        "navigation-drawer"
+      ],
+      "examples": [
+        {
+          "title": "Three destinations",
+          "description": "The rail is anchored to the start edge inside a fixed-height box.",
+          "code": "var selected by remember { mutableIntStateOf(0) }\nNavigationRail {\n    NavigationRailItem(\n        selected = selected == 0,\n        onClick = { selected = 0 },\n        icon = { Icon(Icons.Filled.Home, \"Home\") },\n        label = { Text(\"Home\") }\n    )\n    // Search, Profile ...\n}"
+        },
+        {
+          "title": "Adaptive: bar ↔ rail",
+          "description": "A NavigationBar in compact width swaps to a NavigationRail when ",
+          "code": "// Real apps read this from calculateWindowSizeClass(activity):\n//   val widthClass = windowSizeClass.widthSizeClass\n//   val expanded = widthClass != WindowWidthSizeClass.Compact\nvar selected by remember { mutableIntStateOf(0) }\nif (expanded) {\n    Row {\n        NavigationRail {\n            NavigationRailItem(\n                selected = selected == 0,\n                onClick = { selected = 0 },\n                icon = { Icon(Icons.Filled.Home, \"Home\") },\n                label = { Text(\"Home\") }\n            )\n            // Search, Profile ...\n        }\n        Box(Modifier.weight(1f)) { /* content */ }\n    }\n} else {\n    Column {\n        Box(Modifier.weight(1f)) { /* content */ }\n        NavigationBar {\n            NavigationBarItem(\n                selected = selected == 0,\n                onClick = { selected = 0 },\n                icon = { Icon(Icons.Filled.Home, \"Home\") },\n                label = { Text(\"Home\") }\n            )\n            // Search, Profile ...\n        }\n    }\n}"
+        }
+      ],
+      "screenshot": "screenshots/navigation-rail.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/NavigationGroup.kt"
+    },
+    {
+      "id": "navigation-drawer",
+      "name": "Navigation Drawer",
+      "group": "Navigation",
+      "summary": "A drawer sheet of destination items",
+      "description": "A navigation drawer presents destinations in a vertical sheet that usually slides in from the side. Shown here is the drawer sheet content on its own — a column of NavigationDrawerItem entries — without the full sliding overlay.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/drawer",
+      "related": [
+        "navigation-bar",
+        "navigation-rail",
+        "top-app-bar"
+      ],
+      "examples": [
+        {
+          "title": "Drawer sheet content",
+          "description": "Each item pairs a label and icon, with one selected.",
+          "code": "ModalDrawerSheet {\n    NavigationDrawerItem(\n        label = { Text(\"Home\") },\n        icon = { Icon(Icons.Filled.Home, null) },\n        selected = true,\n        onClick = {},\n        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)\n    )\n    // Favorites, Profile ...\n}"
+        }
+      ],
+      "screenshot": "screenshots/navigation-drawer.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/NavigationGroup.kt"
+    },
+    {
+      "id": "tabs",
+      "name": "Tabs",
+      "group": "Navigation",
+      "summary": "Fixed and scrollable tab rows",
+      "description": "Tabs organize content across parallel sections of a screen. A fixed TabRow splits the available width evenly, while a ScrollableTabRow keeps each tab at its natural width and scrolls horizontally when they overflow.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/tabs",
+      "related": [
+        "top-app-bar",
+        "navigation-bar"
+      ],
+      "examples": [
+        {
+          "title": "Fixed tabs",
+          "description": "Three evenly spaced tabs with content below.",
+          "code": "var selected by remember { mutableIntStateOf(0) }\nval titles = listOf(\"Overview\", \"Specs\", \"Reviews\")\nTabRow(selectedTabIndex = selected) {\n    titles.forEachIndexed { index, title ->\n        Tab(\n            selected = selected == index,\n            onClick = { selected = index },\n            text = { Text(title) }\n        )\n    }\n}\nText(\"Showing: ${titles[selected]}\")"
+        },
+        {
+          "title": "Scrollable tabs",
+          "description": "Many tabs scroll horizontally rather than compressing.",
+          "code": "var selected by remember { mutableIntStateOf(0) }\nval titles = listOf(\"Daily\", \"Weekly\", \"Monthly\", \"Quarterly\", \"Yearly\")\nScrollableTabRow(selectedTabIndex = selected) {\n    titles.forEachIndexed { index, title ->\n        Tab(\n            selected = selected == index,\n            onClick = { selected = index },\n            text = { Text(title) }\n        )\n    }\n}\nText(\"Showing: ${titles[selected]}\")"
+        }
+      ],
+      "screenshot": "screenshots/tabs.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/NavigationGroup.kt"
+    },
+    {
+      "id": "menu",
+      "name": "Menu",
+      "group": "Navigation",
+      "summary": "Dropdown menus and exposed dropdown selection",
+      "description": "Menus display a list of choices on a temporary surface. A DropdownMenu anchors to a trigger such as a button, while an ExposedDropdownMenuBox pairs a text field with a menu so people can pick a value.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/menu",
+      "related": [
+        "button",
+        "tabs"
+      ],
+      "examples": [
+        {
+          "title": "Dropdown menu",
+          "description": "A menu anchored to a button via an expanded flag.",
+          "code": "var expanded by remember { mutableStateOf(false) }\nBox {\n    Button(onClick = { expanded = true }) { Text(\"Options\") }\n    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {\n        DropdownMenuItem(text = { Text(\"Edit\") }, onClick = { expanded = false })\n        DropdownMenuItem(text = { Text(\"Delete\") }, onClick = { expanded = false })\n    }\n}"
+        },
+        {
+          "title": "Exposed dropdown",
+          "description": "A read-only text field reveals a menu of selectable values.",
+          "code": "val options = listOf(\"Low\", \"Medium\", \"High\")\nvar expanded by remember { mutableStateOf(false) }\nvar selected by remember { mutableStateOf(options[0]) }\nExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }) {\n    OutlinedTextField(\n        value = selected,\n        onValueChange = {},\n        readOnly = true,\n        label = { Text(\"Priority\") },\n        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },\n        modifier = Modifier.menuAnchor()\n    )\n    ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {\n        options.forEach { option ->\n            DropdownMenuItem(\n                text = { Text(option) },\n                onClick = { selected = option; expanded = false }\n            )\n        }\n    }\n}"
+        }
+      ],
+      "screenshot": "screenshots/menu.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/NavigationGroup.kt"
+    },
+    {
+      "id": "bottom-app-bar",
+      "name": "Bottom App Bar",
+      "group": "Navigation",
+      "summary": "Bottom bar pairing actions with a FAB",
+      "description": "A bottom app bar groups a small set of action icons at the bottom of the screen and commonly hosts a floating action button for the screen's primary action.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/app-bars",
+      "related": [
+        "top-app-bar",
+        "navigation-bar",
+        "fab"
+      ],
+      "examples": [
+        {
+          "title": "Actions with a FAB",
+          "description": "Leading action icons plus a trailing floating action button.",
+          "code": "BottomAppBar(\n    actions = {\n        IconButton(onClick = {}) { Icon(Icons.Filled.Search, \"Search\") }\n        IconButton(onClick = {}) { Icon(Icons.Filled.Favorite, \"Favorite\") }\n        IconButton(onClick = {}) { Icon(Icons.Filled.Settings, \"Settings\") }\n    },\n    floatingActionButton = {\n        FloatingActionButton(onClick = {}) { Icon(Icons.Filled.Add, \"Add\") }\n    }\n)"
+        }
+      ],
+      "screenshot": "screenshots/bottom-app-bar.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/NavigationGroup.kt"
+    },
+    {
+      "id": "checkbox",
+      "name": "Checkbox",
+      "group": "Selection",
+      "summary": "Single, grouped, and tri-state parent checkboxes",
+      "description": "Checkboxes let people select one or more items from a set, or turn a single option on or off. A TriStateCheckbox can act as a parent that reflects and toggles a group of child checkboxes.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/checkbox",
+      "related": [
+        "switch",
+        "radio-button"
+      ],
+      "examples": [
+        {
+          "title": "Parent / child group",
+          "description": "A TriStateCheckbox shows On, Off, or Indeterminate for its children.",
+          "code": "val children = remember { mutableStateListOf(true, false, false) }\nval parentState = when {\n    children.all { it } -> ToggleableState.On\n    children.none { it } -> ToggleableState.Off\n    else -> ToggleableState.Indeterminate\n}\nTriStateCheckbox(\n    state = parentState,\n    onClick = {\n        val target = parentState != ToggleableState.On\n        for (i in children.indices) children[i] = target\n    }\n)\nchildren.forEachIndexed { index, checked ->\n    Checkbox(checked = checked, onCheckedChange = { children[index] = it })\n}"
+        }
+      ],
+      "screenshot": "screenshots/checkbox.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/SelectionGroup.kt"
+    },
+    {
+      "id": "switch",
+      "name": "Switch",
+      "group": "Selection",
+      "summary": "Toggle a single setting on or off",
+      "description": "Switches toggle the state of a single item on or off. They are the preferred control for settings rows where the change takes effect immediately.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/switch",
+      "related": [
+        "checkbox",
+        "radio-button"
+      ],
+      "examples": [
+        {
+          "title": "Settings rows",
+          "description": "Pair each switch with a label in a Row.",
+          "code": "var wifi by remember { mutableStateOf(true) }\nRow(verticalAlignment = Alignment.CenterVertically) {\n    Text(\"Wi-Fi\", modifier = Modifier.weight(1f))\n    Switch(checked = wifi, onCheckedChange = { wifi = it })\n}"
+        }
+      ],
+      "screenshot": "screenshots/switch.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/SelectionGroup.kt"
+    },
+    {
+      "id": "radio-button",
+      "name": "Radio Button",
+      "group": "Selection",
+      "summary": "Pick exactly one option from a set",
+      "description": "Radio buttons let people select a single option from a mutually exclusive set. Wrap each row in Modifier.selectable so the whole row is tappable and accessible.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/radio-button",
+      "related": [
+        "checkbox",
+        "switch"
+      ],
+      "examples": [
+        {
+          "title": "Selectable group",
+          "description": "Make the entire row toggle the selection, not just the dot.",
+          "code": "val options = listOf(\"Standard\", \"Priority\", \"Express\")\nvar selected by remember { mutableStateOf(options.first()) }\noptions.forEach { option ->\n    Row(\n        modifier = Modifier.selectable(\n            selected = option == selected,\n            onClick = { selected = option }\n        ),\n        verticalAlignment = Alignment.CenterVertically\n    ) {\n        RadioButton(selected = option == selected, onClick = null)\n        Text(option)\n    }\n}"
+        }
+      ],
+      "screenshot": "screenshots/radio-button.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/SelectionGroup.kt"
+    },
+    {
+      "id": "slider",
+      "name": "Slider",
+      "group": "Selection",
+      "summary": "Continuous, stepped, and range sliders",
+      "description": "Sliders let people select a value or range from along a track. They support continuous motion, discrete steps within a range, and a two-thumb range variant.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/slider",
+      "related": [
+        "segmented-button"
+      ],
+      "examples": [
+        {
+          "title": "Continuous",
+          "description": "A free-moving thumb across the default 0..1 range.",
+          "code": "var value by remember { mutableStateOf(0.5f) }\nSlider(value = value, onValueChange = { value = it })\nText(\"Value: ${(value * 100).roundToInt()}%\")"
+        },
+        {
+          "title": "Stepped",
+          "description": "steps places discrete tick marks inside the value range.",
+          "code": "var value by remember { mutableStateOf(2f) }\nSlider(\n    value = value,\n    onValueChange = { value = it },\n    valueRange = 0f..10f,\n    steps = 9\n)\nText(\"Step: ${value.roundToInt()}\")"
+        },
+        {
+          "title": "Range",
+          "description": "A RangeSlider exposes two thumbs for a lower and upper bound.",
+          "code": "var range by remember { mutableStateOf(20f..80f) }\nRangeSlider(value = range, onValueChange = { range = it }, valueRange = 0f..100f)\nText(\"From ${range.start.roundToInt()} to ${range.endInclusive.roundToInt()}\")"
+        }
+      ],
+      "screenshot": "screenshots/slider.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/SelectionGroup.kt"
+    },
+    {
+      "id": "chip",
+      "name": "Chip",
+      "group": "Selection",
+      "summary": "Assist, filter, input, and suggestion chips",
+      "description": "Chips help people enter information, make selections, filter content, or trigger actions. Material 3 ships four kinds: assist, filter, input, and suggestion.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/chip",
+      "related": [
+        "button",
+        "segmented-button"
+      ],
+      "examples": [
+        {
+          "title": "Assist",
+          "description": "An AssistChip triggers an action related to nearby content.",
+          "code": "AssistChip(\n    onClick = {},\n    label = { Text(\"Settings\") },\n    leadingIcon = { Icon(Icons.Filled.Settings, null, Modifier.size(18.dp)) }\n)"
+        },
+        {
+          "title": "Filter (multi-select)",
+          "description": "FilterChips reflect selection state and can be toggled independently.",
+          "code": "val filters = listOf(\"Vegetarian\", \"Vegan\", \"Gluten-free\", \"Spicy\")\nval selected = remember { mutableStateMapOf<String, Boolean>() }\nFlowRow {\n    filters.forEach { filter ->\n        val isOn = selected[filter] == true\n        FilterChip(\n            selected = isOn,\n            onClick = { selected[filter] = !isOn },\n            label = { Text(filter) },\n            leadingIcon = if (isOn) {\n                { Icon(Icons.Filled.Check, null, Modifier.size(18.dp)) }\n            } else null\n        )\n    }\n}"
+        },
+        {
+          "title": "Input (removable)",
+          "description": "An InputChip represents a discrete entry the user can dismiss.",
+          "code": "var visible by remember { mutableStateOf(true) }\nif (visible) {\n    InputChip(\n        selected = false,\n        onClick = {},\n        label = { Text(\"alice@example.com\") },\n        trailingIcon = {\n            Icon(\n                Icons.Filled.Close,\n                \"Remove\",\n                Modifier.size(18.dp).selectable(false) { visible = false }\n            )\n        }\n    )\n}"
+        },
+        {
+          "title": "Suggestion",
+          "description": "SuggestionChips surface dynamically generated recommendations.",
+          "code": "Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {\n    SuggestionChip(onClick = {}, label = { Text(\"Sounds good\") })\n    SuggestionChip(onClick = {}, label = { Text(\"On my way\") })\n}"
+        }
+      ],
+      "screenshot": "screenshots/chip.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/SelectionGroup.kt"
+    },
+    {
+      "id": "segmented-button",
+      "name": "Segmented Button",
+      "group": "Selection",
+      "summary": "Single- and multi-choice segmented selection",
+      "description": "Segmented buttons group related options in a compact toggle. Use single choice for mutually exclusive options and multi choice for independent toggles.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/segmented-button",
+      "related": [
+        "button",
+        "chip",
+        "slider"
+      ],
+      "examples": [
+        {
+          "title": "Single choice",
+          "description": "Exactly one segment is selected at a time.",
+          "code": "val options = listOf(\"Day\", \"Week\", \"Month\")\nvar selectedIndex by remember { mutableStateOf(0) }\nSingleChoiceSegmentedButtonRow {\n    options.forEachIndexed { index, label ->\n        SegmentedButton(\n            selected = index == selectedIndex,\n            onClick = { selectedIndex = index },\n            shape = SegmentedButtonDefaults.itemShape(index, options.size)\n        ) { Text(label) }\n    }\n}"
+        },
+        {
+          "title": "Multi choice",
+          "description": "Any combination of segments can be active at once.",
+          "code": "val options = listOf(\"Bold\", \"Italic\", \"Underline\")\nval checked = remember { mutableStateListOf(false, false, false) }\nMultiChoiceSegmentedButtonRow {\n    options.forEachIndexed { index, label ->\n        SegmentedButton(\n            checked = checked[index],\n            onCheckedChange = { checked[index] = it },\n            shape = SegmentedButtonDefaults.itemShape(index, options.size)\n        ) { Text(label) }\n    }\n}"
+        }
+      ],
+      "screenshot": "screenshots/segmented-button.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/SelectionGroup.kt"
+    },
+    {
+      "id": "pickers",
+      "name": "Date & Time Pickers",
+      "group": "Selection",
+      "summary": "Inline date picker, date dialog, and time picker",
+      "description": "Pickers let people choose a date or time. Material 3 provides an inline DatePicker, a DatePickerDialog for modal selection, and a TimePicker with a clock face.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/datepickers",
+      "related": [
+        "dialog",
+        "switch"
+      ],
+      "examples": [
+        {
+          "title": "Inline date picker",
+          "description": "Embed a DatePicker directly in the layout.",
+          "code": "val state = rememberDatePickerState()\nDatePicker(state = state)"
+        },
+        {
+          "title": "Date picker dialog",
+          "description": "A Button opens a modal dialog and shows the picked date.",
+          "code": "val state = rememberDatePickerState()\nvar open by remember { mutableStateOf(false) }\nButton(onClick = { open = true }) { Text(\"Pick a date\") }\nText(formatDate(state.selectedDateMillis))\nif (open) {\n    DatePickerDialog(\n        onDismissRequest = { open = false },\n        confirmButton = { TextButton(onClick = { open = false }) { Text(\"OK\") } }\n    ) { DatePicker(state = state) }\n}"
+        },
+        {
+          "title": "Time picker",
+          "description": "A TimePicker with a clock face reflects the chosen time.",
+          "code": "val state = rememberTimePickerState(initialHour = 9, initialMinute = 30)\nTimePicker(state = state)\nText(String.format(Locale.US, \"%02d:%02d\", state.hour, state.minute))"
+        }
+      ],
+      "screenshot": "screenshots/pickers.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/SelectionGroup.kt"
+    },
+    {
+      "id": "text",
+      "name": "Text & Typography",
+      "group": "TextInputs",
+      "summary": "Type scale, annotated spans, overflow, and selection",
+      "description": "Text renders strings using the Material 3 type scale. It supports rich, inline styling via AnnotatedString, truncation with TextOverflow, and user text selection through SelectionContainer.",
+      "docUrl": "https://developer.android.com/jetpack/compose/text",
+      "related": [
+        "text-field"
+      ],
+      "examples": [
+        {
+          "title": "Type scale",
+          "description": "The Material 3 type scale ranges from display down to label.",
+          "code": "Text(\"Display\", style = MaterialTheme.typography.displaySmall)\nText(\"Headline\", style = MaterialTheme.typography.headlineSmall)\nText(\"Title\", style = MaterialTheme.typography.titleMedium)\nText(\"Body\", style = MaterialTheme.typography.bodyMedium)\nText(\"Label\", style = MaterialTheme.typography.labelMedium)"
+        },
+        {
+          "title": "Annotated spans",
+          "description": "buildAnnotatedString applies bold, italic, underline, and color spans.",
+          "code": "Text(buildAnnotatedString {\n    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(\"Bold \") }\n    withStyle(SpanStyle(fontStyle = FontStyle.Italic)) { append(\"italic \") }\n    withStyle(SpanStyle(textDecoration = TextDecoration.Underline)) { append(\"underline \") }\n    withStyle(SpanStyle(color = MaterialTheme.colorScheme.primary)) { append(\"color\") }\n})"
+        },
+        {
+          "title": "Overflow",
+          "description": "Limit lines and truncate the remainder with an ellipsis.",
+          "code": "Text(\n    text = longText,\n    maxLines = 2,\n    overflow = TextOverflow.Ellipsis\n)"
+        },
+        {
+          "title": "Selection",
+          "description": "Wrap text in a SelectionContainer to make it user-selectable.",
+          "code": "SelectionContainer {\n    Text(\"Press and hold to select and copy this text.\")\n}"
+        }
+      ],
+      "screenshot": "screenshots/text.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/TextGroup.kt"
+    },
+    {
+      "id": "text-field",
+      "name": "Text Field",
+      "group": "TextInputs",
+      "summary": "Filled, outlined, error, password, search, and multi-line entry",
+      "description": "Text fields let people enter and edit text. Material 3 offers filled and outlined styles with labels, placeholders, supporting text, error states, leading and trailing icons, keyboard options, and visual transformations.",
+      "docUrl": "https://developer.android.com/jetpack/compose/text/user-input",
+      "related": [
+        "text",
+        "chip"
+      ],
+      "examples": [
+        {
+          "title": "Filled",
+          "description": "A filled field with label, placeholder, and a Clear action when filled.",
+          "code": "var text by rememberSaveable { mutableStateOf(\"\") }\nTextField(\n    value = text,\n    onValueChange = { text = it },\n    label = { Text(\"Name\") },\n    placeholder = { Text(\"Enter your name\") },\n    singleLine = true,\n    trailingIcon = {\n        if (text.isNotEmpty()) {\n            IconButton(onClick = { text = \"\" }) {\n                Icon(Icons.Filled.Clear, \"Clear\")\n            }\n        }\n    }\n)"
+        },
+        {
+          "title": "Error & validation",
+          "description": "An outlined field that flags an invalid email via isError and supportingText.",
+          "code": "var email by rememberSaveable { mutableStateOf(\"\") }\nval isError = email.isNotEmpty() && !email.contains(\"@\")\nOutlinedTextField(\n    value = email,\n    onValueChange = { email = it },\n    label = { Text(\"Email\") },\n    isError = isError,\n    supportingText = {\n        Text(if (isError) \"Must contain @\" else \"We'll never share it\")\n    },\n    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),\n    singleLine = true\n)"
+        },
+        {
+          "title": "Password",
+          "description": "Toggle a visual transformation to show or hide the entry.",
+          "code": "var password by rememberSaveable { mutableStateOf(\"\") }\nvar visible by rememberSaveable { mutableStateOf(false) }\nOutlinedTextField(\n    value = password,\n    onValueChange = { password = it },\n    label = { Text(\"Password\") },\n    singleLine = true,\n    visualTransformation = if (visible) {\n        VisualTransformation.None\n    } else {\n        PasswordVisualTransformation()\n    },\n    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),\n    trailingIcon = {\n        IconButton(onClick = { visible = !visible }) {\n            Icon(\n                if (visible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,\n                if (visible) \"Hide password\" else \"Show password\"\n            )\n        }\n    }\n)"
+        },
+        {
+          "title": "Search",
+          "description": "A leading Search icon hints at the field's purpose.",
+          "code": "var query by rememberSaveable { mutableStateOf(\"\") }\nOutlinedTextField(\n    value = query,\n    onValueChange = { query = it },\n    label = { Text(\"Search\") },\n    leadingIcon = { Icon(Icons.Filled.Search, null) },\n    singleLine = true\n)"
+        },
+        {
+          "title": "Multi-line",
+          "description": "Set minLines to reserve room for several lines of input.",
+          "code": "var notes by rememberSaveable { mutableStateOf(\"\") }\nOutlinedTextField(\n    value = notes,\n    onValueChange = { notes = it },\n    label = { Text(\"Notes\") },\n    minLines = 3\n)"
+        }
+      ],
+      "screenshot": "screenshots/text-field.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/TextGroup.kt"
+    },
+    {
+      "id": "row-column",
+      "name": "Row & Column",
+      "group": "Layout",
+      "summary": "Lay children out horizontally or vertically",
+      "description": "Row and Column are the workhorse layouts. Children are placed along the main axis; weight distributes leftover space proportionally, and arrangement controls the gaps between and around them.",
+      "docUrl": "https://developer.android.com/jetpack/compose/layouts/basics",
+      "related": [
+        "box",
+        "spacer"
+      ],
+      "examples": [
+        {
+          "title": "Weighted Row",
+          "description": "Weights split the available width — here 1:2:1.",
+          "code": "Row(modifier = Modifier.fillMaxWidth()) {\n    WeightBox(weight = 1f, color = MaterialTheme.colorScheme.primary)\n    WeightBox(weight = 2f, color = MaterialTheme.colorScheme.secondary)\n    WeightBox(weight = 1f, color = MaterialTheme.colorScheme.tertiary)\n}"
+        },
+        {
+          "title": "Column arrangement",
+          "description": "SpaceBetween pushes the first and last child to the edges.",
+          "code": "Column(\n    modifier = Modifier.fillMaxWidth().height(160.dp),\n    verticalArrangement = Arrangement.SpaceBetween\n) {\n    Text(\"Top\")\n    Text(\"Middle\")\n    Text(\"Bottom\")\n}"
+        }
+      ],
+      "screenshot": "screenshots/row-column.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/LayoutGroup.kt"
+    },
+    {
+      "id": "box",
+      "name": "Box",
+      "group": "Layout",
+      "summary": "Stack children and align them with Modifier.align",
+      "description": "Box draws its children on top of one another, sized to the largest. Each child positions itself within the Box using Modifier.align, making it ideal for overlays, badges, and corner-anchored content.",
+      "docUrl": "https://developer.android.com/jetpack/compose/layouts/basics#box",
+      "related": [
+        "row-column",
+        "spacer"
+      ],
+      "examples": [
+        {
+          "title": "Aligned children",
+          "description": "Three labels anchored to different corners of the same Box.",
+          "code": "Box(modifier = Modifier.fillMaxWidth().height(160.dp)) {\n    Text(\"TopStart\", Modifier.align(Alignment.TopStart))\n    Text(\"Center\", Modifier.align(Alignment.Center))\n    Text(\"BottomEnd\", Modifier.align(Alignment.BottomEnd))\n}"
+        }
+      ],
+      "screenshot": "screenshots/box.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/LayoutGroup.kt"
+    },
+    {
+      "id": "spacer",
+      "name": "Spacer",
+      "group": "Layout",
+      "summary": "Push siblings apart with flexible empty space",
+      "description": "Spacer is an empty layout used to insert gaps. Given a weight inside a Row or Column it absorbs all leftover space, shoving the elements on either side to opposite ends.",
+      "docUrl": "https://developer.android.com/reference/kotlin/androidx/compose/foundation/layout/package-summary#Spacer(androidx.compose.ui.Modifier)",
+      "related": [
+        "row-column",
+        "box"
+      ],
+      "examples": [
+        {
+          "title": "Push apart",
+          "description": "A weighted Spacer separates the leading and trailing text.",
+          "code": "Row(modifier = Modifier.fillMaxWidth()) {\n    Text(\"Left\")\n    Spacer(Modifier.weight(1f))\n    Text(\"Right\")\n}"
+        }
+      ],
+      "screenshot": "screenshots/spacer.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/LayoutGroup.kt"
+    },
+    {
+      "id": "surface",
+      "name": "Surface",
+      "group": "Layout",
+      "summary": "Elevation, shape, and color for a sheet of content",
+      "description": "Surface is the foundational container behind most Material components. It applies a background color, clips to a shape, and raises content with tonal elevation that tints the surface toward the primary color.",
+      "docUrl": "https://developer.android.com/reference/kotlin/androidx/compose/material3/package-summary#Surface(androidx.compose.ui.Modifier,androidx.compose.ui.graphics.Shape,androidx.compose.ui.graphics.Color,androidx.compose.ui.graphics.Color,androidx.compose.foundation.BorderStroke,androidx.compose.ui.unit.Dp,androidx.compose.ui.unit.Dp,kotlin.Function0)",
+      "related": [
+        "box",
+        "row-column"
+      ],
+      "examples": [
+        {
+          "title": "Elevation, shape & color",
+          "description": "Different tonal elevations, shapes, and container colors.",
+          "code": "Surface(tonalElevation = 4.dp, shape = RoundedCornerShape(12.dp)) {\n    Text(\"Elevated\", Modifier.padding(16.dp))\n}\nSurface(\n    shape = RoundedCornerShape(12.dp),\n    color = MaterialTheme.colorScheme.primaryContainer\n) {\n    Text(\"Primary container\", Modifier.padding(16.dp))\n}\nSurface(\n    shape = RoundedCornerShape(12.dp),\n    color = MaterialTheme.colorScheme.secondaryContainer\n) {\n    Text(\"Secondary container\", Modifier.padding(16.dp))\n}"
+        }
+      ],
+      "screenshot": "screenshots/surface.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/LayoutGroup.kt"
+    },
+    {
+      "id": "lazy-column",
+      "name": "Lazy Column",
+      "group": "Lists",
+      "summary": "Vertically scrolling list that composes items on demand",
+      "description": "LazyColumn lays out and composes only the items that are visible, making it efficient for long or unbounded lists. Pair items with ListItem and HorizontalDivider for a classic settings-style list.",
+      "docUrl": "https://developer.android.com/jetpack/compose/lists",
+      "related": [
+        "lazy-row",
+        "lazy-grid"
+      ],
+      "examples": [
+        {
+          "title": "List of items",
+          "description": "A fixed-height LazyColumn of ListItems separated by dividers.",
+          "code": "LazyColumn(modifier = Modifier.height(220.dp)) {\n    items(rows) { row ->\n        ListItem(\n            headlineContent = { Text(row) },\n            supportingContent = { Text(\"Supporting text\") }\n        )\n        HorizontalDivider()\n    }\n}"
+        }
+      ],
+      "screenshot": "screenshots/lazy-column.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/ListsGroup.kt"
+    },
+    {
+      "id": "lazy-row",
+      "name": "Lazy Row",
+      "group": "Lists",
+      "summary": "Horizontally scrolling list of fixed-size cards",
+      "description": "LazyRow is the horizontal counterpart to LazyColumn. It is well suited to carousels of cards or thumbnails, with Arrangement.spacedBy adding consistent gaps between items.",
+      "docUrl": "https://developer.android.com/jetpack/compose/lists",
+      "related": [
+        "lazy-column",
+        "lazy-grid"
+      ],
+      "examples": [
+        {
+          "title": "Card carousel",
+          "description": "A LazyRow of fixed-size cards with spacing between them.",
+          "code": "LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {\n    items(cards) { index ->\n        Card(modifier = Modifier.size(120.dp)) {\n            Box(contentAlignment = Alignment.Center) {\n                Text(\"Card #$index\")\n            }\n        }\n    }\n}"
+        }
+      ],
+      "screenshot": "screenshots/lazy-row.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/ListsGroup.kt"
+    },
+    {
+      "id": "lazy-grid",
+      "name": "Lazy Grid",
+      "group": "Lists",
+      "summary": "Two-dimensional grid with a fixed column count",
+      "description": "LazyVerticalGrid arranges items into columns described by GridCells. A GridCells.Fixed value pins the column count, while aspectRatio keeps each cell square.",
+      "docUrl": "https://developer.android.com/jetpack/compose/lists#lazy-grids",
+      "related": [
+        "lazy-column",
+        "lazy-row",
+        "staggered-grid"
+      ],
+      "examples": [
+        {
+          "title": "Fixed three-column grid",
+          "description": "A fixed-height grid of square, colored cells.",
+          "code": "LazyVerticalGrid(\n    columns = GridCells.Fixed(3),\n    horizontalArrangement = Arrangement.spacedBy(8.dp),\n    verticalArrangement = Arrangement.spacedBy(8.dp),\n    modifier = Modifier.height(220.dp)\n) {\n    items(cells) { color ->\n        Box(\n            modifier = Modifier\n                .aspectRatio(1f)\n                .clip(RoundedCornerShape(8.dp))\n                .background(color)\n        )\n    }\n}"
+        }
+      ],
+      "screenshot": "screenshots/lazy-grid.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/ListsGroup.kt"
+    },
+    {
+      "id": "staggered-grid",
+      "name": "Staggered Grid",
+      "group": "Lists",
+      "summary": "Masonry-style grid where items have varying heights",
+      "description": "LazyVerticalStaggeredGrid packs items of different heights into columns, creating a masonry layout. StaggeredGridCells.Fixed sets the column count.",
+      "docUrl": "https://developer.android.com/jetpack/compose/lists#lazy-staggered-grid",
+      "related": [
+        "lazy-grid"
+      ],
+      "examples": [
+        {
+          "title": "Masonry layout",
+          "description": "A fixed-height staggered grid of items with varying heights.",
+          "code": "LazyVerticalStaggeredGrid(\n    columns = StaggeredGridCells.Fixed(2),\n    horizontalArrangement = Arrangement.spacedBy(8.dp),\n    verticalItemSpacing = 8.dp,\n    modifier = Modifier.height(220.dp)\n) {\n    items(tiles) { tile ->\n        Box(\n            modifier = Modifier\n                .fillMaxWidth()\n                .height(tile.height)\n                .clip(RoundedCornerShape(8.dp))\n                .background(tile.color)\n        )\n    }\n}"
+        }
+      ],
+      "screenshot": "screenshots/staggered-grid.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/ListsGroup.kt"
+    },
+    {
+      "id": "pager",
+      "name": "Pager",
+      "group": "Lists",
+      "summary": "Swipeable pages with a state-driven page count",
+      "description": "HorizontalPager lays out swipeable pages backed by a PagerState. The state exposes currentPage, which can drive indicator dots beneath the pager.",
+      "docUrl": "https://developer.android.com/jetpack/compose/layouts/pager",
+      "related": [
+        "tabs"
+      ],
+      "examples": [
+        {
+          "title": "Horizontal pager with dots",
+          "description": "Four swipeable pages with indicator dots reflecting the current page.",
+          "code": "val state = rememberPagerState(pageCount = { 4 })\nHorizontalPager(state = state, modifier = Modifier.height(180.dp)) { page ->\n    Box(contentAlignment = Alignment.Center) {\n        Text(\"${page + 1}\", style = MaterialTheme.typography.displayLarge)\n    }\n}\nRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {\n    repeat(4) { index ->\n        val active = state.currentPage == index\n        Box(\n            modifier = Modifier\n                .size(if (active) 10.dp else 8.dp)\n                .clip(CircleShape)\n                .background(if (active) selected else unselected)\n        )\n    }\n}"
+        }
+      ],
+      "screenshot": "screenshots/pager.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/ListsGroup.kt"
+    },
+    {
+      "id": "animate-as-state",
+      "name": "animate*AsState",
+      "group": "Animation",
+      "summary": "Animate a single value whenever its target changes",
+      "description": "The animate*AsState family interpolates a value toward a new target whenever that target changes. Swap in animateColorAsState, animateDpAsState, and friends to drive size, color, offset, or alpha — optionally with a spring for a bouncy feel.",
+      "docUrl": "https://developer.android.com/jetpack/compose/animation/value-based",
+      "related": [
+        "animated-visibility",
+        "animated-content",
+        "infinite-transition"
+      ],
+      "examples": [
+        {
+          "title": "Color & size",
+          "description": "Tap to toggle; color and size animate to their new targets.",
+          "code": "var toggled by remember { mutableStateOf(false) }\nval color by animateColorAsState(\n    targetValue = if (toggled) Color(0xFF6750A4) else Color(0xFF7D5260),\n    label = \"color\"\n)\nval size by animateDpAsState(\n    targetValue = if (toggled) 120.dp else 72.dp,\n    animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),\n    label = \"size\"\n)\nBox(Modifier.size(size).clip(RoundedCornerShape(16.dp)).background(color))\nButton(onClick = { toggled = !toggled }) { Text(\"Toggle\") }"
+        }
+      ],
+      "screenshot": "screenshots/animate-as-state.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/AnimationGroup.kt"
+    },
+    {
+      "id": "animated-visibility",
+      "name": "AnimatedVisibility",
+      "group": "Animation",
+      "summary": "Animate content as it enters and leaves composition",
+      "description": "AnimatedVisibility animates the appearance and disappearance of its content. Combine enter transitions like fadeIn and expandVertically with matching exits such as fadeOut and shrinkVertically to control how content slides into view.",
+      "docUrl": "https://developer.android.com/jetpack/compose/animation/composables-modifiers",
+      "related": [
+        "animate-as-state",
+        "animated-content",
+        "crossfade"
+      ],
+      "examples": [
+        {
+          "title": "Fade & expand",
+          "description": "Toggle to fade and expand the panel in and out.",
+          "code": "var visible by remember { mutableStateOf(true) }\nButton(onClick = { visible = !visible }) {\n    Text(if (visible) \"Hide\" else \"Show\")\n}\nAnimatedVisibility(\n    visible = visible,\n    enter = fadeIn() + expandVertically(),\n    exit = fadeOut() + shrinkVertically()\n) {\n    Box(Modifier.fillMaxWidth().size(96.dp).background(Color(0xFF6750A4)))\n}"
+        }
+      ],
+      "screenshot": "screenshots/animated-visibility.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/AnimationGroup.kt"
+    },
+    {
+      "id": "animated-content",
+      "name": "AnimatedContent",
+      "group": "Animation",
+      "summary": "Animate the swap between two content states",
+      "description": "AnimatedContent animates the transition whenever its targetState changes, cross-fading (and optionally sliding) between the old and new content. It is well suited to swapping a number, label, or whole layout in response to state.",
+      "docUrl": "https://developer.android.com/jetpack/compose/animation/composables-modifiers",
+      "related": [
+        "crossfade",
+        "animated-visibility",
+        "animate-as-state"
+      ],
+      "examples": [
+        {
+          "title": "Counter",
+          "description": "The number animates as it changes with the +/- buttons.",
+          "code": "var count by remember { mutableIntStateOf(0) }\nRow {\n    Button(onClick = { count-- }) { Text(\"-\") }\n    AnimatedContent(targetState = count, label = \"count\") { value ->\n        Text(\"$value\", style = MaterialTheme.typography.displaySmall)\n    }\n    Button(onClick = { count++ }) { Text(\"+\") }\n}"
+        }
+      ],
+      "screenshot": "screenshots/animated-content.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/AnimationGroup.kt"
+    },
+    {
+      "id": "crossfade",
+      "name": "Crossfade",
+      "group": "Animation",
+      "summary": "Cross-fade between mutually exclusive screens",
+      "description": "Crossfade fades between two layouts based on a state value. It is the simplest way to animate a swap between mutually exclusive content, such as paging through a set of cards or switching between loading and loaded states.",
+      "docUrl": "https://developer.android.com/jetpack/compose/animation/composables-modifiers",
+      "related": [
+        "animated-content",
+        "animated-visibility",
+        "infinite-transition"
+      ],
+      "examples": [
+        {
+          "title": "Pages",
+          "description": "Advance through three pages; each cross-fades into the next.",
+          "code": "var page by remember { mutableIntStateOf(0) }\nCrossfade(targetState = page, label = \"page\") { current ->\n    Box(Modifier.fillMaxWidth().size(96.dp).background(pageColors[current])) {\n        Text(\"Page ${current + 1}\")\n    }\n}\nButton(onClick = { page = (page + 1) % 3 }) { Text(\"Next\") }"
+        }
+      ],
+      "screenshot": "screenshots/crossfade.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/AnimationGroup.kt"
+    },
+    {
+      "id": "infinite-transition",
+      "name": "InfiniteTransition",
+      "group": "Animation",
+      "summary": "Loop an animation indefinitely",
+      "description": "rememberInfiniteTransition drives one or more values that animate forever. Pair it with infiniteRepeatable and RepeatMode.Reverse to ping-pong a value back and forth — perfect for pulsing, breathing, or shimmering effects.",
+      "docUrl": "https://developer.android.com/jetpack/compose/animation/value-based",
+      "related": [
+        "animate-as-state",
+        "crossfade",
+        "animated-content"
+      ],
+      "examples": [
+        {
+          "title": "Pulse",
+          "description": "An infinitely repeating tween reverses to pulse the alpha.",
+          "code": "val transition = rememberInfiniteTransition(label = \"pulse\")\nval alpha by transition.animateFloat(\n    initialValue = 1f,\n    targetValue = 0.2f,\n    animationSpec = infiniteRepeatable(\n        animation = tween(800),\n        repeatMode = RepeatMode.Reverse\n    ),\n    label = \"alpha\"\n)\nBox(\n    Modifier.size(96.dp).alpha(alpha)\n        .clip(RoundedCornerShape(16.dp))\n        .background(Color(0xFF6750A4))\n)"
+        }
+      ],
+      "screenshot": "screenshots/infinite-transition.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/AnimationGroup.kt"
+    },
+    {
+      "id": "clickable",
+      "name": "Clickable",
+      "group": "Gestures",
+      "summary": "Modifier.clickable and combinedClickable for taps and long presses",
+      "description": "Modifier.clickable makes any composable respond to taps. combinedClickable adds long-press and double-tap callbacks, letting a plain Box behave like a button.",
+      "docUrl": "https://developer.android.com/jetpack/compose/touch-input/pointer-input/tap-and-press",
+      "related": [
+        "draggable",
+        "transformable"
+      ],
+      "examples": [
+        {
+          "title": "Tap and long press",
+          "description": "combinedClickable distinguishes a tap from a long press.",
+          "code": "var label by remember { mutableStateOf(\"Tap or long-press me\") }\nvar count by remember { mutableIntStateOf(0) }\nBox(\n    Modifier\n        .clip(RoundedCornerShape(12.dp))\n        .background(MaterialTheme.colorScheme.primaryContainer)\n        .combinedClickable(\n            onClick = { count++; label = \"Tapped $count\" },\n            onLongClick = { label = \"Long-pressed!\" }\n        )\n        .padding(24.dp)\n) {\n    Text(label)\n}"
+        }
+      ],
+      "screenshot": "screenshots/clickable.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/GesturesGroup.kt"
+    },
+    {
+      "id": "draggable",
+      "name": "Draggable",
+      "group": "Gestures",
+      "summary": "Drag a box along one axis with rememberDraggableState",
+      "description": "Modifier.draggable reports drag deltas on a single orientation. Track the accumulated offset in state, clamp it to a range, and apply it with Modifier.offset.",
+      "docUrl": "https://developer.android.com/jetpack/compose/touch-input/pointer-input/drag-swipe-fling",
+      "related": [
+        "clickable",
+        "transformable"
+      ],
+      "examples": [
+        {
+          "title": "Horizontal drag",
+          "description": "The handle follows your finger, clamped to a 0..220 dp range.",
+          "code": "var offset by remember { mutableFloatStateOf(0f) }\nBox(\n    Modifier\n        .offset { IntOffset(offset.roundToInt(), 0) }\n        .size(64.dp)\n        .clip(RoundedCornerShape(12.dp))\n        .background(MaterialTheme.colorScheme.primary)\n        .draggable(\n            orientation = Orientation.Horizontal,\n            state = rememberDraggableState { delta ->\n                offset = (offset + delta).coerceIn(0f, 600f)\n            }\n        )\n)"
+        }
+      ],
+      "screenshot": "screenshots/draggable.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/GesturesGroup.kt"
+    },
+    {
+      "id": "transformable",
+      "name": "Transformable",
+      "group": "Gestures",
+      "summary": "Pan, zoom, and rotate with rememberTransformableState",
+      "description": "Modifier.transformable feeds combined pan, zoom, and rotation gestures into a single callback. Store the result in state and render it through a graphicsLayer.",
+      "docUrl": "https://developer.android.com/jetpack/compose/touch-input/pointer-input/multitouch",
+      "related": [
+        "clickable",
+        "draggable"
+      ],
+      "examples": [
+        {
+          "title": "Pan, zoom, rotate",
+          "description": "Use two fingers to scale and rotate; drag to pan.",
+          "code": "var scale by remember { mutableFloatStateOf(1f) }\nvar rotation by remember { mutableFloatStateOf(0f) }\nvar offsetX by remember { mutableFloatStateOf(0f) }\nvar offsetY by remember { mutableFloatStateOf(0f) }\nval state = rememberTransformableState { zoomChange, panChange, rotationChange ->\n    scale = (scale * zoomChange).coerceIn(0.5f, 4f)\n    rotation += rotationChange\n    offsetX += panChange.x\n    offsetY += panChange.y\n}\nBox(\n    Modifier\n        .graphicsLayer(\n            scaleX = scale,\n            scaleY = scale,\n            rotationZ = rotation,\n            translationX = offsetX,\n            translationY = offsetY\n        )\n        .transformable(state)\n        .size(96.dp)\n        .background(MaterialTheme.colorScheme.primary)\n)"
+        }
+      ],
+      "screenshot": "screenshots/transformable.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/GesturesGroup.kt"
+    },
+    {
+      "id": "scroll",
+      "name": "Scroll",
+      "group": "Gestures",
+      "summary": "Modifier.verticalScroll over a fixed-height Column",
+      "description": "For a known, modest number of items a plain Column made scrollable with Modifier.verticalScroll(rememberScrollState()) is simpler than a lazy list.",
+      "docUrl": "https://developer.android.com/jetpack/compose/touch-input/pointer-input/scroll",
+      "related": [
+        "lazy-column"
+      ],
+      "examples": [
+        {
+          "title": "Scrollable Column",
+          "description": "All rows are composed eagerly; the viewport is capped at 180 dp.",
+          "code": "val scroll = rememberScrollState()\nColumn(\n    Modifier\n        .height(180.dp)\n        .verticalScroll(scroll)\n) {\n    repeat(20) { index ->\n        Text(\"Row $index\", Modifier.padding(8.dp))\n    }\n}"
+        }
+      ],
+      "screenshot": "screenshots/scroll.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/GesturesGroup.kt"
+    },
+    {
+      "id": "swipe-to-dismiss",
+      "name": "Swipe to Dismiss",
+      "group": "Gestures",
+      "summary": "Swipe list items away with SwipeToDismissBox",
+      "description": "SwipeToDismissBox wraps each row with a swipe gesture and a background that shows behind it. Confirm the dismissal to remove the backing item from the list.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/swipe-to-dismiss",
+      "related": [
+        "pull-to-refresh",
+        "lazy-column"
+      ],
+      "examples": [
+        {
+          "title": "Dismiss to remove",
+          "description": "Swipe a row in either direction to delete it.",
+          "code": "val items = remember { mutableStateListOf(\"Email one\", \"Email two\", \"Email three\") }\nColumn {\n    items.forEach { item ->\n        val state = rememberSwipeToDismissBoxState(\n            confirmValueChange = { value ->\n                if (value != SwipeToDismissBoxValue.Settled) {\n                    items.remove(item)\n                    true\n                } else {\n                    false\n                }\n            }\n        )\n        SwipeToDismissBox(\n            state = state,\n            backgroundContent = {\n                Box(\n                    Modifier\n                        .fillMaxWidth()\n                        .background(MaterialTheme.colorScheme.errorContainer)\n                )\n            }\n        ) {\n            Text(item, Modifier.fillMaxWidth().padding(16.dp))\n        }\n    }\n}"
+        }
+      ],
+      "screenshot": "screenshots/swipe-to-dismiss.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/GesturesGroup.kt"
+    },
+    {
+      "id": "pull-to-refresh",
+      "name": "Pull to Refresh",
+      "group": "Gestures",
+      "summary": "Pull down to trigger a refresh with PullToRefreshBox",
+      "description": "PullToRefreshBox shows a refresh indicator when the content is pulled past the threshold. Drive it with an isRefreshing flag that you flip off when the work completes.",
+      "docUrl": "https://developer.android.com/jetpack/compose/components/pull-to-refresh",
+      "related": [
+        "swipe-to-dismiss",
+        "lazy-column"
+      ],
+      "examples": [
+        {
+          "title": "Pull to refresh",
+          "description": "Pull down; the list reloads after a brief simulated fetch.",
+          "code": "var isRefreshing by remember { mutableStateOf(false) }\nvar generation by remember { mutableIntStateOf(0) }\nLaunchedEffect(isRefreshing) {\n    if (isRefreshing) {\n        delay(1200)\n        generation++\n        isRefreshing = false\n    }\n}\nPullToRefreshBox(\n    isRefreshing = isRefreshing,\n    onRefresh = { isRefreshing = true }\n) {\n    Column(\n        Modifier\n            .fillMaxWidth()\n            .height(200.dp)\n            .verticalScroll(rememberScrollState())\n    ) {\n        repeat(6) { index ->\n            Text(\"Item $generation.$index\", Modifier.padding(12.dp))\n        }\n    }\n}"
+        }
+      ],
+      "screenshot": "screenshots/pull-to-refresh.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/GesturesGroup.kt"
+    },
+    {
+      "id": "canvas",
+      "name": "Canvas",
+      "group": "Graphics",
+      "summary": "Draw lines, circles, rects, arcs, and paths",
+      "description": "Canvas gives you a DrawScope to render custom graphics imperatively. The scope exposes drawLine, drawCircle, drawRect, drawArc, and drawPath, all working in pixels with the composable's own size available as this.size.",
+      "docUrl": "https://developer.android.com/jetpack/compose/graphics/draw/overview",
+      "related": [
+        "gradients",
+        "shapes",
+        "draw-modifiers"
+      ],
+      "examples": [
+        {
+          "title": "Primitive shapes",
+          "description": "A single DrawScope draws a line, circle, rectangle, arc, and a triangle path.",
+          "code": "Canvas(Modifier.fillMaxWidth().height(160.dp)) {\n    drawLine(\n        color = Color(0xFF6750A4),\n        start = Offset(0f, 0f),\n        end = Offset(size.width, size.height),\n        strokeWidth = 4f\n    )\n    drawCircle(Color(0xFF7D5260), radius = 36f, center = Offset(60f, 60f))\n    drawRect(Color(0xFF625B71), topLeft = Offset(120f, 24f), size = Size(72f, 72f))\n    drawArc(\n        color = Color(0xFF386A20),\n        startAngle = 0f,\n        sweepAngle = 270f,\n        useCenter = true,\n        topLeft = Offset(size.width - 120f, 24f),\n        size = Size(80f, 80f)\n    )\n    val triangle = Path().apply {\n        moveTo(size.width / 2f, size.height - 16f)\n        lineTo(size.width / 2f - 48f, size.height - 80f)\n        lineTo(size.width / 2f + 48f, size.height - 80f)\n        close()\n    }\n    drawPath(triangle, Color(0xFFB3261E))\n}"
+        }
+      ],
+      "screenshot": "screenshots/canvas.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/GraphicsGroup.kt"
+    },
+    {
+      "id": "gradients",
+      "name": "Gradients",
+      "group": "Graphics",
+      "summary": "Linear, radial, and sweep brushes",
+      "description": "A Brush describes how to paint an area. Brush.linearGradient interpolates along a vector, Brush.radialGradient fans out from a center, and Brush.sweepGradient sweeps around it. Any brush can fill a composable via Modifier.background.",
+      "docUrl": "https://developer.android.com/jetpack/compose/graphics/draw/brush",
+      "related": [
+        "canvas",
+        "shapes",
+        "draw-modifiers"
+      ],
+      "examples": [
+        {
+          "title": "Three brush types",
+          "description": "Each box clips to a rounded shape and fills with a different gradient.",
+          "code": "val colors = listOf(Color(0xFF6750A4), Color(0xFF7D5260), Color(0xFF386A20))\nBox(\n    Modifier.size(80.dp).clip(RoundedCornerShape(16.dp))\n        .background(Brush.linearGradient(colors))\n)\nBox(\n    Modifier.size(80.dp).clip(RoundedCornerShape(16.dp))\n        .background(Brush.radialGradient(colors))\n)\nBox(\n    Modifier.size(80.dp).clip(RoundedCornerShape(16.dp))\n        .background(Brush.sweepGradient(colors))\n)"
+        }
+      ],
+      "screenshot": "screenshots/gradients.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/GraphicsGroup.kt"
+    },
+    {
+      "id": "shapes",
+      "name": "Shapes & Clipping",
+      "group": "Graphics",
+      "summary": "Rounded, circle, and cut-corner clips",
+      "description": "Shapes define an outline used for clipping and backgrounds. RoundedCornerShape softens corners, CircleShape produces a pill or circle, and CutCornerShape bevels them. Apply with Modifier.clip then paint with a background.",
+      "docUrl": "https://developer.android.com/jetpack/compose/graphics/draw/shapes",
+      "related": [
+        "canvas",
+        "gradients",
+        "draw-modifiers"
+      ],
+      "examples": [
+        {
+          "title": "Clip outlines",
+          "description": "The same colored box clipped three different ways.",
+          "code": "Box(\n    Modifier.size(80.dp).clip(RoundedCornerShape(20.dp))\n        .background(MaterialTheme.colorScheme.primary)\n)\nBox(\n    Modifier.size(80.dp).clip(CircleShape)\n        .background(MaterialTheme.colorScheme.secondary)\n)\nBox(\n    Modifier.size(80.dp).clip(CutCornerShape(20.dp))\n        .background(MaterialTheme.colorScheme.tertiary)\n)"
+        }
+      ],
+      "screenshot": "screenshots/shapes.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/GraphicsGroup.kt"
+    },
+    {
+      "id": "draw-modifiers",
+      "name": "Draw Modifiers",
+      "group": "Graphics",
+      "summary": "drawBehind, drawWithContent, and border",
+      "description": "Draw modifiers attach custom rendering to any composable. Modifier.drawBehind paints under the content, Modifier.drawWithContent lets you sequence drawing around drawContent(), and Modifier.border strokes a shaped outline.",
+      "docUrl": "https://developer.android.com/jetpack/compose/graphics/draw/modifiers",
+      "related": [
+        "canvas",
+        "gradients",
+        "shapes"
+      ],
+      "examples": [
+        {
+          "title": "Accent behind text",
+          "description": "drawBehind paints a highlight bar under a label.",
+          "code": "val accent = MaterialTheme.colorScheme.primary\nText(\n    text = \"Highlighted\",\n    modifier = Modifier\n        .drawBehind {\n            drawLine(\n                color = accent,\n                start = Offset(0f, size.height),\n                end = Offset(size.width, size.height),\n                strokeWidth = 6f,\n                cap = StrokeCap.Round\n            )\n        }\n        .padding(bottom = 4.dp)\n)"
+        },
+        {
+          "title": "Overlay & border",
+          "description": "drawWithContent tints over the content; border strokes a shaped edge.",
+          "code": "Text(\n    text = \"Tinted\",\n    modifier = Modifier\n        .border(2.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(8.dp))\n        .padding(8.dp)\n        .drawWithContent {\n            drawContent()\n            drawRect(Color(0x223F51B5))\n        }\n)"
+        }
+      ],
+      "screenshot": "screenshots/draw-modifiers.png",
+      "sourceFile": "app/src/main/java/com/corvidlabs/composeplayground/catalog/groups/GraphicsGroup.kt"
+    }
+  ]
+}

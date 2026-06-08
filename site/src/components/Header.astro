@@ -1,0 +1,87 @@
+---
+import { withBase } from "../lib/site";
+
+interface Props {
+  active?: string;
+  repoUrl: string;
+}
+const { active, repoUrl } = Astro.props;
+
+const nav = [
+  { key: "components", label: "Components", href: withBase("/components") },
+  { key: "groups", label: "Groups", href: withBase("/#groups") },
+  { key: "about", label: "About", href: withBase("/#about") },
+];
+---
+
+<header class="site-header">
+  <div class="container bar">
+    <a class="brand" href={withBase("/")} aria-label="Compose Playground home">
+      <span class="logo" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+      </span>
+      <span class="brand-text">Compose<span class="muted">Playground</span></span>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      {nav.map((n) => (
+        <a href={n.href} class:list={["nav-link", { active: active === n.key }]}>{n.label}</a>
+      ))}
+    </nav>
+
+    <div class="actions">
+      <button class="icon-btn" data-search-open aria-label="Search components" title="Search (press /)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      </button>
+      <button class="icon-btn" data-theme-toggle aria-label="Toggle theme" title="Toggle theme">
+        <svg class="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+      </button>
+      <a class="btn btn-ghost gh" href={repoUrl} target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12 11.5 11.5 0 0 0 8 22.9c.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg>
+        <span class="gh-text">GitHub</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky; top: 0; z-index: 50;
+    height: var(--header-h);
+    backdrop-filter: blur(14px) saturate(140%);
+    background: color-mix(in srgb, var(--bg) 72%, transparent);
+    border-bottom: 1px solid var(--border);
+  }
+  .bar { height: var(--header-h); display: flex; align-items: center; gap: 18px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -0.02em; color: var(--text); }
+  .brand:hover { text-decoration: none; }
+  .brand-text .muted { margin-left: 4px; font-weight: 600; }
+  .logo { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; width: 26px; height: 26px; }
+  .logo span { border-radius: 5px; }
+  .logo span:nth-child(1) { background: var(--primary-bright); }
+  .logo span:nth-child(2) { background: var(--primary); }
+  .logo span:nth-child(3) { background: var(--primary); }
+  .logo span:nth-child(4) { background: var(--accent); }
+
+  .nav { display: flex; gap: 4px; margin-left: 12px; }
+  .nav-link { color: var(--text-dim); padding: 8px 12px; border-radius: 999px; font-weight: 600; font-size: 0.92rem; }
+  .nav-link:hover { color: var(--text); background: var(--surface-2); text-decoration: none; }
+  .nav-link.active { color: var(--primary-bright); background: var(--primary-soft); }
+
+  .actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .icon-btn {
+    display: inline-grid; place-items: center; width: 38px; height: 38px;
+    border-radius: 11px; border: 1px solid var(--border); background: var(--surface-2);
+    color: var(--text); cursor: pointer; transition: border-color .2s, transform .15s;
+  }
+  .icon-btn:hover { border-color: var(--primary-ring); transform: translateY(-1px); }
+  .gh { padding: 0.5em 0.9em; }
+  [data-theme="dark"] .i-sun { display: block; } [data-theme="dark"] .i-moon { display: none; }
+  [data-theme="light"] .i-sun { display: none; } [data-theme="light"] .i-moon { display: block; }
+
+  @media (max-width: 760px) {
+    .nav { display: none; }
+    .gh-text { display: none; }
+  }
+</style>

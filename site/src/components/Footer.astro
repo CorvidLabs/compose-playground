@@ -1,0 +1,53 @@
+---
+import { withBase, meta } from "../lib/site";
+interface Props { repoUrl: string; }
+const { repoUrl } = Astro.props;
+---
+
+<footer class="site-footer">
+  <div class="container inner">
+    <div class="col brand-col">
+      <div class="brand">
+        <span class="logo" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        <strong>Compose Playground</strong>
+      </div>
+      <p class="muted">An open-source Jetpack Compose + Material 3 gallery. {meta.componentCount} components, {meta.exampleCount} live examples.</p>
+    </div>
+    <div class="col">
+      <h4>Explore</h4>
+      <a href={withBase("/components")}>All components</a>
+      <a href={withBase("/#groups")}>Browse by group</a>
+      <a href={withBase("/#about")}>About</a>
+    </div>
+    <div class="col">
+      <h4>Project</h4>
+      <a href={repoUrl} target="_blank" rel="noopener">GitHub repo</a>
+      <a href={`${repoUrl}/blob/main/docs/COMPONENTS.md`} target="_blank" rel="noopener">Component docs</a>
+      <a href={`${repoUrl}/blob/main/docs/ACCESSIBILITY.md`} target="_blank" rel="noopener">Accessibility</a>
+    </div>
+    <div class="col">
+      <h4>Build with Compose</h4>
+      <a href="https://developer.android.com/jetpack/compose" target="_blank" rel="noopener">Jetpack Compose</a>
+      <a href="https://m3.material.io/" target="_blank" rel="noopener">Material 3</a>
+    </div>
+  </div>
+  <div class="container baseline">
+    <span class="faint">Built with Astro · Snapshots rendered with Paparazzi · MIT-spirited open source</span>
+    <span class="faint">© 2026 CorvidLabs</span>
+  </div>
+</footer>
+
+<style>
+  .site-footer { border-top: 1px solid var(--border); margin-top: 40px; padding-block: 56px 28px; background: linear-gradient(180deg, transparent, var(--surface)); }
+  .inner { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
+  .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .logo { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; width: 24px; height: 24px; }
+  .logo span { border-radius: 5px; }
+  .logo span:nth-child(1){background:var(--primary-bright)} .logo span:nth-child(2){background:var(--primary)} .logo span:nth-child(3){background:var(--primary)} .logo span:nth-child(4){background:var(--accent)}
+  .col h4 { font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-faint); margin: 0 0 12px; }
+  .col a { display: block; color: var(--text-dim); padding: 4px 0; font-size: 0.92rem; }
+  .col a:hover { color: var(--primary-bright); }
+  .brand-col p { max-width: 36ch; font-size: 0.92rem; }
+  .baseline { display: flex; justify-content: space-between; gap: 12px; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 0.82rem; flex-wrap: wrap; }
+  @media (max-width: 760px){ .inner{ grid-template-columns: 1fr 1fr; } }
+</style>
