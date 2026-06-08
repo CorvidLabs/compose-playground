@@ -1,6 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { groups, meta, componentsInGroup, withBase, groupHue } from "../../lib/site";
+import { groups, meta, componentsInGroup, withBase, groupHue, groupIcon } from "../../lib/site";
 ---
 
 <Layout
@@ -52,9 +52,14 @@ import { groups, meta, componentsInGroup, withBase, groupHue } from "../../lib/s
       const items = componentsInGroup(group.key);
       const hue = groupHue(group.key);
       return (
-        <section id={group.key} class="group-section" data-group-section>
+        <section id={group.key} class="group-section" data-group-section style={`--hue:${hue}`}>
           <div class="group-head">
-            <h2 class="group-title">{group.label}</h2>
+            <div class="gh-left">
+              <span class="group-ic" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={groupIcon(group.key)} />
+              </span>
+              <h2 class="group-title">{group.label}</h2>
+            </div>
             <span class="group-meta">{items.length} {items.length === 1 ? "component" : "components"}</span>
           </div>
           <p class="group-blurb muted">{group.blurb}</p>
@@ -124,7 +129,15 @@ import { groups, meta, componentsInGroup, withBase, groupHue } from "../../lib/s
 
   .group-section { margin-bottom: clamp(40px, 6vw, 64px); scroll-margin-top: calc(var(--header-h) + 72px); }
   .group-section[hidden] { display: none; }
-  .group-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 4px; }
+  .group-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 4px; }
+  .gh-left { display: flex; align-items: center; gap: 12px; }
+  .group-ic {
+    display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 10px;
+    background: hsl(var(--hue) 85% 68% / 0.16); border: 1px solid hsl(var(--hue) 85% 70% / 0.38);
+    color: hsl(var(--hue) 85% 78%);
+  }
+  [data-theme="light"] .group-ic { color: hsl(var(--hue) 60% 45%); }
+  .group-ic svg { width: 18px; height: 18px; }
   .group-title { margin: 0; }
   .group-meta { flex: none; font-size: 0.85rem; color: var(--text-faint); font-weight: 600; }
   .group-blurb { max-width: 64ch; margin-bottom: 22px; }

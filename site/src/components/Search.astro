@@ -471,3 +471,24 @@ const searchData = components.map((c) => ({
     .cp-modal { transform: none; }
   }
 </style>
+
+<style is:global>
+  /* Result rows are injected via JS innerHTML and don't receive Astro's scoped
+     attribute, so style them via the static results-list id instead. */
+  #cp-search-results .cp-row {
+    display: flex; align-items: center; gap: 14px; padding: 11px 12px;
+    border-radius: var(--radius-sm); cursor: pointer; border: 1px solid transparent;
+  }
+  #cp-search-results .cp-row.is-active { background: var(--primary-soft); border-color: var(--primary-ring); }
+  #cp-search-results .cp-row-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+  #cp-search-results .cp-name { color: var(--text); font-weight: 600; font-size: 0.96rem; letter-spacing: -0.01em; }
+  #cp-search-results .cp-row.is-active .cp-name { color: var(--primary-bright); }
+  #cp-search-results .cp-summary {
+    color: var(--text-dim); font-size: 0.84rem; line-height: 1.4;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  #cp-search-results .cp-chip { flex: none; }
+  #cp-search-results mark { background: transparent; color: var(--primary-bright); font-weight: 700; }
+  #cp-search-results .cp-empty { padding: 36px 16px; text-align: center; }
+  #cp-search-results .cp-empty-title { color: var(--text); font-weight: 600; margin-bottom: 4px; }
+</style>

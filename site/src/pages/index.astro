@@ -1,7 +1,7 @@
 ---
 import { Code } from "astro:components";
 import Layout from "../layouts/Layout.astro";
-import { groups, meta, withBase, groupHue, componentById } from "../lib/site";
+import { groups, meta, withBase, groupHue, groupIcon, componentById } from "../lib/site";
 
 const showcase = ["button", "chip", "gradients"]
   .map((id) => componentById(id))
@@ -156,7 +156,9 @@ const stats = [
         return (
           <a class="card card-hover group" href={withBase(`/components#${g.key}`)} style={`--g: ${hue};`}>
             <span class="group-bar" aria-hidden="true"></span>
-            <span class="group-dot" aria-hidden="true"></span>
+            <span class="group-dot" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={groupIcon(g.key)} />
+            </span>
             <h3>{g.label}</h3>
             <p class="muted group-blurb">{g.blurb}</p>
             <span class="group-count">{g.componentIds.length} {g.componentIds.length === 1 ? "component" : "components"}</span>
@@ -276,7 +278,9 @@ const stats = [
   .group { position: relative; display: block; padding: 22px 22px 22px 26px; color: var(--text); overflow: hidden; }
   .group:hover { text-decoration: none; }
   .group-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: hsl(var(--g) 80% 70%); opacity: 0.85; }
-  .group-dot { display: block; width: 30px; height: 30px; border-radius: 9px; margin-bottom: 14px; background: hsl(var(--g) 85% 68% / 0.18); border: 1px solid hsl(var(--g) 85% 70% / 0.4); }
+  .group-dot { display: inline-grid; place-items: center; width: 38px; height: 38px; border-radius: 11px; margin-bottom: 14px; background: hsl(var(--g) 85% 68% / 0.16); border: 1px solid hsl(var(--g) 85% 70% / 0.38); color: hsl(var(--g) 85% 78%); }
+  [data-theme="light"] .group-dot { color: hsl(var(--g) 60% 45%); }
+  .group-dot svg { width: 19px; height: 19px; }
   .group h3 { margin: 0 0 6px; font-size: 1.12rem; }
   .group-blurb { margin: 0 0 14px; font-size: 0.92rem; }
   .group-count { font-size: 0.8rem; font-weight: 600; color: hsl(var(--g) 70% 72%); }

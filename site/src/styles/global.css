@@ -209,6 +209,11 @@ code { font-family: var(--font-mono); }
 
 :focus-visible { outline: 2px solid var(--primary-bright); outline-offset: 2px; border-radius: 6px; }
 
+/* theme toggle icon: show one glyph at a time based on <html data-theme> */
+.i-moon { display: none; }
+[data-theme="light"] .i-sun { display: none; }
+[data-theme="light"] .i-moon { display: block; }
+
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }
