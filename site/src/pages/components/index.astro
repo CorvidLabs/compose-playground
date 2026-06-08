@@ -1,0 +1,267 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { groups, meta, componentsInGroup, withBase, groupHue } from "../../lib/site";
+---
+
+<Layout
+  title="Components · Compose Playground"
+  description={`Browse all ${meta.componentCount} Jetpack Compose + Material 3 components across ${meta.groupCount} groups, with live examples and copy-paste Kotlin.`}
+  active="components"
+>
+  <section class="section container">
+    <header class="page-head">
+      <p class="eyebrow">Component gallery</p>
+      <h1><span class="gradient-text">All components</span></h1>
+      <p class="lead">
+        {meta.componentCount} components across {meta.groupCount} groups — each with live
+        examples and copy-paste Kotlin.
+      </p>
+    </header>
+
+    {/* Sticky filter */}
+    <div class="filter-bar" role="search">
+      <div class="filter-field">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" />
+        </svg>
+        <input
+          id="component-filter"
+          type="search"
+          placeholder="Filter components by name or summary…"
+          aria-label="Filter components"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <span class="filter-count" data-filter-count aria-live="polite"></span>
+      </div>
+    </div>
+
+    {/* No results state */}
+    <p class="no-results" data-no-results hidden>
+      No components match <strong data-no-results-term></strong>. Try a different term.
+    </p>
+
+    {groups.map((group) => {
+      const items = componentsInGroup(group.key);
+      const hue = groupHue(group.key);
+      return (
+        <section id={group.key} class="group-section" data-group-section data-group-count={items.length}>
+          <div class="group-head">
+            <h2 class="group-title">{group.label}</h2>
+            <span class="group-meta">{items.length} {items.length === 1 ? "component" : "components"}</span>
+          </div>
+          <p class="group-blurb muted">{group.blurb}</p>
+
+          <div class="card-grid">
+            {items.map((c) => (
+              <a
+                class="card card-hover comp-card"
+                href={withBase(`/components/${c.id}`)}
+                data-card
+                data-name={c.name}
+                data-summary={c.summary}
+                style={`--hue:${hue}`}
+              >
+                <span class="thumb">
+                  <img
+                    src={withBase(`/${c.screenshot}`)}
+                    alt={`Screenshot of the ${c.name} component`}
+                    loading="lazy"
+                    width="320"
+                    height="200"
+                  />
+                </span>
+                <span class="comp-body">
+                  <span class="comp-name">{c.name}</span>
+                  <span class="comp-summary">{c.summary}</span>
+                  <span class="chip group-chip">{group.label}</span>
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+      );
+    })}
+  </section>
+</Layout>
+
+<style>
+  .page-head { margin-bottom: 28px; }
+  .page-head h1 { margin-bottom: 0.3em; }
+
+  /* sticky filter */
+  .filter-bar {
+    position: sticky;
+    top: calc(var(--header-h) + 8px);
+    z-index: 20;
+    margin-bottom: 36px;
+    padding: 8px 0;
+    background: linear-gradient(180deg, var(--bg-grad-1) 30%, transparent);
+    backdrop-filter: blur(8px);
+  }
+  .filter-field {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, var(--surface), var(--surface-2));
+    border: 1px solid var(--border-strong);
+    box-shadow: var(--shadow);
+  }
+  .filter-field:focus-within {
+    border-color: var(--primary-ring);
+    box-shadow: 0 0 0 3px var(--primary-soft);
+  }
+  .filter-field svg { color: var(--text-faint); flex: none; }
+  .filter-field input {
+    flex: 1 1 auto;
+    min-width: 0;
+    background: transparent;
+    border: 0;
+    color: var(--text);
+    font: inherit;
+    font-size: 1rem;
+    outline: none;
+  }
+  .filter-field input::placeholder { color: var(--text-faint); }
+  .filter-count {
+    flex: none;
+    font-size: 0.82rem;
+    color: var(--text-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .no-results {
+    text-align: center;
+    color: var(--text-dim);
+    padding: 48px 12px;
+    font-size: 1.05rem;
+  }
+
+  /* groups */
+  .group-section { margin-bottom: clamp(40px, 6vw, 64px); scroll-margin-top: calc(var(--header-h) + 72px); }
+  .group-section[hidden] { display: none; }
+  .group-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 4px;
+  }
+  .group-title { margin: 0; }
+  .group-meta {
+    flex: none;
+    font-size: 0.85rem;
+    color: var(--text-faint);
+    font-weight: 600;
+  }
+  .group-blurb { max-width: 64ch; margin-bottom: 22px; }
+
+  /* card grid */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 20px;
+  }
+  .comp-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0;
+    text-decoration: none;
+    color: var(--text);
+  }
+  .comp-card:hover { text-decoration: none; }
+  .comp-card[hidden] { display: none; }
+
+  .thumb {
+    display: block;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background:
+      radial-gradient(120% 120% at 50% 0%, hsl(var(--hue) 60% 22% / 0.5), transparent 70%),
+      var(--surface-3);
+    border-bottom: 1px solid var(--border);
+  }
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    transition: transform 0.4s ease;
+  }
+  .comp-card:hover .thumb img { transform: scale(1.04); }
+
+  .comp-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 16px 18px 18px;
+  }
+  .comp-name { font-weight: 700; font-size: 1.05rem; letter-spacing: -0.01em; }
+  .comp-summary {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .group-chip {
+    margin-top: 2px;
+    background: hsl(var(--hue) 70% 60% / 0.14);
+    color: hsl(var(--hue) 80% 78%);
+    border-color: hsl(var(--hue) 70% 60% / 0.4);
+  }
+  [data-theme="light"] .group-chip { color: hsl(var(--hue) 65% 42%); }
+
+  @media (max-width: 480px) {
+    .card-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  }
+</style>
+
+<script>
+  const input = document.getElementById("component-filter") as HTMLInputElement | null;
+  const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-card]"));
+  const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-group-section]"));
+  const countEl = document.querySelector<HTMLElement>("[data-filter-count]");
+  const noResults = document.querySelector<HTMLElement>("[data-no-results]");
+  const noResultsTerm = document.querySelector<HTMLElement>("[data-no-results-term]");
+
+  const total = cards.length;
+
+  function setCount(visible: number) {
+    if (!countEl) return;
+    countEl.textContent = visible === total ? `${total}` : `${visible} / ${total}`;
+  }
+
+  function applyFilter(raw: string) {
+    const term = raw.trim().toLowerCase();
+    let visible = 0;
+
+    for (const card of cards) {
+      const name = (card.dataset.name ?? "").toLowerCase();
+      const summary = (card.dataset.summary ?? "").toLowerCase();
+      const match = term === "" || name.includes(term) || summary.includes(term);
+      card.hidden = !match;
+      if (match) visible++;
+    }
+
+    // hide groups with no visible cards
+    for (const section of sections) {
+      const anyVisible = section.querySelector("[data-card]:not([hidden])");
+      section.hidden = !anyVisible;
+    }
+
+    if (noResults) noResults.hidden = visible !== 0;
+    if (noResultsTerm) noResultsTerm.textContent = raw.trim();
+    setCount(visible);
+  }
+
+  setCount(total);
+  input?.addEventListener("input", () => applyFilter(input.value));
+</script>
