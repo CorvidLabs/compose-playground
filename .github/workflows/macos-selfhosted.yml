@@ -21,7 +21,7 @@ jobs:
     runs-on: [self-hosted, macOS]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Point Gradle at the local Android SDK
         run: echo "sdk.dir=$HOME/Library/Android/sdk" > local.properties
@@ -31,7 +31,7 @@ jobs:
 
       - name: Upload debug APK
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: app-debug-apk
           path: app/build/outputs/apk/debug/*.apk
@@ -39,7 +39,7 @@ jobs:
 
       - name: Upload Paparazzi diffs on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: paparazzi-failures
           path: app/build/paparazzi/failures/**
