@@ -1,5 +1,9 @@
 # Compose Playground
 
+🌐 **Live site: https://corvidlabs.github.io/compose-playground/**
+
+- **Docs site:** an [Astro](https://astro.build)-powered browsable catalog (source in [`site/`](site/)) — see [`site/README.md`](site/README.md).
+
 An interactive **Jetpack Compose + Material 3** gallery: **52 components** across **11
 groups**, each with its own detail page, a written description, related links, and
 scrollable examples that pair a **live, interactive demo** with its **expandable source
