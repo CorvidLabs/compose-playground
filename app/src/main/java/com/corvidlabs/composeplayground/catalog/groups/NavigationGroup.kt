@@ -2,6 +2,8 @@ package com.corvidlabs.composeplayground.catalog.groups
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -33,7 +35,11 @@ import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -45,6 +51,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.corvidlabs.composeplayground.model.CodeExample
@@ -167,6 +174,45 @@ private val navigationRailComponent = Component(
                 }
             """,
             demo = { NavigationRailDemo() }
+        ),
+        CodeExample(
+            title = "Adaptive: bar ↔ rail",
+            description = "A NavigationBar in compact width swaps to a NavigationRail when " +
+                "expanded, sharing the same selected destination.",
+            code = """
+                // Real apps read this from calculateWindowSizeClass(activity):
+                //   val widthClass = windowSizeClass.widthSizeClass
+                //   val expanded = widthClass != WindowWidthSizeClass.Compact
+                var selected by remember { mutableIntStateOf(0) }
+                if (expanded) {
+                    Row {
+                        NavigationRail {
+                            NavigationRailItem(
+                                selected = selected == 0,
+                                onClick = { selected = 0 },
+                                icon = { Icon(Icons.Filled.Home, "Home") },
+                                label = { Text("Home") }
+                            )
+                            // Search, Profile ...
+                        }
+                        Box(Modifier.weight(1f)) { /* content */ }
+                    }
+                } else {
+                    Column {
+                        Box(Modifier.weight(1f)) { /* content */ }
+                        NavigationBar {
+                            NavigationBarItem(
+                                selected = selected == 0,
+                                onClick = { selected = 0 },
+                                icon = { Icon(Icons.Filled.Home, "Home") },
+                                label = { Text("Home") }
+                            )
+                            // Search, Profile ...
+                        }
+                    }
+                }
+            """,
+            demo = { AdaptiveNavDemo() }
         )
     )
 )
@@ -445,6 +491,97 @@ private fun NavigationRailDemo() {
                 label = { Text("Profile") }
             )
         }
+    }
+}
+
+private val adaptiveDestinations = listOf("Home", "Search", "Profile")
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AdaptiveNavDemo() {
+    var expanded by remember { mutableStateOf(false) }
+    var selected by remember { mutableIntStateOf(0) }
+    Column(modifier = Modifier.fillMaxWidth()) {
+        SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+            SegmentedButton(
+                selected = !expanded,
+                onClick = { expanded = false },
+                shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2)
+            ) {
+                Text("Compact")
+            }
+            SegmentedButton(
+                selected = expanded,
+                onClick = { expanded = true },
+                shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2)
+            ) {
+                Text("Expanded")
+            }
+        }
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp),
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
+            tonalElevation = 2.dp
+        ) {
+            if (expanded) {
+                Row(modifier = Modifier.height(140.dp)) {
+                    NavigationRail {
+                        adaptiveDestinations.forEachIndexed { index, label ->
+                            NavigationRailItem(
+                                selected = selected == index,
+                                onClick = { selected = index },
+                                icon = { Icon(adaptiveIcon(index), contentDescription = label) },
+                                label = { Text(label) }
+                            )
+                        }
+                    }
+                    AdaptiveContent(
+                        label = adaptiveDestinations[selected],
+                        modifier = Modifier.weight(1f).fillMaxSize()
+                    )
+                }
+            } else {
+                Column(modifier = Modifier.height(140.dp)) {
+                    AdaptiveContent(
+                        label = adaptiveDestinations[selected],
+                        modifier = Modifier.weight(1f).fillMaxWidth()
+                    )
+                    NavigationBar {
+                        adaptiveDestinations.forEachIndexed { index, label ->
+                            NavigationBarItem(
+                                selected = selected == index,
+                                onClick = { selected = index },
+                                icon = { Icon(adaptiveIcon(index), contentDescription = label) },
+                                label = { Text(label) }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        Text(
+            text = "Real apps drive this with WindowSizeClass — " +
+                "calculateWindowSizeClass() — using NavigationBar at WindowWidthSizeClass.Compact " +
+                "and NavigationRail at Medium/Expanded.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(top = 12.dp)
+        )
+    }
+}
+
+private fun adaptiveIcon(index: Int) = when (index) {
+    0 -> Icons.Filled.Home
+    1 -> Icons.Filled.Search
+    else -> Icons.Filled.Person
+}
+
+@Composable
+private fun AdaptiveContent(label: String, modifier: Modifier = Modifier) {
+    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+        Text(text = label, style = MaterialTheme.typography.titleMedium)
     }
 }
 
