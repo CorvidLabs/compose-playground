@@ -1,11 +1,560 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { meta } from "../lib/site";
+import { groups, meta, withBase, groupHue } from "../lib/site";
+
+const features = [
+  {
+    title: "Live, interactive examples",
+    body: "Every component rendered for real — no mock-ups, no guesswork.",
+    icon: `<path d="M4 4h16v12H4z"/><path d="M2 20h20"/><path d="m9 9 3 2-3 2"/>`,
+  },
+  {
+    title: "Copy-paste Kotlin",
+    body: "Real, idiomatic Compose snippets you can drop straight into your app.",
+    icon: `<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>`,
+  },
+  {
+    title: "Light, dark & Material You",
+    body: "See each component themed across modes and dynamic color.",
+    icon: `<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>`,
+  },
+  {
+    title: "Snapshot-tested UI",
+    body: "Each screenshot is verified pixel-for-pixel with Paparazzi.",
+    icon: `<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3.5"/>`,
+  },
+];
+
+const showcase = [
+  {
+    id: "button",
+    label: "Actions",
+    title: "Buttons that feel native",
+    body: "Filled, tonal, outlined, elevated, and text buttons — every Material 3 variant with the right elevation and ripple.",
+    img: "button",
+  },
+  {
+    id: "pickers",
+    label: "Selection & Inputs",
+    title: "Date & time pickers",
+    body: "Modal and inline pickers wired up with state, ready to adapt to any locale or input style.",
+    img: "pickers",
+  },
+  {
+    id: "gradients",
+    label: "Graphics & Drawing",
+    title: "Brushes & gradients",
+    body: "Linear, radial, and sweep gradients painted onto surfaces, text, and custom shapes.",
+    img: "gradients",
+  },
+];
+
+const stats = [
+  { value: meta.componentCount, label: "components" },
+  { value: groups.length, label: "groups" },
+  { value: meta.exampleCount, label: "examples" },
+];
 ---
-<Layout title="Compose Playground" active="home">
+
+<Layout
+  title="Compose Playground — every Jetpack Compose component"
+  description="An interactive Jetpack Compose + Material 3 gallery: 52 components, 82 live examples, and copy-paste Kotlin — all snapshot-tested."
+  active="home"
+>
+  {/* ===================== HERO ===================== */}
+  <section class="hero">
+    <div class="aurora" aria-hidden="true"></div>
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Jetpack Compose · Material 3</p>
+        <h1>
+          Every Compose component, in
+          <span class="gradient-text">one playground.</span>
+        </h1>
+        <p class="lead">
+          A living gallery of {meta.componentCount} Jetpack Compose components with {meta.exampleCount}
+          interactive examples and copy-paste Kotlin — themed for light, dark, and Material You.
+        </p>
+        <div class="row hero-cta">
+          <a class="btn btn-primary" href={withBase("/components")}>
+            Browse components
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn-ghost" href={meta.repoUrl} target="_blank" rel="noopener">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12 11.5 11.5 0 0 0 8 22.9c.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg>
+            View on GitHub
+          </a>
+        </div>
+
+        <ul class="stats" aria-label="At a glance">
+          {stats.map((s) => (
+            <li class="stat card">
+              <span class="stat-value gradient-text">{s.value}</span>
+              <span class="stat-label faint">{s.label}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="phone phone-back">
+          <img src={withBase("/screenshots/gradients.png")} alt="" loading="eager" width="320" height="660" />
+        </div>
+        <div class="phone phone-mid">
+          <img src={withBase("/screenshots/button.png")} alt="" loading="eager" width="320" height="660" />
+        </div>
+        <div class="phone phone-front">
+          <img src={withBase("/screenshots/home-light.png")} alt="" loading="eager" width="320" height="660" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ===================== FEATURES ===================== */}
   <section class="section container">
-    <p class="eyebrow">Foundation OK</p>
-    <h1 class="gradient-text">Compose Playground</h1>
-    <p class="lead">{meta.componentCount} components · {meta.groupCount} groups · {meta.exampleCount} examples</p>
+    <div class="grid features">
+      {features.map((f) => (
+        <div class="card card-hover feature">
+          <span class="feature-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={f.icon} />
+          </span>
+          <h3>{f.title}</h3>
+          <p class="muted">{f.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {/* ===================== GROUPS ===================== */}
+  <section class="section container" id="groups">
+    <header class="band-head">
+      <p class="eyebrow">Organized by purpose</p>
+      <h2>Explore the <span class="gradient-text">{groups.length} groups</span></h2>
+      <p class="lead muted">From actions and navigation to gestures and graphics — jump straight to what you need.</p>
+    </header>
+
+    <div class="grid groups-grid">
+      {groups.map((g) => {
+        const hue = groupHue(g.key);
+        return (
+          <a
+            class="card card-hover group"
+            href={withBase(`/components#${g.key}`)}
+            style={`--g: ${hue};`}
+          >
+            <span class="group-bar" aria-hidden="true"></span>
+            <span class="group-dot" aria-hidden="true"></span>
+            <h3>{g.label}</h3>
+            <p class="muted group-blurb">{g.blurb}</p>
+            <span class="group-count faint">
+              {g.componentIds.length} {g.componentIds.length === 1 ? "component" : "components"}
+            </span>
+          </a>
+        );
+      })}
+    </div>
+  </section>
+
+  {/* ===================== SHOWCASE ===================== */}
+  <section class="section container">
+    <header class="band-head">
+      <p class="eyebrow">A closer look</p>
+      <h2>Real components, <span class="gradient-text">really running</span></h2>
+    </header>
+
+    <div class="showcase">
+      {showcase.map((s, i) => (
+        <article class:list={["show-row", { reverse: i % 2 === 1 }]}>
+          <div class="show-media">
+            <div class="phone phone-solo">
+              <img
+                src={withBase(`/screenshots/${s.img}.png`)}
+                alt={`${s.title} rendered in Compose Playground`}
+                loading="lazy"
+                width="320"
+                height="660"
+              />
+            </div>
+          </div>
+          <div class="show-copy">
+            <span class="chip">{s.label}</span>
+            <h3 class="show-title">{s.title}</h3>
+            <p class="muted">{s.body}</p>
+            <a class="see-it" href={withBase(`/components/${s.id}`)}>
+              See it
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  {/* ===================== ABOUT ===================== */}
+  <section class="section container" id="about">
+    <div class="about card">
+      <p class="eyebrow">About</p>
+      <h2>What is Compose Playground?</h2>
+      <p class="muted">
+        Compose Playground is an interactive reference for Jetpack Compose and Material 3. It collects
+        {meta.componentCount} components into {groups.length} groups, each paired with focused, runnable
+        examples and the exact Kotlin you'd write yourself.
+      </p>
+      <p class="muted">
+        Every example is real — not a screenshot mock-up. The previews you see here are rendered from the
+        actual composables and verified pixel-for-pixel with Paparazzi snapshot tests, so what you copy is
+        what you ship.
+      </p>
+      <p class="muted">
+        Browse the gallery to find a component, study its variants in light and dark, then copy the snippet
+        into your project. The full source — components, examples, and tests — lives on
+        <a href={meta.repoUrl} target="_blank" rel="noopener">GitHub</a>.
+      </p>
+      <div class="row">
+        <a class="btn btn-primary" href={withBase("/components")}>Browse components</a>
+        <a class="btn btn-ghost" href={meta.repoUrl} target="_blank" rel="noopener">View the repo</a>
+      </div>
+    </div>
+  </section>
+
+  {/* ===================== FINAL CTA ===================== */}
+  <section class="section container">
+    <div class="cta">
+      <div class="cta-glow" aria-hidden="true"></div>
+      <h2>Start exploring the playground</h2>
+      <p class="lead">{meta.componentCount} components · {groups.length} groups · {meta.exampleCount} live examples.</p>
+      <div class="row cta-row">
+        <a class="btn btn-primary" href={withBase("/components")}>
+          Browse components
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="btn btn-ghost" href={meta.repoUrl} target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+    </div>
   </section>
 </Layout>
+
+<style>
+  /* ---------------- hero ---------------- */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(40px, 7vw, 88px);
+  }
+  .aurora {
+    position: absolute;
+    inset: -30% -10% auto -10%;
+    height: 720px;
+    background:
+      radial-gradient(620px 420px at 72% 18%, rgba(139, 109, 255, 0.32), transparent 62%),
+      radial-gradient(560px 380px at 18% 8%, rgba(255, 143, 176, 0.22), transparent 60%);
+    filter: blur(8px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: center;
+  }
+  .hero-copy h1 {
+    margin-top: 0.5rem;
+  }
+  .hero-cta {
+    margin-top: 1.8rem;
+  }
+
+  /* stats */
+  .stats {
+    list-style: none;
+    margin: 2.4rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    max-width: 480px;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 12px;
+    text-align: center;
+  }
+  .stat-value {
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .stat-label {
+    margin-top: 6px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 600;
+  }
+
+  /* hero phones */
+  .hero-visual {
+    position: relative;
+    height: clamp(420px, 46vw, 560px);
+  }
+  .phone {
+    border-radius: 30px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface-2);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    padding: 6px;
+  }
+  .phone img {
+    border-radius: 24px;
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .hero-visual .phone {
+    position: absolute;
+    width: clamp(180px, 22vw, 250px);
+    transition: transform 0.4s ease;
+  }
+  .phone-front {
+    left: 28%;
+    top: 4%;
+    z-index: 3;
+    transform: rotate(-4deg);
+    box-shadow: var(--shadow-glow);
+  }
+  .phone-mid {
+    left: 2%;
+    top: 18%;
+    z-index: 2;
+    transform: rotate(-9deg);
+    opacity: 0.96;
+  }
+  .phone-back {
+    right: 0;
+    top: 26%;
+    z-index: 1;
+    transform: rotate(7deg);
+    opacity: 0.9;
+  }
+  .hero-visual:hover .phone-front { transform: rotate(-3deg) translateY(-6px); }
+  .hero-visual:hover .phone-mid { transform: rotate(-10deg) translateY(-3px); }
+  .hero-visual:hover .phone-back { transform: rotate(8deg) translateY(-3px); }
+
+  /* ---------------- features ---------------- */
+  .features {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .feature {
+    padding: 24px;
+  }
+  .feature h3 {
+    margin: 14px 0 6px;
+    font-size: 1.08rem;
+  }
+  .feature p {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+  .feature-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: var(--primary-soft);
+    border: 1px solid var(--primary-ring);
+    color: var(--primary-bright);
+  }
+
+  /* ---------------- band heads ---------------- */
+  .band-head {
+    max-width: 60ch;
+    margin-bottom: 36px;
+  }
+  .band-head h2 {
+    margin-top: 0.3rem;
+  }
+
+  /* ---------------- groups ---------------- */
+  .groups-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+  .group {
+    position: relative;
+    display: block;
+    padding: 22px 22px 22px 26px;
+    color: var(--text);
+    overflow: hidden;
+  }
+  .group:hover {
+    text-decoration: none;
+  }
+  .group-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: hsl(var(--g) 80% 70%);
+    opacity: 0.85;
+  }
+  .group-dot {
+    display: block;
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    margin-bottom: 14px;
+    background: hsl(var(--g) 85% 68% / 0.18);
+    border: 1px solid hsl(var(--g) 85% 70% / 0.4);
+  }
+  .group h3 {
+    margin: 0 0 6px;
+    font-size: 1.12rem;
+  }
+  .group-blurb {
+    margin: 0 0 14px;
+    font-size: 0.92rem;
+  }
+  .group-count {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: hsl(var(--g) 70% 72%);
+  }
+
+  /* ---------------- showcase ---------------- */
+  .showcase {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(40px, 7vw, 88px);
+  }
+  .show-row {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: clamp(28px, 5vw, 64px);
+    align-items: center;
+  }
+  .show-row.reverse {
+    grid-template-columns: 1.15fr 0.85fr;
+  }
+  .show-row.reverse .show-media {
+    order: 2;
+  }
+  .show-media {
+    display: flex;
+    justify-content: center;
+  }
+  .phone-solo {
+    width: min(260px, 80%);
+    transform: rotate(-3deg);
+    transition: transform 0.3s ease;
+  }
+  .show-row.reverse .phone-solo {
+    transform: rotate(3deg);
+  }
+  .phone-solo:hover {
+    transform: rotate(0) translateY(-6px);
+  }
+  .show-title {
+    font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+    margin: 14px 0 10px;
+  }
+  .see-it {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    font-weight: 600;
+  }
+  .see-it:hover {
+    text-decoration: none;
+    gap: 10px;
+  }
+  .see-it svg {
+    transition: transform 0.2s ease;
+  }
+
+  /* ---------------- about ---------------- */
+  .about {
+    padding: clamp(28px, 5vw, 52px);
+    max-width: 760px;
+  }
+  .about h2 {
+    margin-top: 0.4rem;
+  }
+  .about .row {
+    margin-top: 1.4rem;
+  }
+
+  /* ---------------- final cta ---------------- */
+  .cta {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    padding: clamp(40px, 7vw, 80px) 24px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-strong);
+    background:
+      radial-gradient(700px 320px at 50% -20%, var(--primary-soft), transparent 70%),
+      linear-gradient(180deg, var(--surface), var(--surface-2));
+    box-shadow: var(--shadow-glow);
+  }
+  .cta-glow {
+    position: absolute;
+    inset: auto 0 -60% 0;
+    height: 320px;
+    background: radial-gradient(520px 240px at 50% 100%, rgba(255, 143, 176, 0.22), transparent 70%);
+    pointer-events: none;
+  }
+  .cta h2 {
+    position: relative;
+  }
+  .cta .lead {
+    position: relative;
+    margin-inline: auto;
+  }
+  .cta-row {
+    position: relative;
+    justify-content: center;
+    margin-top: 1.6rem;
+  }
+
+  /* ---------------- responsive ---------------- */
+  @media (max-width: 960px) {
+    .features { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-visual {
+      height: clamp(360px, 80vw, 480px);
+      max-width: 420px;
+      margin-inline: auto;
+      width: 100%;
+    }
+    .show-row,
+    .show-row.reverse {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+    .show-row.reverse .show-media { order: 0; }
+    .show-copy { display: flex; flex-direction: column; align-items: center; }
+    .show-copy .muted { max-width: 52ch; }
+  }
+  @media (max-width: 520px) {
+    .features { grid-template-columns: 1fr; }
+    .stats { max-width: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-visual:hover .phone-front,
+    .hero-visual:hover .phone-mid,
+    .hero-visual:hover .phone-back,
+    .phone-solo:hover { transform: none; }
+  }
+</style>
