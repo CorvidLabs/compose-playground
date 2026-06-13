@@ -23,7 +23,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -37,24 +37,26 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     <meta property="og:image" content={new URL(ogImage, Astro.site).href} />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <link rel="icon" type="image/svg+xml" href={withBase("/favicon.svg")} />
+    <link rel="icon" type="image/svg+xml" href={withBase("/brand/favicon.svg")} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700;900&family=Spline+Sans+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
 
-    {/* set theme before paint to avoid a flash */}
+    {/* CorvidLabs pre-paint: ?theme= or stored choice before first paint, no flash */}
     <script is:inline>
       (() => {
-        const stored = localStorage.getItem("cp-theme");
-        const theme =
-          stored ?? (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
-        document.documentElement.setAttribute("data-theme", theme);
+        try {
+          const q = new URLSearchParams(location.search).get("theme");
+          const t = q || localStorage.getItem("corvid-theme");
+          if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+        } catch (_) {}
       })();
     </script>
+    <script is:inline src={withBase("/brand/theme.js")} defer></script>
   </head>
   <body>
     <a href="#main" class="sr-only">Skip to content</a>
@@ -64,17 +66,5 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     </main>
     <Footer repoUrl={meta.repoUrl} />
     <Search />
-
-    <script>
-      // theme toggle (delegated, works on every page)
-      document.addEventListener("click", (e) => {
-        const btn = (e.target as HTMLElement).closest("[data-theme-toggle]");
-        if (!btn) return;
-        const root = document.documentElement;
-        const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
-        root.setAttribute("data-theme", next);
-        localStorage.setItem("cp-theme", next);
-      });
-    </script>
   </body>
 </html>

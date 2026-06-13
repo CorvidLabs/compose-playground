@@ -93,20 +93,24 @@ export function groupIcon(groupKey: string): string {
   return icons[groupKey] ?? icons.Actions;
 }
 
-/** A stable accent hue per group, for subtle visual variety. */
-export function groupHue(groupKey: string): number {
-  const hues: Record<string, number> = {
-    Actions: 258,
-    Communication: 198,
-    Containment: 32,
-    Navigation: 280,
-    Selection: 160,
-    TextInputs: 220,
-    Layout: 18,
-    Lists: 300,
-    Animation: 340,
-    Gestures: 120,
-    Graphics: 48,
+/**
+ * A stable brand accent per group, for subtle visual variety.
+ * Returns a CorvidLabs categorical chart token (teal/steel/amber/green/clay) —
+ * never purple. Use it as `style={`--group-accent: ${groupColor(key)}`}`.
+ */
+export function groupColor(groupKey: string): string {
+  const charts: Record<string, string> = {
+    Actions: "var(--chart-1)",       // teal
+    Communication: "var(--chart-2)", // steel
+    Containment: "var(--chart-3)",   // amber
+    Navigation: "var(--chart-2)",    // steel
+    Selection: "var(--chart-4)",     // green
+    TextInputs: "var(--chart-2)",    // steel
+    Layout: "var(--chart-5)",        // clay
+    Lists: "var(--chart-1)",         // teal
+    Animation: "var(--chart-5)",     // clay
+    Gestures: "var(--chart-4)",      // green
+    Graphics: "var(--chart-3)",      // amber
   };
-  return hues[groupKey] ?? 258;
+  return charts[groupKey] ?? "var(--sheen)";
 }

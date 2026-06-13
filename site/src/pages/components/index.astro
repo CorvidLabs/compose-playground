@@ -1,6 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { groups, meta, componentsInGroup, withBase, groupHue, groupIcon } from "../../lib/site";
+import { groups, meta, componentsInGroup, withBase, groupColor, groupIcon } from "../../lib/site";
 ---
 
 <Layout
@@ -38,7 +38,7 @@ import { groups, meta, componentsInGroup, withBase, groupHue, groupIcon } from "
     {/* group jump nav */}
     <nav class="group-nav" aria-label="Jump to group">
       {groups.map((g) => (
-        <a class="group-pill" href={`#${g.key}`} style={`--hue:${groupHue(g.key)}`}>
+        <a class="group-pill" href={`#${g.key}`} style={`--group-accent:${groupColor(g.key)}`}>
           {g.label}<span class="group-pill-n">{componentsInGroup(g.key).length}</span>
         </a>
       ))}
@@ -50,9 +50,9 @@ import { groups, meta, componentsInGroup, withBase, groupHue, groupIcon } from "
 
     {groups.map((group) => {
       const items = componentsInGroup(group.key);
-      const hue = groupHue(group.key);
+      const accent = groupColor(group.key);
       return (
-        <section id={group.key} class="group-section" data-group-section style={`--hue:${hue}`}>
+        <section id={group.key} class="group-section" data-group-section style={`--group-accent:${accent}`}>
           <div class="group-head">
             <div class="gh-left">
               <span class="group-ic" aria-hidden="true">
@@ -72,7 +72,7 @@ import { groups, meta, componentsInGroup, withBase, groupHue, groupIcon } from "
                 data-card
                 data-name={c.name}
                 data-summary={c.summary}
-                style={`--hue:${hue}`}
+                style={`--group-accent:${accent}`}
               >
                 <span class="thumb">
                   <img src={withBase(`/${c.screenshot}`)} alt={`${c.name} preview`} loading="lazy" />
@@ -101,75 +101,72 @@ import { groups, meta, componentsInGroup, withBase, groupHue, groupIcon } from "
   .filter-bar {
     position: sticky; top: calc(var(--header-h) + 8px); z-index: 20;
     margin-bottom: 18px; padding: 8px 0;
-    background: linear-gradient(180deg, var(--bg-grad-1) 30%, transparent);
+    background: var(--header-bg);
     backdrop-filter: blur(8px);
   }
   .filter-field {
     display: flex; align-items: center; gap: 12px; padding: 12px 18px;
-    border-radius: 999px; background: linear-gradient(180deg, var(--surface), var(--surface-2));
-    border: 1px solid var(--border-strong); box-shadow: var(--shadow);
+    border-radius: 0; background: var(--surface);
+    border: 1px solid var(--ink-12); box-shadow: var(--shadow);
   }
-  .filter-field:focus-within { border-color: var(--primary-ring); box-shadow: 0 0 0 3px var(--primary-soft); }
-  .filter-field svg { color: var(--text-faint); flex: none; }
-  .filter-field input { flex: 1 1 auto; min-width: 0; background: transparent; border: 0; color: var(--text); font: inherit; font-size: 1rem; outline: none; }
-  .filter-field input::placeholder { color: var(--text-faint); }
-  .filter-count { flex: none; font-size: 0.82rem; color: var(--text-faint); font-variant-numeric: tabular-nums; }
+  .filter-field:focus-within { border-color: var(--sheen); box-shadow: 0 0 0 2px var(--sheen); }
+  .filter-field svg { color: var(--ink-45); flex: none; }
+  .filter-field input { flex: 1 1 auto; min-width: 0; background: transparent; border: 0; color: var(--ink); font: inherit; font-size: 1rem; outline: none; }
+  .filter-field input::placeholder { color: var(--ink-45); }
+  .filter-count { flex: none; font-size: 0.82rem; color: var(--ink-45); font-variant-numeric: tabular-nums; font-family: var(--font-mono); }
 
   .group-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; }
   .group-pill {
     display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px;
-    border-radius: 999px; font-size: 0.88rem; font-weight: 600; color: var(--text-dim);
-    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 0; font-size: 0.88rem; font-weight: 600; color: var(--ink-70);
+    background: var(--ink-06); border: 1px solid var(--hairline);
   }
-  .group-pill:hover { color: var(--text); border-color: hsl(var(--hue) 70% 60% / 0.6); text-decoration: none; }
-  .group-pill-n { font-size: 0.74rem; color: hsl(var(--hue) 78% 72%); font-variant-numeric: tabular-nums; }
-  [data-theme="light"] .group-pill-n { color: hsl(var(--hue) 60% 45%); }
+  .group-pill:hover { color: var(--ink); border-color: var(--group-accent); text-decoration: none; }
+  .group-pill-n { font-size: 0.74rem; color: var(--group-accent); font-variant-numeric: tabular-nums; font-family: var(--font-mono); }
 
-  .no-results { text-align: center; color: var(--text-dim); padding: 48px 12px; font-size: 1.05rem; }
+  .no-results { text-align: center; color: var(--ink-70); padding: 48px 12px; font-size: 1.05rem; }
 
   .group-section { margin-bottom: clamp(40px, 6vw, 64px); scroll-margin-top: calc(var(--header-h) + 72px); }
   .group-section[hidden] { display: none; }
   .group-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 4px; }
   .gh-left { display: flex; align-items: center; gap: 12px; }
   .group-ic {
-    display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 10px;
-    background: hsl(var(--hue) 85% 68% / 0.16); border: 1px solid hsl(var(--hue) 85% 70% / 0.38);
-    color: hsl(var(--hue) 85% 78%);
+    display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 0;
+    background: var(--ink-06); border: 1px solid var(--ink-12);
+    color: var(--group-accent);
   }
-  [data-theme="light"] .group-ic { color: hsl(var(--hue) 60% 45%); }
   .group-ic svg { width: 18px; height: 18px; }
   .group-title { margin: 0; }
-  .group-meta { flex: none; font-size: 0.85rem; color: var(--text-faint); font-weight: 600; }
+  .group-meta { flex: none; font-size: 0.85rem; color: var(--ink-45); font-weight: 600; font-family: var(--font-mono); }
   .group-blurb { max-width: 64ch; margin-bottom: 22px; }
 
   .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
 
   .comp-card {
-    position: relative; display: flex; flex-direction: column; padding: 0; overflow: hidden; color: var(--text);
+    position: relative; display: flex; flex-direction: column; padding: 0; overflow: hidden; color: var(--ink);
   }
   .comp-card:hover { text-decoration: none; }
   .comp-card[hidden] { display: none; }
   .thumb {
-    display: block; aspect-ratio: 16 / 10; overflow: hidden; border-bottom: 1px solid var(--border);
-    background: radial-gradient(120% 120% at 50% 0%, hsl(var(--hue) 60% 40% / 0.18), transparent 70%), var(--surface-3);
+    display: block; aspect-ratio: 16 / 10; overflow: hidden; border-bottom: 1px solid var(--hairline);
+    background: var(--surface-strong);
   }
   .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: center; transition: transform .4s ease; }
   .comp-card:hover .thumb img { transform: scale(1.04); }
   .comp-body { display: flex; flex-direction: column; gap: 8px; padding: 16px 18px 18px; flex: 1; }
   .comp-name { font-weight: 700; font-size: 1.08rem; letter-spacing: -0.01em; }
   .comp-summary {
-    color: var(--text-dim); font-size: 0.92rem; line-height: 1.5; flex: 1;
+    color: var(--ink-70); font-size: 0.92rem; line-height: 1.5; flex: 1;
     display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   }
   .comp-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
   .comp-count {
-    font-size: 0.78rem; font-weight: 600; color: hsl(var(--hue) 78% 74%);
-    background: hsl(var(--hue) 70% 60% / 0.12); border: 1px solid hsl(var(--hue) 70% 60% / 0.3);
-    padding: 3px 9px; border-radius: 999px;
+    font-size: 0.78rem; font-weight: 600; font-family: var(--font-mono); color: var(--group-accent);
+    background: var(--ink-06); border: 1px solid var(--ink-12);
+    padding: 3px 9px; border-radius: 0;
   }
-  [data-theme="light"] .comp-count { color: hsl(var(--hue) 60% 42%); }
-  .comp-arrow { color: var(--text-faint); transition: transform .2s ease, color .2s ease; }
-  .comp-card:hover .comp-arrow { color: hsl(var(--hue) 80% 72%); transform: translateX(3px); }
+  .comp-arrow { color: var(--ink-45); transition: transform .2s ease, color .2s ease; }
+  .comp-card:hover .comp-arrow { color: var(--group-accent); transform: translateX(3px); }
 
   @media (max-width: 480px) { .card-grid { grid-template-columns: 1fr; } }
 </style>

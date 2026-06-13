@@ -7,7 +7,7 @@ import {
   componentById,
   withBase,
   sourceUrl,
-  groupHue,
+  groupColor,
   type Component,
 } from "../../lib/site";
 
@@ -26,7 +26,7 @@ const { component } = Astro.props;
 
 const group = groups.find((g) => g.key === component.group);
 const groupLabel = group?.label ?? component.group;
-const hue = groupHue(component.group);
+const accent = groupColor(component.group);
 
 const related = component.related
   .map((id) => componentById(id))
@@ -45,7 +45,7 @@ const slug = (s: string) =>
   description={component.summary}
   active="components"
 >
-  <div class="section container detail" style={`--hue:${hue}`}>
+  <div class="section container detail" style={`--group-accent:${accent}`}>
     <nav class="crumbs" aria-label="Breadcrumb">
       <ol>
         <li><a href={withBase("/")}>Home</a></li>
@@ -117,7 +117,7 @@ const slug = (s: string) =>
                     <span class="copy-label">Copy</span>
                   </button>
                 </div>
-                <Code code={example.code} lang="kotlin" />
+                <Code code={example.code} lang="kotlin" theme="css-variables" />
               </div>
             </article>
           ))}
@@ -131,9 +131,9 @@ const slug = (s: string) =>
         <div class="related-grid">
           {related.map((r) => {
             const rGroup = groups.find((g) => g.key === r.group);
-            const rHue = groupHue(r.group);
+            const rAccent = groupColor(r.group);
             return (
-              <a class="card card-hover related-card" href={withBase(`/components/${r.id}`)} style={`--hue:${rHue}`}>
+              <a class="card card-hover related-card" href={withBase(`/components/${r.id}`)} style={`--group-accent:${rAccent}`}>
                 <span class="related-name">{r.name}</span>
                 <span class="related-sum muted">{r.summary}</span>
                 <span class="chip group-chip">{rGroup?.label ?? r.group}</span>
@@ -162,29 +162,28 @@ const slug = (s: string) =>
 
   .crumbs ol {
     list-style: none; display: flex; flex-wrap: wrap; gap: 8px;
-    margin: 0 0 28px; padding: 0; font-size: 0.88rem; color: var(--text-faint);
+    margin: 0 0 28px; padding: 0; font-size: 0.88rem; color: var(--ink-45);
   }
-  .crumbs a { color: var(--text-dim); }
-  .crumbs a:hover { color: var(--primary-bright); }
-  .crumbs [aria-current="page"] { color: var(--text); font-weight: 600; }
+  .crumbs a { color: var(--ink-70); }
+  .crumbs a:hover { color: var(--sheen); }
+  .crumbs [aria-current="page"] { color: var(--ink); font-weight: 600; }
 
   .hero { margin-bottom: clamp(28px, 5vw, 40px); }
   .head { margin-bottom: 28px; }
   .head h1 { margin: 0.4em 0 0.2em; font-size: clamp(2.2rem, 5vw, 3.1rem); }
   .shot { margin: 0 auto; max-width: 680px; }
   .shot img {
-    width: 100%; height: auto; border-radius: 18px;
-    border: 1px solid var(--border-strong); box-shadow: var(--shadow-glow); display: block;
+    width: 100%; height: auto; border-radius: 0;
+    border: 1px solid var(--ink-12); box-shadow: var(--shadow); display: block;
     background: var(--surface);
   }
   .shot figcaption { margin-top: 10px; text-align: center; font-size: 0.78rem; }
   .group-chip {
-    background: hsl(var(--hue) 70% 60% / 0.14);
-    color: hsl(var(--hue) 80% 78%);
-    border-color: hsl(var(--hue) 70% 60% / 0.4);
+    background: var(--ink-06);
+    color: var(--group-accent);
+    border-color: var(--ink-12);
   }
-  [data-theme="light"] .group-chip { color: hsl(var(--hue) 65% 40%); }
-  a.group-chip:hover { text-decoration: none; border-color: hsl(var(--hue) 70% 60% / 0.7); }
+  a.group-chip:hover { text-decoration: none; border-color: var(--group-accent); }
   .description { max-width: 65ch; margin-top: 14px; font-size: 1.02rem; }
   .head-actions { margin-top: 26px; }
 
@@ -194,10 +193,10 @@ const slug = (s: string) =>
   }
   .jump-label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-faint); margin-right: 4px; }
   .jump-chip {
-    padding: 6px 13px; border-radius: 999px; font-size: 0.86rem; font-weight: 600;
-    color: var(--text-dim); background: var(--surface-2); border: 1px solid var(--border);
+    padding: 6px 13px; border-radius: 0; font-size: 0.86rem; font-weight: 600;
+    color: var(--ink-70); background: var(--ink-06); border: 1px solid var(--hairline);
   }
-  .jump-chip:hover { color: var(--text); border-color: var(--primary-ring); text-decoration: none; }
+  .jump-chip:hover { color: var(--ink); border-color: var(--sheen); text-decoration: none; }
 
   .examples { margin-bottom: clamp(48px, 8vw, 80px); }
   .example-list { display: grid; gap: 22px; }
@@ -205,26 +204,25 @@ const slug = (s: string) =>
   .example-head { display: flex; gap: 16px; align-items: baseline; margin-bottom: 18px; }
   .example-num {
     font-family: var(--font-mono); font-size: 0.85rem; font-weight: 600;
-    color: hsl(var(--hue) 75% 70%); padding-top: 2px; flex-shrink: 0;
+    color: var(--group-accent); padding-top: 2px; flex-shrink: 0;
   }
   .example-head h3 { margin: 0 0 0.2em; font-size: 1.2rem; }
   .example-head p { margin: 0; max-width: 70ch; font-size: 0.95rem; }
 
-  .code-panel { position: relative; margin: 0 -24px; border-top: 1px solid var(--border); }
+  .code-panel { position: relative; margin: 0 -24px; border-top: 1px solid var(--hairline); }
   .code-toolbar {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 8px 16px; background: #0a0712; border-bottom: 1px solid var(--border);
+    padding: 8px 16px; background: var(--ink-06); border-bottom: 1px solid var(--hairline);
   }
-  [data-theme="light"] .code-toolbar { background: #faf8ff; }
-  .code-lang { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+  .code-lang { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-45); }
   .copy-btn {
     display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px;
-    border-radius: 999px; font: inherit; font-size: 0.78rem; font-weight: 600;
-    color: var(--text-dim); background: var(--surface-2); border: 1px solid var(--border-strong);
+    border-radius: 0; font: inherit; font-size: 0.78rem; font-weight: 600;
+    color: var(--ink-70); background: var(--surface); border: 1px solid var(--ink-12);
     cursor: pointer; transition: color .15s, border-color .15s, background .15s;
   }
-  .copy-btn:hover { color: var(--text); border-color: var(--primary-ring); }
-  .copy-btn.copied { color: var(--mint); border-color: var(--mint); }
+  .copy-btn:hover { color: var(--ink); border-color: var(--sheen); }
+  .copy-btn.copied { color: var(--success); border-color: var(--success); }
   .code-panel :global(pre) { border: 0; border-radius: 0; }
 
   .related { margin-bottom: clamp(40px, 7vw, 64px); }
