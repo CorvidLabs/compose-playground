@@ -11,6 +11,15 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
+    paths:
+      - "app/**"
+      - "**/*.gradle"
+      - "**/*.gradle.kts"
+      - "gradle/**"
+      - "gradle.properties"
+      - "settings.gradle.kts"
+      - "fledge.toml"
+      - ".github/workflows/macos-selfhosted.yml"
 
 concurrency:
   group: macos-selfhosted-${{ github.ref }}
@@ -19,6 +28,7 @@ concurrency:
 jobs:
   ci:
     runs-on: [self-hosted, macOS]
+    timeout-minutes: 45
     steps:
       - name: Checkout
         uses: actions/checkout@v5
