@@ -28,6 +28,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0   # atlas reads git history for activity
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -41,6 +43,30 @@ jobs:
         uses: actions/configure-pages@v5
         with:
           enablement: true
+
+      # Render the spec-coverage badge + SVG cards from the atlas into the built
+      # site, so they ship to Pages alongside it (served at
+      # corvidlabs.github.io/compose-playground/badges/). Cached by the pinned v1
+      # commit so the step is a fast no-op on a cache hit.
+      - name: Resolve pinned atlas commit (cache key)
+        id: atlasref
+        run: echo "sha=$(git ls-remote https://github.com/CorvidLabs/fledge-plugin-atlas v1 | cut -f1)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache the fledge-atlas CLI
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/fledge-atlas
+            ~/.cargo/.crates.toml
+            ~/.cargo/.crates2.json
+          key: fledge-atlas-${{ runner.os }}-${{ steps.atlasref.outputs.sha }}
+
+      - name: Render atlas coverage badges
+        uses: CorvidLabs/fledge-plugin-atlas@v1
+        with:
+          path: .
+          output-dir: site/dist/badges
+          components: "coverage langmix treemap sunburst"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
