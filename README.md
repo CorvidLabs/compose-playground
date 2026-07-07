@@ -1,5 +1,7 @@
 # Compose Playground
 
+![spec coverage](https://img.shields.io/endpoint?url=https://corvidlabs.github.io/compose-playground/badges/coverage.json)
+
 🌐 **Live site: https://corvidlabs.github.io/compose-playground/**
 
 - **Docs site:** an [Astro](https://astro.build)-powered browsable catalog (source in [`site/`](site/)) — see [`site/README.md`](site/README.md).

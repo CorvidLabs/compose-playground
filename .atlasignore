@@ -1,0 +1,28 @@
+# Atlas coverage scope for compose-playground.
+#
+# The specs govern the Compose catalog app's source under app/src/main, not
+# the unit/snapshot tests, the Astro marketing site served on Pages, or the
+# Gradle build manifests. Keep those out of the coverage denominator so the
+# percentage reflects the app code the specs are meant to cover. Root-anchored
+# subset of gitignore.
+
+# Unit and snapshot tests.
+app/src/test/
+
+# Astro marketing site (built and served on Pages).
+site/
+
+# Docs and dev scripts.
+docs/
+scripts/
+
+# Gradle build manifests, wrapper, and output.
+build/
+app/build/
+gradle/
+build.gradle.kts
+settings.gradle.kts
+app/build.gradle.kts
+
+# specsync metadata.
+.specsync/
