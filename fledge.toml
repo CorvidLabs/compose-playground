@@ -31,3 +31,7 @@ steps = [
   { parallel = ["test", "spec-check"] },
   "snapshot-verify",
 ]
+
+[lanes.verify]
+description = "Native verification used by the unified Trust gate"
+steps = ["build", "test", "snapshot-verify"]

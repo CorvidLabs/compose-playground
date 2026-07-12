@@ -4,8 +4,7 @@ name: CI
 #
 # This is a PRIVATE repo, so build/test run on our self-hosted macOS runners
 # (corvid-mac-*), which already have the Android SDK, the Android Studio JBR, and
-# fledge installed. Spec-sync validation runs via fledge but is intentionally NOT a
-# hard gate here; a best-effort, non-blocking `specs` job is included for visibility.
+# fledge installed. Governance validation is handled by the required `trust` workflow.
 
 on:
   push:
@@ -62,18 +61,3 @@ jobs:
           name: app-debug
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
-
-  # Non-blocking spec-sync visibility job. This job never fails the workflow.
-  specs:
-    name: Spec check (non-blocking)
-    runs-on: [self-hosted, macOS]
-    timeout-minutes: 10
-    continue-on-error: true
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Run spec check
-        run: |
-          command -v fledge || { echo "::error::fledge missing on $(hostname)"; exit 1; }
-          fledge run spec-check

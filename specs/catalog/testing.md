@@ -6,8 +6,8 @@ spec: catalog.spec.md
 
 ### Unit Tests
 
-- <!-- List unit test scenarios. -->
+- Validate registry identifiers, navigation, grouping, and search behavior.
 
 ### Integration Tests
 
-- <!-- List integration test scenarios. -->
+- Build the debug APK, run unit tests, and verify committed Paparazzi snapshots.

@@ -31,6 +31,22 @@ aggregates the per-group lists.
 The app module is intentionally `internal` (Kotlin app-module convention); nothing is
 exported across module boundaries. The catalog surface is:
 
+### Exported Functions
+
+| Export | Description |
+|--------|-------------|
+| `title` | Example title |
+| `description` | Component or example description |
+| `code` | Example source text |
+| `demo` | Interactive Compose example |
+| `id` | Stable component route identifier |
+| `name` | Display name |
+| `group` | Component group |
+| `summary` | Searchable short summary |
+| `docUrl` | Optional external documentation URL |
+| `related` | Related component identifiers |
+| `examples` | Interactive examples |
+
 ### Structs & Enums
 
 | Type | Description |

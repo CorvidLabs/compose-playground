@@ -4,6 +4,6 @@ spec: catalog.spec.md
 
 ## Tasks
 
-- [ ] Write spec
-- [ ] Implement module
-- [ ] Write tests
+- [x] Define catalog and navigation behavior.
+- [x] Implement grouped registry and searchable UI.
+- [x] Cover navigation and visual examples.
