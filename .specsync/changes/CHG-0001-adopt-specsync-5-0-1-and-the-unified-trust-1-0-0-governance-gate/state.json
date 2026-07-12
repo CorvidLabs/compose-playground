@@ -33,9 +33,7 @@
   "no_spec_change": false,
   "no_spec_change_rationale": null,
   "acceptance_criteria": [
-    "SpecSync strict check passes; all four agent integrations are installed; the immutable Trust 1.0.0 action runs as job trust; native Android build",
-    "unit tests",
-    "and snapshot verification remain green; standalone Pages and Atlas publishing remain independent"
+    "SpecSync strict check passes; all four agent integrations are installed; the immutable Trust 1.0.0 action runs as job trust; native Android build, unit tests, and snapshot verification remain green; standalone Pages and Atlas publishing remain independent"
   ],
   "selected_artifacts": [
     "context",
