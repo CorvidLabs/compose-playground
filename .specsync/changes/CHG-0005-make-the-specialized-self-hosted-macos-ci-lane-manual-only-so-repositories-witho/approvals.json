@@ -1,0 +1,19 @@
+{
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1784053435,
+      "digest": "c075b00c189a771c5fa90ec553283438a0ce00a07ce4db1263568e81cba80dd5",
+      "note": "Approved after actionlint and the full native Android verification lane passed for the manual-only workflow correction."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784053464,
+      "digest": "c7c5b6f368c239ffe6a7c2804e9d98309ac64f4b034adbf85c136832278d9e45",
+      "note": "Accepted after actionlint, full native Android verification, and immutable-trigger inspection passed; hosted success remains pending."
+    }
+  ],
+  "reopenings": []
+}

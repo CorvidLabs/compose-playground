@@ -55,6 +55,13 @@
       "timestamp": 1784051881,
       "digest": "672869cc9721987ff057d494c9e6f9a3b1683821b985e4249c2067c80ae91ac2",
       "note": "Fresh closing approval after complete repository-specific SDD ownership and truthful evidence documentation; native Android verification passes and hosted success remains pending."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784053488,
+      "digest": "81071929db7fa6971cb5e81f72f8d02a1a318438034cf1a2006de6d46f3316fa",
+      "note": "Fresh closing approval after the workflow-only successor and full native verification passed; canonical product and catalog semantics remain unchanged."
     }
   ],
   "reopenings": [
@@ -186,6 +193,49 @@
       },
       "stale_acceptance_input_digest": "24634fedadf5f54098839c798758a2922cfdd4013158e58f48c5cca09fc19c38",
       "current_acceptance_input_digest": "580b47a6ff844bc3ca4fc95efe79d9198a393ae330fbff8d635803994a978061"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0001-adopt-specsync-5-0-1-and-the-unified-trust-1-0-0-governance-gate",
+      "actor": "user:0xLeif",
+      "reason": "The approved manual-only macOS workflow successor changes current delivery inputs, so the rollout evidence must be freshly verified without altering its canonical specification.",
+      "timestamp": 1784053380,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1784051881,
+        "digest": "672869cc9721987ff057d494c9e6f9a3b1683821b985e4249c2067c80ae91ac2",
+        "note": "Fresh closing approval after complete repository-specific SDD ownership and truthful evidence documentation; native Android verification passes and hosted success remains pending."
+      },
+      "prior_verification": {
+        "timestamp": 1784051871,
+        "commit": "87f5fc98f927e2f02f75d9d6f448f66ca1b04189",
+        "contract_digest": "6643e824f0accc20c0452291c26a6a44934c4a54d649fa717d5bce12c23b3937",
+        "workspace_digest": "ac1a5b510dfc91ffc12eaf54224baf578ed66a8ffef234f7dea07c56988641f1",
+        "acceptance_input_digest": "f04f53e50c031f49e1fd9583711b71491186a8af6ccb53aed631bd57e30395c6",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-catalog-001",
+          "REQ-catalog-002",
+          "REQ-catalog-003",
+          "REQ-catalog-004",
+          "REQ-catalog-005",
+          "REQ-catalog-006",
+          "REQ-catalog-007",
+          "REQ-catalog-008"
+        ]
+      },
+      "stale_acceptance_input_digest": "f04f53e50c031f49e1fd9583711b71491186a8af6ccb53aed631bd57e30395c6",
+      "current_acceptance_input_digest": "9257d1461517b03f979c7de748986c4fdfdd2c450e3a2ec8270e3b2a80b393b6"
     }
   ]
 }

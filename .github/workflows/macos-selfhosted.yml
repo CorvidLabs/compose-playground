@@ -1,25 +1,15 @@
 name: macOS (self-hosted)
 
-# Runs the full fledge `ci` lane on a self-hosted macOS runner that already has the
-# Android SDK, the Android Studio JBR, and fledge installed. Triggered manually or on
-# pushes to main so it never blocks PRs when the runner is offline.
+# Optional manual lane for a self-hosted macOS runner that already has the Android
+# SDK, the Android Studio JBR, and fledge installed. This repository currently has
+# no registered self-hosted runner, so normal push coverage is provided by the
+# GitHub-hosted Build and Trust workflows without queueing this specialized lane.
 #
 # Register the runner once with:  ./scripts/setup-macos-runner.sh
 # (see that script for the token step), then start it with `./run.sh` in the runner dir.
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - "app/**"
-      - "**/*.gradle"
-      - "**/*.gradle.kts"
-      - "gradle/**"
-      - "gradle.properties"
-      - "settings.gradle.kts"
-      - "fledge.toml"
-      - ".github/workflows/macos-selfhosted.yml"
 
 concurrency:
   group: macos-selfhosted-${{ github.ref }}
@@ -31,7 +21,7 @@ jobs:
     timeout-minutes: 45
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
 
       - name: Point Gradle at the local Android SDK
         run: echo "sdk.dir=$HOME/Library/Android/sdk" > local.properties
@@ -41,7 +31,7 @@ jobs:
 
       - name: Upload debug APK
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
           name: app-debug-apk
           path: app/build/outputs/apk/debug/*.apk
@@ -49,7 +39,7 @@ jobs:
 
       - name: Upload Paparazzi diffs on failure
         if: failure()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
           name: paparazzi-failures
           path: app/build/paparazzi/failures/**
