@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "id": "CHG-0001-adopt-specsync-5-0-1-and-the-unified-trust-1-0-0-governance-gate",
+  "slug": "adopt-specsync-5-0-1-and-the-unified-trust-1-0-0-governance-gate",
+  "title": "Adopt SpecSync 5.0.1 and the unified Trust 1.0.0 governance gate",
+  "description": "Adopt SpecSync 5.0.1 and the unified Trust 1.0.0 governance gate",
+  "kind": "migration",
+  "state": "accepted",
+  "canonical_applied": true,
+  "base_commit": "55039e73610c628e70d77d7aaa3ac4929915011d",
+  "created_at": 1783887207,
+  "updated_at": 1784051881,
+  "affected_specs": [
+    "catalog"
+  ],
+  "affected_paths": [
+    "app/",
+    "site/",
+    ".github/",
+    "specs/",
+    ".specsync/",
+    "fledge.toml",
+    ".github/workflows/ci.yml",
+    ".github/workflows/trust.yml",
+    ".specsync/config.toml",
+    ".specsync/sdd.json",
+    ".specsync/version",
+    "specs/catalog/catalog.spec.md",
+    "specs/catalog/context.md",
+    "specs/catalog/requirements.md",
+    "specs/catalog/tasks.md",
+    "specs/catalog/testing.md"
+  ],
+  "no_spec_change": false,
+  "no_spec_change_rationale": null,
+  "acceptance_criteria": [
+    "SpecSync strict check passes; all four agent integrations are installed; the immutable Trust 1.0.0 action runs as job trust; native Android build, unit tests, and snapshot verification remain green; standalone Pages and Atlas publishing remain independent"
+  ],
+  "selected_artifacts": [
+    "context",
+    "research",
+    "design",
+    "plan",
+    "tasks",
+    "testing",
+    "docs"
+  ],
+  "dependencies": [],
+  "answers": {
+    "architecture_risk": "yes",
+    "public_contract": "no"
+  }
+}

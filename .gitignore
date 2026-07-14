@@ -10,5 +10,13 @@
 local.properties
 /app/build
 
-# Claude Code session worktrees
-/.claude/
+# Claude Code session worktrees and local state; commit only managed SpecSync integration.
+/.claude/*
+!/.claude/commands/
+/.claude/commands/*
+!/.claude/commands/specsync/
+!/.claude/commands/specsync/**
+!/.claude/skills/
+/.claude/skills/*
+!/.claude/skills/spec-sync/
+!/.claude/skills/spec-sync/**

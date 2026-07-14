@@ -1,0 +1,191 @@
+{
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1784035620,
+      "digest": "03e9e0ac863fa219a2861777a4a7666fc6a474e32e8a59c2fad239253fdee8b7",
+      "note": "Approved complete 100% catalog contract and deterministic native verification"
+    },
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1784035714,
+      "digest": "6643e824f0accc20c0452291c26a6a44934c4a54d649fa717d5bce12c23b3937",
+      "note": "Reapproved after exact Kotlin detector coverage and requirement-evidence mapping"
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784035989,
+      "digest": "4afc6e98f27fd2db2413ab01c4c36c4ce8a85ee6996e30e2883840698e8aa490",
+      "note": "Closing approval after full Android build, unit tests, deterministic snapshots, and 100% contract verification"
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784036091,
+      "digest": "abb140cda8e4c7e05d08d7484ebddb9a9107b3dae7079bba08740458a028b448",
+      "note": "Fresh closing approval after canonical cleanup and repeated full native verification"
+    },
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1784051091,
+      "digest": "f17dc7ac7316684eb5fcdda86c19f42ab371e7872a2678f6b977f4dff3f2ddeb",
+      "note": "Re-approved after correcting the repository visibility and runner narrative; catalog behavior and stable requirements are unchanged."
+    },
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1784051231,
+      "digest": "6643e824f0accc20c0452291c26a6a44934c4a54d649fa717d5bce12c23b3937",
+      "note": "Re-approved the unchanged applied catalog definition after the successor operations change; historical approval is preserved and no catalog semantics changed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784051249,
+      "digest": "c0202c580b1325534d6015aca6de8153c1408c440d5ecfb3a29a8c75263cf660",
+      "note": "Fresh closing approval after the successor hosted-runner change and repeated native Android verification; hosted success remains pending."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784051881,
+      "digest": "672869cc9721987ff057d494c9e6f9a3b1683821b985e4249c2067c80ae91ac2",
+      "note": "Fresh closing approval after complete repository-specific SDD ownership and truthful evidence documentation; native Android verification passes and hosted success remains pending."
+    }
+  ],
+  "reopenings": [
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0001-adopt-specsync-5-0-1-and-the-unified-trust-1-0-0-governance-gate",
+      "actor": "user:0xLeif",
+      "reason": "Remove post-accept transition wording from the canonical requirements companion",
+      "timestamp": 1784036053,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1784035989,
+        "digest": "4afc6e98f27fd2db2413ab01c4c36c4ce8a85ee6996e30e2883840698e8aa490",
+        "note": "Closing approval after full Android build, unit tests, deterministic snapshots, and 100% contract verification"
+      },
+      "prior_verification": {
+        "timestamp": 1784035975,
+        "commit": "a5751b42a836089184d68e9468500ac827a4ce79",
+        "contract_digest": "6643e824f0accc20c0452291c26a6a44934c4a54d649fa717d5bce12c23b3937",
+        "workspace_digest": "451f3c20c3a5714ec377e3f4a6096130426cafdc5379577e266919333a92125c",
+        "acceptance_input_digest": "c72602760ee4c1f49acf0e6245f1a02411483cea2bd030473a2979f89cd9cda2",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-catalog-001",
+          "REQ-catalog-002",
+          "REQ-catalog-003",
+          "REQ-catalog-004",
+          "REQ-catalog-005",
+          "REQ-catalog-006",
+          "REQ-catalog-007",
+          "REQ-catalog-008"
+        ]
+      },
+      "stale_acceptance_input_digest": "c72602760ee4c1f49acf0e6245f1a02411483cea2bd030473a2979f89cd9cda2",
+      "current_acceptance_input_digest": "c71e9b0d7ed249dcddb8cb4069d528ea5392a5c59594fb78a3661cf3aa1f1e8f"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0001-adopt-specsync-5-0-1-and-the-unified-trust-1-0-0-governance-gate",
+      "actor": "user:0xLeif",
+      "reason": "The corrective hosted-runner lifecycle change altered final delivery inputs after the prior acceptance.",
+      "timestamp": 1784051049,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1784036091,
+        "digest": "abb140cda8e4c7e05d08d7484ebddb9a9107b3dae7079bba08740458a028b448",
+        "note": "Fresh closing approval after canonical cleanup and repeated full native verification"
+      },
+      "prior_verification": {
+        "timestamp": 1784036066,
+        "commit": "a5751b42a836089184d68e9468500ac827a4ce79",
+        "contract_digest": "6643e824f0accc20c0452291c26a6a44934c4a54d649fa717d5bce12c23b3937",
+        "workspace_digest": "8fa5c2433c24da8bdd7f667591cc6edf8d39911eb48b8908e59f6f3bbd6a5d23",
+        "acceptance_input_digest": "c71e9b0d7ed249dcddb8cb4069d528ea5392a5c59594fb78a3661cf3aa1f1e8f",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-catalog-001",
+          "REQ-catalog-002",
+          "REQ-catalog-003",
+          "REQ-catalog-004",
+          "REQ-catalog-005",
+          "REQ-catalog-006",
+          "REQ-catalog-007",
+          "REQ-catalog-008"
+        ]
+      },
+      "stale_acceptance_input_digest": "c71e9b0d7ed249dcddb8cb4069d528ea5392a5c59594fb78a3661cf3aa1f1e8f",
+      "current_acceptance_input_digest": "24634fedadf5f54098839c798758a2922cfdd4013158e58f48c5cca09fc19c38"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0001-adopt-specsync-5-0-1-and-the-unified-trust-1-0-0-governance-gate",
+      "actor": "user:0xLeif",
+      "reason": "The full repository-specific SDD and truthful evidence successor change altered final delivery inputs after prior acceptance.",
+      "timestamp": 1784051792,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1784051249,
+        "digest": "c0202c580b1325534d6015aca6de8153c1408c440d5ecfb3a29a8c75263cf660",
+        "note": "Fresh closing approval after the successor hosted-runner change and repeated native Android verification; hosted success remains pending."
+      },
+      "prior_verification": {
+        "timestamp": 1784051242,
+        "commit": "84d8f2f84f883f26e0672e539afe3cc241fd79c1",
+        "contract_digest": "6643e824f0accc20c0452291c26a6a44934c4a54d649fa717d5bce12c23b3937",
+        "workspace_digest": "e8d683828afa379425ab4a9ee801267cf10b5d93a008d0fc99578a7846a82865",
+        "acceptance_input_digest": "24634fedadf5f54098839c798758a2922cfdd4013158e58f48c5cca09fc19c38",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-catalog-001",
+          "REQ-catalog-002",
+          "REQ-catalog-003",
+          "REQ-catalog-004",
+          "REQ-catalog-005",
+          "REQ-catalog-006",
+          "REQ-catalog-007",
+          "REQ-catalog-008"
+        ]
+      },
+      "stale_acceptance_input_digest": "24634fedadf5f54098839c798758a2922cfdd4013158e58f48c5cca09fc19c38",
+      "current_acceptance_input_digest": "580b47a6ff844bc3ca4fc95efe79d9198a393ae330fbff8d635803994a978061"
+    }
+  ]
+}

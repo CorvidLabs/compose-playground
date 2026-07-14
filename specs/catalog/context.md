@@ -4,12 +4,14 @@ spec: catalog.spec.md
 
 ## Context
 
-<!-- Describe the context and motivation for this module. -->
+The playground needs one discoverable registry that drives navigation, search,
+examples, screenshots, and the generated companion site.
 
 ## Related Modules
 
-- <!-- List related modules or specs. -->
+- Per-group catalog declarations and the static Astro component index.
 
 ## Design Decisions
 
-- <!-- Document key design decisions and their rationale. -->
+- Group files own entries while the registry aggregates them.
+- Related links are identifier based and tolerate missing targets.

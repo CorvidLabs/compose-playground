@@ -1,0 +1,19 @@
+{
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1784052458,
+      "digest": "e12e17ef68494411b579fc5c1e875acc4a622a6ed2a32257c564ff5f4a1f4484",
+      "note": "Approved exact lifecycle ownership for the four existing rollout governance files; their content and catalog behavior remain unchanged."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784052498,
+      "digest": "b780045bd3599d0a0cd16ddbef1a996d81a6e6edc2ca1e9aa11e19c65b9e4257",
+      "note": "Accepted after strict ownership and native verification; hosted success remains pending."
+    }
+  ],
+  "reopenings": []
+}

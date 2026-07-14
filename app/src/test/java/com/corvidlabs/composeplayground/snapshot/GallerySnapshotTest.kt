@@ -14,12 +14,15 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -108,10 +111,22 @@ private fun Showcase(component: Component) {
                 "bottom-sheet" -> BottomSheetShowcase()
                 "dialog" -> DialogShowcase()
                 "pager" -> PagerShowcase()
+                "pickers" -> PickersShowcase()
                 else -> component.examples.firstOrNull()?.demo?.invoke()
             }
         }
     }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun PickersShowcase() {
+    val fixedDateMillis = 1_780_876_800_000L // 2026-06-08T00:00:00Z
+    val state = rememberDatePickerState(
+        initialSelectedDateMillis = fixedDateMillis,
+        initialDisplayedMonthMillis = fixedDateMillis
+    )
+    DatePicker(state = state, title = null)
 }
 
 @Composable

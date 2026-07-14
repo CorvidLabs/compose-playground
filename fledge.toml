@@ -1,6 +1,6 @@
 # fledge task runner — https://github.com/CorvidLabs
-# Gradle tasks use the Android Studio JBR for Java unless JAVA_HOME is already set,
-# so they work both locally and on a self-hosted macOS runner.
+# Gradle tasks use JAVA_HOME when configured and fall back to the local Android Studio JBR,
+# so they work on ephemeral hosted CI and a maintainer's macOS workstation.
 
 [tasks.build]
 cmd = "JAVA_HOME=\"${JAVA_HOME:-/Applications/Android Studio.app/Contents/jbr/Contents/Home}\" ./gradlew assembleDebug"
@@ -18,7 +18,7 @@ cmd = "JAVA_HOME=\"${JAVA_HOME:-/Applications/Android Studio.app/Contents/jbr/Co
 cmd = "JAVA_HOME=\"${JAVA_HOME:-/Applications/Android Studio.app/Contents/jbr/Contents/Home}\" ./gradlew lintDebug"
 
 [tasks.spec-check]
-cmd = "fledge spec check --non-interactive"
+cmd = "specsync check --strict --require-coverage 100 --force"
 
 [lanes.check]
 description = "Quick pre-commit gate"
@@ -31,3 +31,7 @@ steps = [
   { parallel = ["test", "spec-check"] },
   "snapshot-verify",
 ]
+
+[lanes.verify]
+description = "Native verification used by the unified Trust gate"
+steps = ["build", "test", "snapshot-verify"]
