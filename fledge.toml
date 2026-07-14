@@ -18,7 +18,7 @@ cmd = "JAVA_HOME=\"${JAVA_HOME:-/Applications/Android Studio.app/Contents/jbr/Co
 cmd = "JAVA_HOME=\"${JAVA_HOME:-/Applications/Android Studio.app/Contents/jbr/Contents/Home}\" ./gradlew lintDebug"
 
 [tasks.spec-check]
-cmd = "fledge spec check --non-interactive"
+cmd = "specsync check --strict --require-coverage 100 --force"
 
 [lanes.check]
 description = "Quick pre-commit gate"

@@ -1,3 +1,77 @@
 {
-  "approvals": []
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1784035620,
+      "digest": "03e9e0ac863fa219a2861777a4a7666fc6a474e32e8a59c2fad239253fdee8b7",
+      "note": "Approved complete 100% catalog contract and deterministic native verification"
+    },
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1784035714,
+      "digest": "6643e824f0accc20c0452291c26a6a44934c4a54d649fa717d5bce12c23b3937",
+      "note": "Reapproved after exact Kotlin detector coverage and requirement-evidence mapping"
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784035989,
+      "digest": "4afc6e98f27fd2db2413ab01c4c36c4ce8a85ee6996e30e2883840698e8aa490",
+      "note": "Closing approval after full Android build, unit tests, deterministic snapshots, and 100% contract verification"
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784036091,
+      "digest": "abb140cda8e4c7e05d08d7484ebddb9a9107b3dae7079bba08740458a028b448",
+      "note": "Fresh closing approval after canonical cleanup and repeated full native verification"
+    }
+  ],
+  "reopenings": [
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0001-adopt-specsync-5-0-1-and-the-unified-trust-1-0-0-governance-gate",
+      "actor": "user:0xLeif",
+      "reason": "Remove post-accept transition wording from the canonical requirements companion",
+      "timestamp": 1784036053,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1784035989,
+        "digest": "4afc6e98f27fd2db2413ab01c4c36c4ce8a85ee6996e30e2883840698e8aa490",
+        "note": "Closing approval after full Android build, unit tests, deterministic snapshots, and 100% contract verification"
+      },
+      "prior_verification": {
+        "timestamp": 1784035975,
+        "commit": "a5751b42a836089184d68e9468500ac827a4ce79",
+        "contract_digest": "6643e824f0accc20c0452291c26a6a44934c4a54d649fa717d5bce12c23b3937",
+        "workspace_digest": "451f3c20c3a5714ec377e3f4a6096130426cafdc5379577e266919333a92125c",
+        "acceptance_input_digest": "c72602760ee4c1f49acf0e6245f1a02411483cea2bd030473a2979f89cd9cda2",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-catalog-001",
+          "REQ-catalog-002",
+          "REQ-catalog-003",
+          "REQ-catalog-004",
+          "REQ-catalog-005",
+          "REQ-catalog-006",
+          "REQ-catalog-007",
+          "REQ-catalog-008"
+        ]
+      },
+      "stale_acceptance_input_digest": "c72602760ee4c1f49acf0e6245f1a02411483cea2bd030473a2979f89cd9cda2",
+      "current_acceptance_input_digest": "c71e9b0d7ed249dcddb8cb4069d528ea5392a5c59594fb78a3661cf3aa1f1e8f"
+    }
+  ]
 }
