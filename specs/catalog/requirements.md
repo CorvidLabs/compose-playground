@@ -9,6 +9,8 @@ spec: catalog.spec.md
 
 ## Acceptance Criteria
 
+Each stable requirement below defines its own observable acceptance criterion.
+
 ## Constraints
 
 - Catalog entries are internal to the Android application module.

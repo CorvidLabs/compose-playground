@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "id": "CHG-0002-move-public-pull-request-verification-from-unavailable-self-hosted-macos-runners",
+  "slug": "move-public-pull-request-verification-from-unavailable-self-hosted-macos-runners",
+  "title": "Move public pull-request verification from unavailable self-hosted macOS runners to ephemeral hosted Ubuntu with pinned JDK 17, Android 35, and Gradle setup; correct repository visibility narratives and remove empty acceptance boilerplate without changing product behavior",
+  "description": "Move public pull-request verification from unavailable self-hosted macOS runners to ephemeral hosted Ubuntu with pinned JDK 17, Android 35, and Gradle setup; correct repository visibility narratives and remove empty acceptance boilerplate without changing product behavior",
+  "kind": "operations",
+  "state": "accepted",
+  "canonical_applied": true,
+  "base_commit": "84d8f2f84f883f26e0672e539afe3cc241fd79c1",
+  "created_at": 1784050889,
+  "updated_at": 1784051203,
+  "affected_specs": [],
+  "affected_paths": [
+    ".github/workflows/ci.yml",
+    ".github/workflows/trust.yml",
+    "fledge.toml",
+    "specs/catalog/requirements.md"
+  ],
+  "no_spec_change": true,
+  "no_spec_change_rationale": "This corrects CI infrastructure, security posture, and documentation only; the catalog product contract and behavior do not change.",
+  "acceptance_criteria": [
+    "Build and Trust pull-request jobs target ephemeral hosted Ubuntu; both install pinned JDK 17",
+    "Android SDK platform 35",
+    "and Gradle support; Build preserves the debug APK artifact; Trust preserves full-history verification and gains stale-run cancellation; all action dependencies are immutable; repository narratives identify the repository as public; the catalog contract remains unchanged; static workflow validation and native verification pass; hosted success is not claimed before exact-head jobs execute."
+  ],
+  "selected_artifacts": [
+    "context",
+    "plan",
+    "testing",
+    "research",
+    "design",
+    "tasks"
+  ],
+  "dependencies": [],
+  "answers": {
+    "architecture_risk": "yes",
+    "public_contract": "no"
+  }
+}

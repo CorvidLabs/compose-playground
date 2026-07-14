@@ -1,0 +1,26 @@
+{
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1784051070,
+      "digest": "7b0747a4a8b34b3114f86fabb9ad5a14f2fd140e7b619008174150cf0e189a73",
+      "note": "Approved the security correction to ephemeral hosted runners with immutable toolchain actions; no catalog behavior changes."
+    },
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1784051183,
+      "digest": "8cae8415a4e1a9e9b1f5a902f664905eb5546462637f8be563b7685172aa814b",
+      "note": "Re-approved after replacing circular verification and push tasks with truthful completed preparation and delivery-boundary tasks."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784051203,
+      "digest": "9ea57722135901090ad1714fe8163cbeb86998cd5fcf80a7c3353a10e88e0774",
+      "note": "Accepted after immutable hosted-runner configuration, clean static validation, and successful native Android build, tests, and snapshots; hosted success remains unclaimed."
+    }
+  ],
+  "reopenings": []
+}
