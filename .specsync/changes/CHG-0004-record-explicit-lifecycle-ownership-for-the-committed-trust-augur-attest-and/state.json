@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "id": "CHG-0004-record-explicit-lifecycle-ownership-for-the-committed-trust-augur-attest-and",
+  "slug": "record-explicit-lifecycle-ownership-for-the-committed-trust-augur-attest-and",
+  "title": "Record explicit lifecycle ownership for the committed Trust, Augur, Attest, and managed-agent governance files introduced by the rollout",
+  "description": "Record explicit lifecycle ownership for the committed Trust, Augur, Attest, and managed-agent governance files introduced by the rollout",
+  "kind": "operations",
+  "state": "accepted",
+  "canonical_applied": true,
+  "base_commit": "71c0dae5907387e92491036aa1c0233c5189aedc",
+  "created_at": 1784052336,
+  "updated_at": 1784052498,
+  "affected_specs": [],
+  "affected_paths": [
+    ".attest.json",
+    ".augur.toml",
+    ".trust.toml",
+    "AGENTS.md"
+  ],
+  "no_spec_change": true,
+  "no_spec_change_rationale": "These files configure the governance migration and managed guidance; they do not change the Android catalog contract or product behavior.",
+  "acceptance_criteria": [
+    "The four committed governance files are explicitly owned by an active successor change; strict range validation reports no uncovered meaningful paths; their existing standard Trust blocking risk progressive provenance and managed-agent semantics remain unchanged; native and hosted verification pass before readiness."
+  ],
+  "selected_artifacts": [
+    "context",
+    "plan",
+    "testing",
+    "research",
+    "design",
+    "tasks"
+  ],
+  "dependencies": [],
+  "answers": {
+    "architecture_risk": "yes",
+    "public_contract": "no"
+  }
+}
