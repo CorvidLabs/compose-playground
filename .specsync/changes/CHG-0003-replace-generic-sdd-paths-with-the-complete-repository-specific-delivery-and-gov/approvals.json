@@ -1,0 +1,19 @@
+{
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1784051785,
+      "digest": "78379afd8a98555e14979dca44f6044a459adc874dede91e65fdd7739427ebc5",
+      "note": "Approved complete repository-specific SDD ownership and truthful test-evidence limits without catalog behavior changes."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784051847,
+      "digest": "788789bb94138770e7c3e31bcd2d0496adb44d2e787d1008c9ef4bfbc07c4c6b",
+      "note": "Accepted after full repository-specific lifecycle ownership, truthful test-evidence limits, strict validation, and successful native verification; hosted success remains pending."
+    }
+  ],
+  "reopenings": []
+}
