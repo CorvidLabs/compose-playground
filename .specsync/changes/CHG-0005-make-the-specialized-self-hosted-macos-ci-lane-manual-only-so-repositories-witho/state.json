@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "CHG-0005-make-the-specialized-self-hosted-macos-ci-lane-manual-only-so-repositories-witho",
+  "slug": "make-the-specialized-self-hosted-macos-ci-lane-manual-only-so-repositories-witho",
+  "title": "Make the specialized self-hosted macOS CI lane manual-only so repositories without registered macOS runners do not queue it on every main push",
+  "description": "Make the specialized self-hosted macOS CI lane manual-only so repositories without registered macOS runners do not queue it on every main push",
+  "kind": "operations",
+  "state": "accepted",
+  "canonical_applied": true,
+  "base_commit": "d3476ad90a54d01036bf651b3e44231f3d86766c",
+  "created_at": 1784053301,
+  "updated_at": 1784053464,
+  "affected_specs": [],
+  "affected_paths": [
+    ".github/workflows/macos-selfhosted.yml"
+  ],
+  "no_spec_change": true,
+  "no_spec_change_rationale": "This changes only CI trigger governance and immutable action references; it does not alter the Android catalog contract or product behavior.",
+  "acceptance_criteria": [
+    "The macOS self-hosted workflow exposes workflow_dispatch only and cannot queue from a main push; comments accurately describe manual operation and zero registered runners; every touched action is pinned to an immutable commit; actionlint",
+    "strict SpecSync 100 percent coverage",
+    "native verification",
+    "local Trust",
+    "and exact-head hosted checks pass."
+  ],
+  "selected_artifacts": [
+    "context",
+    "plan",
+    "testing",
+    "research",
+    "design",
+    "tasks"
+  ],
+  "dependencies": [],
+  "answers": {
+    "architecture_risk": "no",
+    "public_contract": "no"
+  }
+}
