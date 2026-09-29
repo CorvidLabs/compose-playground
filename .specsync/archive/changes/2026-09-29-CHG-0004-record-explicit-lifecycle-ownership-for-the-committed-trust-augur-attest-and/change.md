@@ -1,6 +1,6 @@
 ---
 id: CHG-0004-record-explicit-lifecycle-ownership-for-the-committed-trust-augur-attest-and
-state: accepted
+state: archived
 type: operations
 base_commit: 71c0dae5907387e92491036aa1c0233c5189aedc
 ---

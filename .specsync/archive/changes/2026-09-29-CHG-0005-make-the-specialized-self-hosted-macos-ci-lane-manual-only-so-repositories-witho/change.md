@@ -1,6 +1,6 @@
 ---
 id: CHG-0005-make-the-specialized-self-hosted-macos-ci-lane-manual-only-so-repositories-witho
-state: accepted
+state: archived
 type: operations
 base_commit: d3476ad90a54d01036bf651b3e44231f3d86766c
 ---

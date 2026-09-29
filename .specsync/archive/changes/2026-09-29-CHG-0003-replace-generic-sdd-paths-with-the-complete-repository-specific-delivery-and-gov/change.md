@@ -1,6 +1,6 @@
 ---
 id: CHG-0003-replace-generic-sdd-paths-with-the-complete-repository-specific-delivery-and-gov
-state: accepted
+state: archived
 type: operations
 base_commit: 87f5fc98f927e2f02f75d9d6f448f66ca1b04189
 ---
